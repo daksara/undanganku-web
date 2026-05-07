@@ -1,11 +1,760 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0;url=./builder.html">
-  <title>UndanganKu</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UndanganKu — Undangan Digital Pernikahan</title>
+<meta name="description" content="Undangan digital pernikahan elegan dengan 3 tema pilihan. Lengkap dengan RSVP, countdown, dan ucapan tamu. Hanya Rp 79.000.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Allura&family=Cinzel:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0d0a07;
+    --bg2: #150f08;
+    --gold: #c8a96e;
+    --gold-light: #e0c88a;
+    --gold-dim: rgba(200,169,110,0.15);
+    --cream: #f5ead8;
+    --cream-dim: rgba(245,234,216,0.55);
+    --cream-mute: rgba(245,234,216,0.3);
+    --line: rgba(200,169,110,0.18);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(13,10,7,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 22px;
+    color: var(--cream);
+    letter-spacing: 0.5px;
+  }
+  .nav-logo span { color: var(--gold); }
+
+  .nav-cta {
+    padding: 9px 20px;
+    background: var(--gold);
+    color: var(--bg);
+    font-family: 'Cinzel', serif;
+    font-size: 10px; letter-spacing: 2px;
+    border: none; cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(200,169,110,0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(100,60,20,0.1), transparent);
+  }
+
+  .hero-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 9px; letter-spacing: 5px;
+    color: var(--gold); opacity: 0.8;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300; font-style: italic;
+    font-size: clamp(42px, 10vw, 72px);
+    line-height: 1.1;
+    margin-bottom: 12px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 15px; line-height: 1.7;
+    color: var(--cream-dim);
+    max-width: 360px; margin: 0 auto 40px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-buttons {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .btn-primary {
+    padding: 14px 32px;
+    background: linear-gradient(135deg, var(--gold), #a8892e);
+    color: var(--bg);
+    font-family: 'Cinzel', serif;
+    font-size: 11px; letter-spacing: 3px;
+    border: none; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: all 0.3s;
+    box-shadow: 0 8px 32px rgba(200,169,110,0.25);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(200,169,110,0.35);
+  }
+
+  .btn-ghost {
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 11px; letter-spacing: 3px;
+    border: 1px solid rgba(200,169,110,0.4);
+    cursor: pointer; text-decoration: none; display: inline-block;
+    transition: all 0.3s;
+  }
+  .btn-ghost:hover { background: var(--gold-dim); }
+
+  .hero-scroll {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
+    color: var(--cream-mute);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    animation: fadeUp 1s 0.6s ease both;
+  }
+  .hero-scroll::after {
+    content: '';
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+
+  /* ── ORNAMENT DIVIDER ── */
+  .divider {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; padding: 0 24px;
+    color: rgba(200,169,110,0.3);
+    font-size: 12px; letter-spacing: 8px;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(200,169,110,0.2), transparent);
+  }
+
+  /* ── SECTION BASE ── */
+  section {
+    padding: 80px 24px;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+
+  .section-tag {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 5px;
+    color: var(--gold); margin-bottom: 12px; text-transform: uppercase;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 36px; font-weight: 300;
+    line-height: 1.2; margin-bottom: 10px;
+  }
+  .section-sub {
+    font-size: 14px; color: var(--cream-dim);
+    line-height: 1.7; margin-bottom: 36px;
+  }
+
+  /* ── HARGA ── */
+  .price-card {
+    border: 1px solid var(--line);
+    padding: 36px 28px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(200,169,110,0.05), transparent);
+    position: relative; overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .price-card::before {
+    content: ''; position: absolute; inset: 8px;
+    border: 1px solid rgba(200,169,110,0.08);
+    pointer-events: none;
+  }
+  .price-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px; font-style: italic;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .price-label {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 4px;
+    color: var(--cream-mute); margin-top: 8px; margin-bottom: 24px;
+  }
+  .price-features {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 10px;
+    text-align: left;
+  }
+  .price-features li {
+    font-size: 13px; color: var(--cream-dim);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .price-features li::before {
+    content: '✦';
+    color: var(--gold); font-size: 8px; flex-shrink: 0;
+  }
+
+  /* ── TEMA ── */
+  .tema-grid {
+    display: flex; flex-direction: column; gap: 14px;
+  }
+
+  .tema-card {
+    border: 1px solid var(--line);
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: all 0.3s;
+  }
+  .tema-card:hover { border-color: rgba(200,169,110,0.4); }
+  .tema-card * { color: inherit; }
+
+  .tema-thumb {
+    height: 140px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+
+  .tema-thumb.royal {
+    background: linear-gradient(135deg, #1f1208, #3d2418);
+  }
+  .tema-thumb.royal::before {
+    content: ''; position: absolute; inset: 12px;
+    border: 1px solid rgba(212,175,108,0.3);
+  }
+  .tema-thumb.bloom {
+    background: linear-gradient(135deg, #fef5ed, #f4a574);
+  }
+  .tema-thumb.jawa {
+    background: linear-gradient(160deg, #2c1f0e, #4a3520);
+  }
+  .tema-thumb.jawa::before {
+    content: ''; position: absolute; inset: 12px;
+    border: 1px solid rgba(196,164,100,0.3);
+  }
+
+  .tema-thumb-inner {
+    text-align: center; z-index: 2; position: relative;
+  }
+  .tema-thumb-name {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 28px; line-height: 1;
+  }
+  .tema-thumb-amp {
+    font-family: 'Allura', cursive; font-size: 32px; line-height: 0.8;
+    margin: 4px 0;
+  }
+
+  .tema-meta {
+    padding: 14px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(255,255,255,0.02);
+  }
+  .tema-name {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 18px;
+  }
+  .tema-tag {
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1.5px;
+    color: var(--cream-mute); text-transform: uppercase;
+  }
+
+  /* ── FITUR ── */
+  .fitur-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .fitur-item {
+    border: 1px solid var(--line);
+    padding: 20px 16px;
+    background: rgba(200,169,110,0.03);
+    transition: all 0.2s;
+  }
+  .fitur-item:hover { background: rgba(200,169,110,0.07); }
+
+  .fitur-icon { font-size: 22px; margin-bottom: 10px; }
+  .fitur-name {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 17px; margin-bottom: 4px;
+  }
+  .fitur-desc { font-size: 11px; color: var(--cream-mute); line-height: 1.5; }
+
+  /* ── CARA PESAN ── */
+  .steps-list {
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .step-item {
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .step-item:last-child { border: none; }
+  .step-num {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 36px; color: var(--gold); opacity: 0.4;
+    line-height: 1; flex-shrink: 0; width: 36px;
+  }
+  .step-content {}
+  .step-title-s {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 19px; margin-bottom: 4px;
+  }
+  .step-desc { font-size: 12px; color: var(--cream-dim); line-height: 1.6; }
+
+  /* ── TESTIMONI ── */
+  .testi-list {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .testi-card {
+    border: 1px solid var(--line);
+    padding: 20px;
+    background: rgba(200,169,110,0.03);
+  }
+  .testi-text {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 16px; line-height: 1.7; color: var(--cream-dim);
+    margin-bottom: 14px;
+  }
+  .testi-name {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
+    color: var(--gold);
+  }
+  .testi-tema { font-size: 10px; color: var(--cream-mute); margin-top: 2px; }
+
+  /* ── FAQ ── */
+  .faq-list { display: flex; flex-direction: column; gap: 0; }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 18px 0;
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 17px;
+    gap: 12px;
+  }
+  .faq-q::after {
+    content: '✦'; color: var(--gold); font-size: 10px;
+    flex-shrink: 0; transition: transform 0.3s;
+  }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease;
+    font-size: 13px; color: var(--cream-dim); line-height: 1.7;
+    padding: 0;
+  }
+  .faq-item.open .faq-a {
+    max-height: 200px;
+    padding-bottom: 18px;
+  }
+
+  /* ── CTA AKHIR ── */
+  .cta-section {
+    text-align: center; padding: 80px 24px;
+    position: relative; overflow: hidden;
+    max-width: 480px; margin: 0 auto;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(200,169,110,0.08), transparent 70%);
+  }
+  .cta-ornament {
+    font-size: 13px; letter-spacing: 10px;
+    color: rgba(200,169,110,0.3); margin-bottom: 28px;
+  }
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 38px; font-weight: 300; margin-bottom: 12px;
+  }
+  .cta-sub {
+    font-size: 13px; color: var(--cream-dim); margin-bottom: 32px; line-height: 1.6;
+  }
+  .cta-ig {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 24px; padding: 10px 20px;
+    border: 1px solid var(--line);
+    color: var(--cream-dim); text-decoration: none;
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
+    transition: all 0.2s;
+  }
+  .cta-ig:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 24px;
+    text-align: center;
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
+    color: var(--cream-mute);
+    max-width: 480px; margin: 0 auto;
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
 </head>
 <body>
-  <script>window.location.replace('./builder.html');</script>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Undangan<span>Ku</span></div>
+  <a href="./builder.html" class="nav-cta">BUAT SEKARANG</a>
+</nav>
+
+<!-- HERO -->
+<div style="max-width:480px; margin:0 auto;">
+<section class="hero">
+  <div class="hero-tag">UNDANGAN DIGITAL PERNIKAHAN</div>
+  <h1 class="hero-title">
+    Ceritakan <em>Cintamu</em><br>dengan Elegan
+  </h1>
+  <p class="hero-sub">
+    Undangan digital premium dengan 3 tema pilihan, RSVP tamu, countdown, dan link unik — siap dalam menit.
+  </p>
+  <div class="hero-buttons">
+    <a href="./builder.html" class="btn-primary">BUAT UNDANGAN</a>
+    <a href="#tema" class="btn-ghost">LIHAT TEMA</a>
+  </div>
+  <div class="hero-scroll">SCROLL</div>
+</section>
+
+<div class="divider">❧ ✦ ❧</div>
+
+<!-- HARGA -->
+<section class="reveal">
+  <div class="section-tag">Investasi</div>
+  <h2 class="section-title">Satu Harga,<br>Semua Fitur</h2>
+  <p class="section-sub">Tidak ada biaya tersembunyi, tidak ada paket membingungkan.</p>
+
+  <div class="price-card">
+    <div class="price-amount">Rp 79.000</div>
+    <div class="price-label">AKTIF 3 BULAN</div>
+    <ul class="price-features">
+      <li>3 tema undangan pilihan</li>
+      <li>Link undangan unik & personal</li>
+      <li>RSVP & ucapan tamu online</li>
+      <li>Countdown menuju hari H</li>
+      <li>Amplop digital (transfer)</li>
+      <li>Aktif 3 bulan penuh</li>
+      <li>Tanpa watermark setelah konfirmasi</li>
+    </ul>
+  </div>
+
+  <a href="./builder.html" class="btn-primary" style="width:100%; text-align:center; display:block;">BUAT UNDANGAN SEKARANG</a>
+</section>
+
+<div class="divider">❧ ✦ ❧</div>
+
+<!-- TEMA -->
+<section id="tema" class="reveal">
+  <div class="section-tag">Desain</div>
+  <h2 class="section-title">Pilih Tema<br>yang Bercerita</h2>
+  <p class="section-sub">Setiap tema dirancang dengan detail untuk momen terpenting hidupmu.</p>
+
+  <div class="tema-grid">
+    <a href="./builder.html" class="tema-card">
+      <div class="tema-thumb royal">
+        <div class="tema-thumb-inner">
+          <div style="font-family:'Cinzel',serif; font-size:8px; letter-spacing:4px; color:#d4af6c; margin-bottom:6px;">THE WEDDING OF</div>
+          <div class="tema-thumb-name" style="color:#f0e6d2;">Mempelai Wanita</div>
+          <div class="tema-thumb-amp" style="color:#d4af6c;">&amp;</div>
+          <div class="tema-thumb-name" style="color:#f0e6d2;">Mempelai Pria</div>
+        </div>
+      </div>
+      <div class="tema-meta">
+        <div>
+          <div class="tema-name">Royal Classic</div>
+          <div class="tema-tag">Mewah · Elegan · Formal</div>
+        </div>
+        <div style="color:var(--gold); font-size:12px;">→</div>
+      </div>
+    </a>
+
+    <a href="./builder.html" class="tema-card">
+      <div class="tema-thumb bloom">
+        <div class="tema-thumb-inner">
+          <div style="font-family:'Allura',cursive; font-size:13px; color:#d97c6c; margin-bottom:4px;">happily ever after</div>
+          <div class="tema-thumb-name" style="color:#5d3a2e;">Mempelai Wanita</div>
+          <div class="tema-thumb-amp" style="color:#ec8772;">&amp;</div>
+          <div class="tema-thumb-name" style="color:#5d3a2e;">Mempelai Pria</div>
+        </div>
+      </div>
+      <div class="tema-meta">
+        <div>
+          <div class="tema-name">Sunset Bloom</div>
+          <div class="tema-tag">Hangat · Romantis · Soft</div>
+        </div>
+        <div style="color:var(--gold); font-size:12px;">→</div>
+      </div>
+    </a>
+
+    <a href="./builder.html" class="tema-card">
+      <div class="tema-thumb jawa">
+        <div class="tema-thumb-inner">
+          <div style="font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:#c4a464; margin-bottom:6px;">ING SALIRA KULA</div>
+          <div class="tema-thumb-name" style="color:#f0e0c0;">Mempelai Wanita</div>
+          <div class="tema-thumb-amp" style="color:#c4a464;">❧</div>
+          <div class="tema-thumb-name" style="color:#f0e0c0;">Mempelai Pria</div>
+        </div>
+      </div>
+      <div class="tema-meta">
+        <div>
+          <div class="tema-name">Adat Jawa</div>
+          <div class="tema-tag">Klasik · Tradisional · Elegan</div>
+        </div>
+        <div style="color:var(--gold); font-size:12px;">→</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<div class="divider">❧ ✦ ❧</div>
+
+<!-- FITUR -->
+<section class="reveal">
+  <div class="section-tag">Fitur</div>
+  <h2 class="section-title">Semua yang<br>Kamu Butuhkan</h2>
+  <p class="section-sub">Lengkap dari awal sampai hari H.</p>
+
+  <div class="fitur-grid">
+    <div class="fitur-item">
+      <div class="fitur-icon">💌</div>
+      <div class="fitur-name">RSVP Online</div>
+      <div class="fitur-desc">Tamu konfirmasi kehadiran langsung dari link undangan</div>
+    </div>
+    <div class="fitur-item">
+      <div class="fitur-icon">⏳</div>
+      <div class="fitur-name">Countdown</div>
+      <div class="fitur-desc">Hitung mundur otomatis menuju hari pernikahan</div>
+    </div>
+    <div class="fitur-item">
+      <div class="fitur-icon">💬</div>
+      <div class="fitur-name">Ucapan Tamu</div>
+      <div class="fitur-desc">Tamu kirim doa dan ucapan langsung di undangan</div>
+    </div>
+    <div class="fitur-item">
+      <div class="fitur-icon">💳</div>
+      <div class="fitur-name">Amplop Digital</div>
+      <div class="fitur-desc">Nomor rekening tampil rapi dengan tombol salin</div>
+    </div>
+    <div class="fitur-item">
+      <div class="fitur-icon">🔗</div>
+      <div class="fitur-name">Link Unik</div>
+      <div class="fitur-desc">Link personal yang bisa dibagikan ke semua platform</div>
+    </div>
+    <div class="fitur-item">
+      <div class="fitur-icon">📍</div>
+      <div class="fitur-name">Lokasi Acara</div>
+      <div class="fitur-desc">Tampil lengkap dengan link Google Maps</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">❧ ✦ ❧</div>
+
+<!-- CARA PESAN -->
+<section class="reveal">
+  <div class="section-tag">Cara Pesan</div>
+  <h2 class="section-title">Mudah & Cepat<br>dalam 4 Langkah</h2>
+
+  <div class="steps-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title-s">Pilih Tema & Isi Data</div>
+        <div class="step-desc">Pilih desain favoritmu, isi data mempelai, lokasi, dan info acara lewat form builder.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title-s">Preview Undangan</div>
+        <div class="step-desc">Lihat tampilan undanganmu secara real-time sebelum memesan.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title-s">Transfer & Pesan</div>
+        <div class="step-desc">Transfer Rp 79.000 ke rekening SeaBank, lalu klik Pesan Sekarang.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title-s">Link Aktif Otomatis</div>
+        <div class="step-desc">Setelah pembayaran dikonfirmasi, link undangan langsung aktif tanpa watermark. Siap dibagikan!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">❧ ✦ ❧</div>
+
+<!-- TESTIMONI -->
+<section class="reveal">
+  <div class="section-tag">Testimoni</div>
+  <h2 class="section-title">Kata Mereka<br>yang Sudah Merasakan</h2>
+
+  <div class="testi-list">
+    <div class="testi-card">
+      <div class="testi-text">"Prosesnya cepat banget, langsung jadi. Tampilannya elegan dan tamu-tamu pada suka. Worth it banget!"</div>
+      <div class="testi-name">RINA & DIMAS</div>
+      <div class="testi-tema">Royal Classic · Jakarta</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-text">"Fitur RSVP-nya membantu banget buat hitung tamu yang datang. Tidak perlu repot tanya satu-satu."</div>
+      <div class="testi-name">SARAH & FAJAR</div>
+      <div class="testi-tema">Sunset Bloom · Bandung</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-text">"Tema Adat Jawa-nya persis yang kami cari. Klasik tapi tidak kuno. Keluarga besar sangat mengapresiasi."</div>
+      <div class="testi-name">DEWI & BAGAS</div>
+      <div class="testi-tema">Adat Jawa · Yogyakarta</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">❧ ✦ ❧</div>
+
+<!-- FAQ -->
+<section class="reveal">
+  <div class="section-tag">FAQ</div>
+  <h2 class="section-title">Pertanyaan<br>yang Sering Ditanyakan</h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">Berapa lama setelah bayar link aktif?</div>
+      <div class="faq-a">Link aktif otomatis setelah pembayaran dikonfirmasi, biasanya dalam 1–3 jam di hari kerja.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Apakah data undangan bisa diedit setelah aktif?</div>
+      <div class="faq-a">Untuk saat ini data tidak bisa diedit setelah order dikonfirmasi. Pastikan semua data sudah benar sebelum memesan.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Berapa lama link undangan aktif?</div>
+      <div class="faq-a">Link aktif selama 3 bulan sejak dikonfirmasi — lebih dari cukup untuk dibagikan dari sebelum hingga sesudah hari H.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Apakah bisa lihat siapa saja yang RSVP?</div>
+      <div class="faq-a">Setiap RSVP yang masuk akan langsung dikirim notifikasi ke WhatsApp/Telegram owner. Data RSVP juga bisa dicek kapan saja.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Apakah ada biaya tambahan?</div>
+      <div class="faq-a">Tidak ada. Rp 79.000 sudah termasuk semua fitur, tidak ada biaya tersembunyi.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA AKHIR -->
+<section class="cta-section reveal">
+  <div class="cta-ornament">❧ ✦ ✦ ✦ ❧</div>
+  <h2 class="cta-title">Siap Membuat<br>Undanganmu?</h2>
+  <p class="cta-sub">Mulai sekarang dan undanganmu siap dalam hitungan menit.</p>
+  <a href="./builder.html" class="btn-primary">BUAT UNDANGAN — Rp 79.000</a>
+  <br>
+  <a href="https://www.instagram.com/willyanugrh" target="_blank" class="cta-ig">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+    @WILLYANUGRH
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="margin-bottom:8px;">
+    <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px; color:var(--cream);">Undangan<span style="color:var(--gold);">Ku</span></span>
+  </div>
+  © 2026 UndanganKu · <a href="https://www.instagram.com/willyanugrh" target="_blank">@willyanugrh</a>
+</footer>
+</div>
+
+<script>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+
 </body>
 </html>
