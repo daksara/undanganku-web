@@ -1139,6 +1139,19 @@
   
   // ============ PREVIEW ============
   let previewReady = false;
+  let pendingPayload = null;
+
+  // Listener: render konfirmasi siap terima data
+  window.addEventListener('message', (event) => {
+    if (event.data?.type === 'PREVIEW_READY') {
+      previewReady = true;
+      if (pendingPayload) {
+        const previewFrame = document.getElementById('previewFrame');
+        previewFrame.contentWindow.postMessage({ type: 'PREVIEW_DATA', payload: pendingPayload }, '*');
+        pendingPayload = null;
+      }
+    }
+  });
 
   function updatePreview() {
     const previewFrame = document.getElementById('previewFrame');
@@ -1149,11 +1162,10 @@
     };
 
     if (!previewReady) {
-      previewFrame.src = RENDER_URL;
-      previewFrame.onload = () => {
-        previewReady = true;
-        previewFrame.contentWindow.postMessage({ type: 'PREVIEW_DATA', payload }, '*');
-      };
+      pendingPayload = payload;
+      if (previewFrame.src === 'about:blank' || !previewFrame.src) {
+        previewFrame.src = RENDER_URL;
+      }
     } else {
       previewFrame.contentWindow.postMessage({ type: 'PREVIEW_DATA', payload }, '*');
     }
