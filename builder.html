@@ -643,9 +643,9 @@
         <div class="theme-thumb royal-classic">
           <div class="thumb-content">
             <div class="thumb-label">THE WEDDING OF</div>
-            <div class="thumb-names">Andini</div>
+            <div class="thumb-names">Mempelai Wanita</div>
             <div class="thumb-amp">&amp;</div>
-            <div class="thumb-names">Reza</div>
+            <div class="thumb-names">Mempelai Pria</div>
           </div>
         </div>
         <div class="theme-meta">
@@ -660,9 +660,9 @@
         <div class="theme-thumb sunset-bloom">
           <div class="thumb-content">
             <div class="thumb-label">happily ever after</div>
-            <div class="thumb-names">Andini</div>
+            <div class="thumb-names">Mempelai Wanita</div>
             <div class="thumb-amp">&amp;</div>
-            <div class="thumb-names">Reza</div>
+            <div class="thumb-names">Mempelai Pria</div>
           </div>
         </div>
         <div class="theme-meta">
@@ -676,9 +676,9 @@
         <div class="theme-thumb adat-jawa">
           <div class="thumb-content">
             <div class="thumb-label">Ing Salira Kula</div>
-            <div class="thumb-names">Andini</div>
+            <div class="thumb-names">Mempelai Wanita</div>
             <div class="thumb-amp">❧</div>
-            <div class="thumb-names">Reza</div>
+            <div class="thumb-names">Mempelai Pria</div>
           </div>
         </div>
         <div class="theme-meta">
@@ -1138,21 +1138,25 @@
   }
   
   // ============ PREVIEW ============
+  let previewReady = false;
+
   function updatePreview() {
-    const data = collectFormData();
-    
-    // Preview pakai postMessage atau langsung load via URL parameter (demo only)
-    // Di production: simpan data ke sessionStorage / pass via URL
     const previewFrame = document.getElementById('previewFrame');
-    
-    // Untuk demo, kita encode data sederhana lewat hash
-    const previewData = encodeURIComponent(JSON.stringify({
+    const payload = {
       theme: selectedTheme,
       isPreview: true,
-      data: data,
-    }));
-    
-    previewFrame.src = `${RENDER_URL}#${previewData}`;
+      data: collectFormData(),
+    };
+
+    if (!previewReady) {
+      previewFrame.src = RENDER_URL;
+      previewFrame.onload = () => {
+        previewReady = true;
+        previewFrame.contentWindow.postMessage({ type: 'PREVIEW_DATA', payload }, '*');
+      };
+    } else {
+      previewFrame.contentWindow.postMessage({ type: 'PREVIEW_DATA', payload }, '*');
+    }
   }
   
   // ============ SUMMARY ============
