@@ -153,6 +153,11 @@
       }
     });
 
+    // Beritahu builder bahwa render sudah siap terima data
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'PREVIEW_READY' }, '*');
+    }
+
     // Mode 2: Preview lama via hash (fallback)
     if (window.location.hash) {
       try {
