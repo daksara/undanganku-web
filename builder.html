@@ -1033,6 +1033,19 @@
       </div>
       <div id="statusDetail" style="margin-top: 12px; font-size: 12px; color: var(--text-dim); line-height: 1.6;"></div>
     </div>
+
+    <a href="https://www.instagram.com/willyanugrh" target="_blank" style="
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 16px; padding: 12px;
+      border: 1px solid rgba(200,169,110,0.2);
+      color: rgba(240,230,210,0.5); text-decoration: none;
+      font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
+      transition: all 0.2s;
+    " onmouseover="this.style.borderColor='rgba(200,169,110,0.5)';this.style.color='#c8a96e'"
+       onmouseout="this.style.borderColor='rgba(200,169,110,0.2)';this.style.color='rgba(240,230,210,0.5)'">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      HUBUNGI @WILLYANUGRH
+    </a>
   </div>
   
   <!-- ===== NAV BUTTONS ===== -->
@@ -1195,7 +1208,11 @@
       watermark: true,
       data: data,
     }));
-    window.open(`${RENDER_URL}#${payload}`, '_blank');
+    // Buka di tab baru dengan hash — undangan-render.html handle hash fallback
+    const url = `${RENDER_URL}#${payload}`;
+    const tab = window.open('', '_blank');
+    tab.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preview Undangan</title><style>body{margin:0;background:#111;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#fff;flex-direction:column;gap:12px;}.sp{width:36px;height:36px;border:2px solid rgba(200,169,110,0.2);border-top-color:#c8a96e;border-radius:50%;animation:spin 0.8s linear infinite;}@keyframes spin{to{transform:rotate(360deg);}}</style></head><body><div class="sp"></div><div style="font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.4);">Memuat preview...</div><script>window.location.replace('${url}'.replace(/'/g, "\'"));<\/script></body></html>`);
+    tab.document.close();
   }
   
   // ============ SUMMARY ============
@@ -1328,7 +1345,7 @@
       showToast('🎉 Undangan aktif!', 'success');
     } else if (status === 'rejected') {
       pill.innerHTML = `<span style="font-size:14px;">❌</span> <span>Ditolak</span>`;
-      detail.innerHTML = 'Pembayaran ditolak owner. Silakan hubungi owner untuk klarifikasi.';
+      detail.innerHTML = 'Pembayaran ditolak. Silakan hubungi owner via Instagram di bawah untuk klarifikasi.';
     }
   }
   
