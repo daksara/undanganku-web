@@ -187,7 +187,7 @@
     document.getElementById('error').classList.add('show');
   }
   
-  function renderInvitation({ theme, isPreview, data }) {
+  function renderInvitation({ theme, isPreview, data, watermark }) {
     const html = theme === 'sunset-bloom' 
       ? renderSunsetBloom(data)
       : renderRoyalClassic(data);
@@ -195,7 +195,7 @@
     document.getElementById('invitation-root').innerHTML = html;
     document.getElementById('invitation-root').classList.add('show');
     
-    if (isPreview) {
+    if (isPreview || watermark) {
       document.getElementById('watermark').classList.add('show');
       document.getElementById('preview-banner').classList.add('show');
       document.body.style.paddingTop = '34px';
@@ -204,7 +204,14 @@
     document.getElementById('loading').classList.add('hidden');
     
     // Init scripts setelah render
-    setTimeout(() => initInvitationScripts(data), 100);
+    setTimeout(() => {
+      initInvitationScripts(data);
+      // Hanya load RSVP kalau status paid (bukan preview)
+      if (!isPreview && !watermark) {
+        const orderId = new URLSearchParams(window.location.search).get('id');
+        if (orderId) initRsvp(orderId, theme);
+      }
+    }, 100);
   }
   
   function initInvitationScripts(data) {
@@ -1083,6 +1090,149 @@
     `;
   }
   
+  // ============ RSVP ============
+  function initRsvp(orderId, theme) {
+    const isRoyal = theme !== 'sunset-bloom';
+    const accent     = isRoyal ? '#d4af6c' : '#e8825a';
+    const accentBg   = isRoyal ? 'rgba(212,175,108,0.08)' : '#fff0ea';
+    const border     = isRoyal ? 'rgba(212,175,108,0.25)' : '#f0d9cc';
+    const bg         = isRoyal ? '#15100a' : '#fff8f5';
+    const textColor  = isRoyal ? '#f0e6d2' : '#7b4f3a';
+    const subColor   = isRoyal ? 'rgba(245,233,211,0.6)' : '#a0776a';
+    const fontTitle  = isRoyal ? "'Italiana', serif" : "'DM Serif Display', serif";
+    const radius     = isRoyal ? '0px' : '8px';
+
+    const root = document.getElementById('invitation-root');
+    const rsvpEl = document.createElement('div');
+    rsvpEl.id = 'rsvp-wrap';
+    rsvpEl.style.cssText = `max-width:480px; margin:0 auto; padding:60px 24px 80px; background:${bg}; font-family:'Cormorant Garamond',serif;`;
+    rsvpEl.innerHTML = `
+      <div style="text-align:center; margin-bottom:28px;">
+        <div style="font-family:${fontTitle}; font-size:28px; color:${textColor}; letter-spacing:2px;">RSVP &amp; Ucapan</div>
+        <div style="font-size:14px; color:${subColor}; font-style:italic; margin-top:6px;">Sampaikan kehadiran &amp; doa terbaikmu</div>
+      </div>
+
+      <div id="rsvp-form">
+        <input id="rsvp-name" type="text" placeholder="Nama kamu" maxlength="60" style="
+          width:100%; box-sizing:border-box; padding:12px 16px;
+          background:${isRoyal ? 'rgba(255,255,255,0.05)' : '#fff'};
+          border:1px solid ${border}; color:${textColor};
+          font-family:'Cormorant Garamond',serif; font-size:16px;
+          margin-bottom:12px; outline:none; border-radius:${radius};
+        "/>
+
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <div id="btn-hadir" onclick="rsvpSelect(true)" style="
+            flex:1; text-align:center; padding:11px;
+            border:1px solid ${border}; cursor:pointer; font-size:14px;
+            color:${subColor}; transition:all .2s; border-radius:${radius};
+          ">✅ Hadir</div>
+          <div id="btn-tidak" onclick="rsvpSelect(false)" style="
+            flex:1; text-align:center; padding:11px;
+            border:1px solid ${border}; cursor:pointer; font-size:14px;
+            color:${subColor}; transition:all .2s; border-radius:${radius};
+          ">❌ Tidak Hadir</div>
+        </div>
+
+        <textarea id="rsvp-msg" placeholder="Ucapan &amp; doa (opsional)" maxlength="200" rows="3" style="
+          width:100%; box-sizing:border-box; padding:12px 16px;
+          background:${isRoyal ? 'rgba(255,255,255,0.05)' : '#fff'};
+          border:1px solid ${border}; color:${textColor};
+          font-family:'Cormorant Garamond',serif; font-size:15px;
+          margin-bottom:14px; resize:none; outline:none; border-radius:${radius};
+        "></textarea>
+
+        <button onclick="rsvpSubmit('${orderId}')" style="
+          width:100%; padding:13px;
+          background:${isRoyal ? 'linear-gradient(135deg,#d4af6c,#b8951f)' : 'linear-gradient(135deg,#e8825a,#d4604a)'};
+          color:${isRoyal ? '#0d0a08' : '#fff'};
+          border:none; font-family:${isRoyal ? "'Cinzel',serif" : "'Inter',sans-serif"};
+          font-size:${isRoyal ? '12px' : '15px'};
+          ${isRoyal ? 'letter-spacing:3px;' : 'font-weight:600;'}
+          cursor:pointer; border-radius:${radius};
+        ">KIRIM RSVP 💌</button>
+        <div id="rsvp-err" style="color:#c0392b; font-size:13px; text-align:center; margin-top:8px; display:none;"></div>
+      </div>
+
+      <div id="rsvp-ok" style="display:none; text-align:center; padding:28px 0;">
+        <div style="font-size:40px; margin-bottom:10px;">🎉</div>
+        <div style="font-family:${fontTitle}; font-size:22px; color:${textColor};">Terima kasih, <span id="rsvp-ok-name"></span>!</div>
+        <div style="font-style:italic; font-size:14px; color:${subColor}; margin-top:6px;">RSVP kamu sudah kami terima.</div>
+      </div>
+
+      <div id="ucapan-list" style="margin-top:32px;"></div>
+    `;
+    root.appendChild(rsvpEl);
+  }
+
+  let _rsvpAttending = null;
+
+  window.rsvpSelect = function(val) {
+    _rsvpAttending = val;
+    const isRoyal = !document.body.classList.contains('theme-bloom');
+    const accent   = isRoyal ? '#d4af6c' : '#e8825a';
+    const accentBg = isRoyal ? 'rgba(212,175,108,0.1)' : '#fff0ea';
+    document.getElementById('btn-hadir').style.borderColor  = val  ? accent   : '';
+    document.getElementById('btn-hadir').style.background   = val  ? accentBg : '';
+    document.getElementById('btn-tidak').style.borderColor  = !val ? accent   : '';
+    document.getElementById('btn-tidak').style.background   = !val ? accentBg : '';
+  };
+
+  window.rsvpSubmit = async function(orderId) {
+    const name    = document.getElementById('rsvp-name').value.trim();
+    const message = document.getElementById('rsvp-msg').value.trim();
+    const errEl   = document.getElementById('rsvp-err');
+
+    if (!name) {
+      errEl.textContent = 'Nama tidak boleh kosong.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (_rsvpAttending === null) {
+      errEl.textContent = 'Pilih kehadiran dulu.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+
+    try {
+      const res = await fetch(`${BOT_API_URL}/orders/rsvp/${orderId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, attending: _rsvpAttending, message })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Gagal kirim');
+
+      document.getElementById('rsvp-form').style.display = 'none';
+      document.getElementById('rsvp-ok-name').textContent = name;
+      document.getElementById('rsvp-ok').style.display = 'block';
+
+      if (message) appendUcapan(name, _rsvpAttending, message);
+    } catch(e) {
+      errEl.textContent = e.message;
+      errEl.style.display = 'block';
+    }
+  };
+
+  function appendUcapan(name, attending, message) {
+    const isRoyal  = !document.body.classList.contains('theme-bloom');
+    const border   = isRoyal ? 'rgba(212,175,108,0.2)' : '#f0d9cc';
+    const bg       = isRoyal ? 'rgba(255,255,255,0.03)' : '#fff';
+    const nameColor = isRoyal ? '#d4af6c' : '#7b4f3a';
+    const msgColor  = isRoyal ? 'rgba(245,233,211,0.7)' : '#6b5045';
+    const radius    = isRoyal ? '0px' : '10px';
+
+    const list = document.getElementById('ucapan-list');
+    const item = document.createElement('div');
+    item.style.cssText = `background:${bg}; border:1px solid ${border}; padding:14px 16px; margin-bottom:10px; border-radius:${radius};`;
+    item.innerHTML = `
+      <div style="font-weight:600; color:${nameColor}; font-size:14px;">${esc(name)} <span style="font-weight:400; opacity:0.5;">${attending ? '✅' : '❌'}</span></div>
+      <div style="color:${msgColor}; font-size:14px; margin-top:5px; font-style:italic;">"${esc(message)}"</div>
+    `;
+    list.prepend(item);
+  }
+
   // ============ HELPERS ============
   function esc(str) {
     if (!str) return '';
