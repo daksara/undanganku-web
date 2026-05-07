@@ -48,9 +48,7 @@
   const THEME_KEY = 'royal-classic';
 
   async function init() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const orderId = urlParams.get('id');
-
+    // postMessage dari builder (iframe preview)
     window.addEventListener('message', (event) => {
       if (event.data?.type === 'PREVIEW_DATA') {
         document.getElementById('loading').classList.add('hidden');
@@ -61,14 +59,17 @@
       window.parent.postMessage({ type: 'PREVIEW_READY' }, '*');
     }
 
+    // Hash dari router atau builder preview — langsung render, tidak fetch ulang
     if (window.location.hash) {
       try {
-        const previewData = JSON.parse(decodeURIComponent(window.location.hash.slice(1)));
-        renderInvitation(previewData);
+        const payload = JSON.parse(decodeURIComponent(window.location.hash.slice(1)));
+        renderInvitation(payload);
         return;
       } catch (e) {}
     }
 
+    // Fallback: ?id= langsung (tanpa router)
+    const orderId = new URLSearchParams(window.location.search).get('id');
     if (!orderId) return;
 
     try {
@@ -103,8 +104,13 @@
     setTimeout(() => {
       initInvitationScripts(data);
       if (!isPreview && !watermark) {
-        const orderId = new URLSearchParams(window.location.search).get('id');
-        if (orderId) initRsvp(orderId, THEME_KEY);
+        const orderId = new URLSearchParams(window.location.search).get('id')
+          || (typeof data === 'object' && data.orderId)
+          || null;
+        // orderId bisa dari hash payload
+        const hashOid = (() => { try { return JSON.parse(decodeURIComponent(window.location.hash.slice(1))).orderId; } catch(e) { return null; } })();
+        const finalId = orderId || hashOid;
+        if (finalId) initRsvp(finalId, THEME_KEY);
       }
     }, 100);
   }
