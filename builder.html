@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Builder Undangan — UndanganKu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --bg: #0f0d0a;
+    --bg-card: #1a1612;
+    --bg-input: #221d18;
+    --accent: #d4af6c;
+    --accent-bright: #e8c585;
+    --text: #f0e6d2;
+    --text-dim: rgba(240, 230, 210, 0.6);
+    --text-mute: rgba(240, 230, 210, 0.4);
+    --line: rgba(212, 175, 108, 0.18);
+    --success: #6ec789;
+    --danger: #e87a7a;
+  }
+  
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+  
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--bg);
+    padding-bottom: 100px;
+  }
+  
+  /* ============ TOPBAR ============ */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 13, 10, 0.92);
+    backdrop-filter: blur(16px);
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 19px;
+    letter-spacing: 0.5px;
+  }
+  .logo span { color: var(--accent); }
+  
+  .step-pills {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .pill {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    transition: all 0.3s;
+  }
+  .pill.done { background: var(--accent); }
+  .pill.active {
+    background: var(--accent-bright);
+    width: 22px;
+    border-radius: 4px;
+  }
+  
+  /* ============ STEP CONTAINERS ============ */
+  .step {
+    display: none;
+    padding: 24px 20px;
+    animation: slideIn 0.4s ease;
+  }
+  .step.active { display: block; }
+  
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .step-head {
+    margin-bottom: 24px;
+  }
+  .step-counter {
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .step-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .step-subtitle {
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  
+  /* ============ THEME PICKER ============ */
+  .themes {
+    display: grid;
+    gap: 16px;
+  }
+  
+  .theme-card {
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .theme-card.selected {
+    border-color: var(--accent);
+    box-shadow: 0 8px 32px rgba(212, 175, 108, 0.2);
+  }
+  
+  .theme-thumb {
+    height: 180px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+  /* Royal Classic thumb */
+  .theme-thumb.royal-classic {
+    background: linear-gradient(135deg, #1f1208, #3d2418);
+  }
+  .theme-thumb.royal-classic::before {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(212, 175, 108, 0.4);
+  }
+  .theme-thumb.royal-classic .thumb-content {
+    text-align: center;
+    color: #f0e6d2;
+  }
+  .theme-thumb.royal-classic .thumb-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: #d4af6c;
+    margin-bottom: 6px;
+  }
+  .theme-thumb.royal-classic .thumb-names {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1;
+  }
+  .theme-thumb.royal-classic .thumb-amp {
+    color: #d4af6c;
+    font-size: 16px;
+    margin: 4px 0;
+  }
+  
+  /* Sunset Bloom thumb */
+  .theme-thumb.sunset-bloom {
+    background: linear-gradient(135deg, #fef5ed 0%, #fad9c0 50%, #f4a574 100%);
+  }
+  .theme-thumb.sunset-bloom::before {
+    content: '';
+    position: absolute;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.5), transparent);
+    top: -20px; left: -20px;
+  }
+  .theme-thumb.sunset-bloom::after {
+    content: '✿ ✿ ✿';
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    color: #d97c6c;
+    font-size: 12px;
+    letter-spacing: 4px;
+  }
+  .theme-thumb.sunset-bloom .thumb-content {
+    text-align: center;
+    color: #5d3a2e;
+    z-index: 2;
+  }
+  .theme-thumb.sunset-bloom .thumb-label {
+    font-family: 'Caveat', cursive;
+    font-size: 14px;
+    color: #d97c6c;
+    margin-bottom: 4px;
+  }
+  .theme-thumb.sunset-bloom .thumb-names {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1;
+  }
+  .theme-thumb.sunset-bloom .thumb-amp {
+    color: #ec8772;
+    font-size: 22px;
+    margin: 0;
+  }
+  
+  .theme-meta {
+    padding: 16px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .theme-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+  }
+  .theme-tag {
+    font-size: 10px;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  .theme-card.selected .theme-meta::after {
+    content: '✓';
+    color: var(--accent);
+    font-size: 18px;
+    margin-left: 8px;
+    font-weight: bold;
+  }
+  
+  /* ============ FORM ============ */
+  .form-section {
+    margin-bottom: 28px;
+  }
+  
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-head-icon {
+    font-size: 14px;
+    color: var(--accent);
+  }
+  .section-head-text {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--accent-bright);
+  }
+  
+  .form-grid {
+    display: grid;
+    gap: 12px;
+  }
+  .form-grid.cols-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 500;
+  }
+  
+  input, textarea, select {
+    width: 100%;
+    padding: 11px 13px;
+    background: var(--bg-input);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    transition: all 0.2s;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(212, 175, 108, 0.05);
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  
+  /* ============ PAKET PICKER ============ */
+  .paket-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  
+  .paket-card {
+    background: var(--bg-card);
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .paket-card.selected {
+    border-color: var(--accent);
+    background: rgba(212, 175, 108, 0.08);
+  }
+  
+  .paket-name {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+  }
+  .paket-price {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--accent-bright);
+  }
+  .paket-features {
+    font-size: 10px;
+    color: var(--text-mute);
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+  
+  /* ============ PREVIEW ============ */
+  .preview-frame {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+    margin-bottom: 16px;
+    aspect-ratio: 9/16;
+    max-height: 70vh;
+  }
+  .preview-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  
+  .preview-cta {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+  .preview-cta strong { color: var(--accent-bright); }
+  
+  /* ============ SUMMARY ============ */
+  .summary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+  }
+  .summary-row:last-child { border: none; }
+  .summary-row .label { color: var(--text-dim); }
+  .summary-row .value {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    color: var(--text);
+  }
+  
+  .total-row {
+    margin-top: 8px;
+    padding: 14px 0 6px;
+    border-top: 2px solid var(--line);
+    border-bottom: none !important;
+  }
+  .total-row .label {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .total-row .value {
+    font-size: 22px;
+    color: var(--accent-bright);
+  }
+  
+  /* ============ ORDER STATUS ============ */
+  .order-status-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 16px;
+    display: none;
+  }
+  .order-status-card.show { display: block; }
+  
+  .order-id {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    background: rgba(255, 200, 0, 0.1);
+    color: #fbbf24;
+    border: 1px solid rgba(255, 200, 0, 0.3);
+  }
+  .status-pill.paid {
+    background: rgba(110, 199, 137, 0.12);
+    color: var(--success);
+    border-color: rgba(110, 199, 137, 0.4);
+  }
+  .status-pill.rejected {
+    background: rgba(232, 122, 122, 0.12);
+    color: var(--danger);
+    border-color: rgba(232, 122, 122, 0.4);
+  }
+  
+  .pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  
+  /* ============ PAYMENT ============ */
+  .bank-card-mini {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bank-card-mini-info {
+    flex: 1;
+  }
+  .bank-card-mini-name {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+  }
+  .bank-card-mini-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    color: var(--accent-bright);
+    letter-spacing: 1px;
+  }
+  .copy-mini {
+    background: rgba(212, 175, 108, 0.1);
+    color: var(--accent);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* ============ NAV BUTTONS ============ */
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    padding: 14px 20px 18px;
+    background: linear-gradient(to top, var(--bg) 75%, transparent);
+    display: flex;
+    gap: 10px;
+    z-index: 50;
+  }
+  
+  .btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #b8951f);
+    color: var(--bg);
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(212, 175, 108, 0.3);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .btn-ghost {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    border: 1px solid var(--line);
+  }
+  
+  /* ============ TOAST ============ */
+  .toast {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-200%);
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 12px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    z-index: 200;
+    transition: transform 0.4s;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.success { border-color: var(--success); color: var(--success); }
+  .toast.error { border-color: var(--danger); color: var(--danger); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <div class="logo">Undangan<span>Ku</span></div>
+    <div class="step-pills">
+      <div class="pill active" id="pill-1"></div>
+      <div class="pill" id="pill-2"></div>
+      <div class="pill" id="pill-3"></div>
+      <div class="pill" id="pill-4"></div>
+      <div class="pill" id="pill-5"></div>
+    </div>
+  </div>
+  
+  <!-- ===== STEP 1: TEMA ===== -->
+  <div class="step active" id="step-1">
+    <div class="step-head">
+      <div class="step-counter">step 1 of 5</div>
+      <div class="step-title">Pilih Tema</div>
+      <div class="step-subtitle">Pilih desain yang sesuai dengan karakter pernikahanmu</div>
+    </div>
+    
+    <div class="themes">
+      <div class="theme-card selected" data-theme="royal-classic" onclick="selectTheme('royal-classic')">
+        <div class="theme-thumb royal-classic">
+          <div class="thumb-content">
+            <div class="thumb-label">THE WEDDING OF</div>
+            <div class="thumb-names">Andini</div>
+            <div class="thumb-amp">&amp;</div>
+            <div class="thumb-names">Reza</div>
+          </div>
+        </div>
+        <div class="theme-meta">
+          <div>
+            <div class="theme-name">Royal Classic</div>
+            <div class="theme-tag">Mewah · Elegan · Formal</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="theme-card" data-theme="sunset-bloom" onclick="selectTheme('sunset-bloom')">
+        <div class="theme-thumb sunset-bloom">
+          <div class="thumb-content">
+            <div class="thumb-label">happily ever after</div>
+            <div class="thumb-names">Andini</div>
+            <div class="thumb-amp">&amp;</div>
+            <div class="thumb-names">Reza</div>
+          </div>
+        </div>
+        <div class="theme-meta">
+          <div>
+            <div class="theme-name">Sunset Bloom</div>
+            <div class="theme-tag">Hangat · Romantis · Soft</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ===== STEP 2: DATA UNDANGAN ===== -->
+  <div class="step" id="step-2">
+    <div class="step-head">
+      <div class="step-counter">step 2 of 5</div>
+      <div class="step-title">Data Undangan</div>
+      <div class="step-subtitle">Lengkapi semua data agar undangan jadi sempurna</div>
+    </div>
+    
+    <!-- Mempelai -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-head-icon">👰🤵</span>
+        <span class="section-head-text">Mempelai</span>
+      </div>
+      
+      <div class="form-grid">
+        <div>
+          <label>Nama Lengkap Mempelai Wanita</label>
+          <input type="text" id="brideName" placeholder="Andini Putri Maharani" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Panggilan</label>
+          <input type="text" id="brideNick" placeholder="Andini" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Putri ke-berapa</label>
+          <input type="text" id="brideOrder" placeholder="Putri pertama dari" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Nama Ayah Mempelai Wanita</label>
+          <input type="text" id="brideFather" placeholder="Bapak H. Bambang Wijaya" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Nama Ibu Mempelai Wanita</label>
+          <input type="text" id="brideMother" placeholder="Ibu Hj. Sri Wahyuni" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Instagram Mempelai Wanita (opsional)</label>
+          <input type="text" id="brideIG" placeholder="@andiniputri" oninput="updatePreview()">
+        </div>
+        
+        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
+        
+        <div>
+          <label>Nama Lengkap Mempelai Pria</label>
+          <input type="text" id="groomName" placeholder="Reza Pratama Adiputra" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Panggilan</label>
+          <input type="text" id="groomNick" placeholder="Reza" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Putra ke-berapa</label>
+          <input type="text" id="groomOrder" placeholder="Putra kedua dari" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Nama Ayah Mempelai Pria</label>
+          <input type="text" id="groomFather" placeholder="Bapak Drs. Hendra Adiputra" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Nama Ibu Mempelai Pria</label>
+          <input type="text" id="groomMother" placeholder="Ibu Dra. Siti Nurhayati" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Instagram Mempelai Pria (opsional)</label>
+          <input type="text" id="groomIG" placeholder="@rezapratama" oninput="updatePreview()">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Acara -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-head-icon">📅</span>
+        <span class="section-head-text">Akad &amp; Resepsi</span>
+      </div>
+      
+      <div class="form-grid">
+        <div>
+          <label>Tanggal Pernikahan</label>
+          <input type="date" id="weddingDate" oninput="updatePreview()">
+        </div>
+        
+        <div class="form-grid cols-2">
+          <div>
+            <label>Akad Mulai</label>
+            <input type="time" id="akadStart" value="08:00" oninput="updatePreview()">
+          </div>
+          <div>
+            <label>Akad Selesai</label>
+            <input type="time" id="akadEnd" value="10:00" oninput="updatePreview()">
+          </div>
+        </div>
+        
+        <div>
+          <label>Tempat Akad</label>
+          <input type="text" id="akadVenue" placeholder="Masjid Istiqlal" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Alamat Akad</label>
+          <textarea id="akadAddress" placeholder="Jl. Taman Wijaya Kusuma, Jakarta Pusat" oninput="updatePreview()"></textarea>
+        </div>
+        <div>
+          <label>Link Maps Akad (opsional)</label>
+          <input type="text" id="akadMaps" placeholder="https://maps.google.com/..." oninput="updatePreview()">
+        </div>
+        
+        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
+        
+        <div class="form-grid cols-2">
+          <div>
+            <label>Resepsi Mulai</label>
+            <input type="time" id="resepsiStart" value="11:00" oninput="updatePreview()">
+          </div>
+          <div>
+            <label>Resepsi Selesai</label>
+            <input type="time" id="resepsiEnd" value="15:00" oninput="updatePreview()">
+          </div>
+        </div>
+        
+        <div>
+          <label>Tempat Resepsi</label>
+          <input type="text" id="resepsiVenue" placeholder="Hotel Mulia Ballroom" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Alamat Resepsi</label>
+          <textarea id="resepsiAddress" placeholder="Jl. Asia Afrika No.8, Senayan, Jakarta" oninput="updatePreview()"></textarea>
+        </div>
+        <div>
+          <label>Link Maps Resepsi (opsional)</label>
+          <input type="text" id="resepsiMaps" placeholder="https://maps.google.com/..." oninput="updatePreview()">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Ayat & Quote -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-head-icon">📖</span>
+        <span class="section-head-text">Ayat / Quote</span>
+      </div>
+      
+      <div class="form-grid">
+        <div>
+          <label>Tulisan Arab (opsional)</label>
+          <textarea id="quoteArabic" placeholder="وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا" oninput="updatePreview()"></textarea>
+        </div>
+        <div>
+          <label>Terjemahan / Quote</label>
+          <textarea id="quoteText" placeholder="Dan di antara tanda-tanda kekuasaan-Nya..." oninput="updatePreview()"></textarea>
+        </div>
+        <div>
+          <label>Sumber</label>
+          <input type="text" id="quoteSource" placeholder="QS. Ar-Rum : 21" oninput="updatePreview()">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Hadiah / Amplop -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-head-icon">💝</span>
+        <span class="section-head-text">Hadiah Pernikahan</span>
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-grid cols-2">
+          <div>
+            <label>Bank 1</label>
+            <input type="text" id="bank1Name" placeholder="BCA" oninput="updatePreview()">
+          </div>
+          <div>
+            <label>No. Rekening 1</label>
+            <input type="text" id="bank1Num" placeholder="1234567890" oninput="updatePreview()">
+          </div>
+        </div>
+        <div>
+          <label>Atas Nama 1</label>
+          <input type="text" id="bank1Holder" placeholder="Andini Putri" oninput="updatePreview()">
+        </div>
+        
+        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
+        
+        <div class="form-grid cols-2">
+          <div>
+            <label>Bank 2 (opsional)</label>
+            <input type="text" id="bank2Name" placeholder="Mandiri" oninput="updatePreview()">
+          </div>
+          <div>
+            <label>No. Rekening 2</label>
+            <input type="text" id="bank2Num" placeholder="9876543210" oninput="updatePreview()">
+          </div>
+        </div>
+        <div>
+          <label>Atas Nama 2</label>
+          <input type="text" id="bank2Holder" placeholder="Reza Pratama" oninput="updatePreview()">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Kontak Pembeli -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-head-icon">📞</span>
+        <span class="section-head-text">Kontak Pemesan</span>
+      </div>
+      
+      <div class="form-grid">
+        <div>
+          <label>WhatsApp / Telegram untuk dihubungi owner</label>
+          <input type="tel" id="buyerContact" placeholder="08123456789">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ===== STEP 3: PAKET ===== -->
+  <div class="step" id="step-3">
+    <div class="step-head">
+      <div class="step-counter">step 3 of 5</div>
+      <div class="step-title">Pilih Paket</div>
+      <div class="step-subtitle">Pilih paket yang sesuai kebutuhanmu</div>
+    </div>
+    
+    <div class="paket-grid">
+      <div class="paket-card" data-paket="basic" onclick="selectPaket('basic')">
+        <div class="paket-name">Basic</div>
+        <div class="paket-price">50K</div>
+        <div class="paket-features">3 bulan aktif</div>
+      </div>
+      <div class="paket-card selected" data-paket="premium" onclick="selectPaket('premium')">
+        <div class="paket-name">Premium</div>
+        <div class="paket-price">75K</div>
+        <div class="paket-features">12 bulan aktif</div>
+      </div>
+      <div class="paket-card" data-paket="custom" onclick="selectPaket('custom')">
+        <div class="paket-name">Custom</div>
+        <div class="paket-price">150K</div>
+        <div class="paket-features">Selamanya + custom domain</div>
+      </div>
+    </div>
+    
+    <div class="preview-cta">
+      💡 <strong>Semua paket termasuk:</strong> Tema yang dipilih, halaman pribadi dengan link unik, RSVP, ucapan tamu, countdown, dan amplop digital. Watermark hilang setelah pembayaran terkonfirmasi.
+    </div>
+  </div>
+  
+  <!-- ===== STEP 4: PREVIEW ===== -->
+  <div class="step" id="step-4">
+    <div class="step-head">
+      <div class="step-counter">step 4 of 5</div>
+      <div class="step-title">Preview Undangan</div>
+      <div class="step-subtitle">Begini tampilan undangan kamu nanti</div>
+    </div>
+    
+    <div class="preview-cta">
+      📱 Geser ke bawah di dalam frame untuk melihat seluruh halaman undangan. Klik "Buka Undangan" untuk masuk.
+    </div>
+    
+    <div class="preview-frame">
+      <iframe id="previewFrame" src="about:blank"></iframe>
+    </div>
+  </div>
+  
+  <!-- ===== STEP 5: BAYAR ===== -->
+  <div class="step" id="step-5">
+    <div class="step-head">
+      <div class="step-counter">step 5 of 5</div>
+      <div class="step-title">Pemesanan</div>
+      <div class="step-subtitle">Selesaikan pembayaran untuk aktivasi undangan</div>
+    </div>
+    
+    <div class="summary-card">
+      <div class="summary-row">
+        <span class="label">Tema</span>
+        <span class="value" id="sumTheme">Royal Classic</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Mempelai</span>
+        <span class="value" id="sumNames">— & —</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Tanggal</span>
+        <span class="value" id="sumDate">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Paket</span>
+        <span class="value" id="sumPaket">Premium</span>
+      </div>
+      <div class="summary-row total-row">
+        <span class="label">Total Pembayaran</span>
+        <span class="value" id="sumTotal">Rp 75.000</span>
+      </div>
+    </div>
+    
+    <div class="section-head" style="margin-top: 24px;">
+      <span class="section-head-icon">💳</span>
+      <span class="section-head-text">Transfer ke Rekening</span>
+    </div>
+    
+    <div class="bank-card-mini">
+      <div class="bank-card-mini-info">
+        <div class="bank-card-mini-name">BCA · a.n. Owner</div>
+        <div class="bank-card-mini-num">1234 5678 90</div>
+      </div>
+      <button class="copy-mini" onclick="copy('1234567890', this)">SALIN</button>
+    </div>
+    
+    <div class="bank-card-mini">
+      <div class="bank-card-mini-info">
+        <div class="bank-card-mini-name">Mandiri · a.n. Owner</div>
+        <div class="bank-card-mini-num">9876 5432 10</div>
+      </div>
+      <button class="copy-mini" onclick="copy('9876543210', this)">SALIN</button>
+    </div>
+    
+    <div class="preview-cta" style="margin-top: 16px;">
+      ⚠️ <strong>Cara pesan:</strong> (1) Transfer sesuai nominal di atas, (2) Klik tombol "Pesan Sekarang" di bawah, (3) Owner akan dapat notifikasi via Telegram lengkap dengan data pesananmu, (4) Setelah konfirmasi, link undangan otomatis aktif tanpa watermark.
+    </div>
+    
+    <div class="order-status-card" id="orderStatusCard">
+      <div class="order-id">📋 <span id="orderIdDisplay">—</span></div>
+      <div id="statusPillContainer">
+        <span class="status-pill" id="statusPill">
+          <span class="pulse"></span>
+          <span id="statusText">Menunggu konfirmasi owner...</span>
+        </span>
+      </div>
+      <div id="statusDetail" style="margin-top: 12px; font-size: 12px; color: var(--text-dim); line-height: 1.6;"></div>
+    </div>
+  </div>
+  
+  <!-- ===== NAV BUTTONS ===== -->
+  <div class="nav">
+    <button class="btn btn-ghost" id="prevBtn" onclick="prevStep()" style="display:none;">← Kembali</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Lanjut →</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ============ KONFIGURASI ============
+  // GANTI dengan URL Cloudflare Worker bot kamu
+  const BOT_API_URL = 'https://telegram-bot.daksara-dev.workers.dev';
+  
+  // URL halaman render undangan publik (file undangan-render.html)
+  const RENDER_URL = './undangan-render.html';
+  
+  // ============ STATE ============
+  let currentStep = 1;
+  let selectedTheme = 'royal-classic';
+  let selectedPaket = 'premium';
+  let currentOrderId = null;
+  let pollingInterval = null;
+  
+  const PRICES = { basic: 50000, premium: 75000, custom: 150000 };
+  const PAKET_LABEL = { basic: 'Basic', premium: 'Premium', custom: 'Custom' };
+  const TEMA_LABEL = {
+    'royal-classic': 'Royal Classic',
+    'sunset-bloom': 'Sunset Bloom',
+  };
+  
+  // ============ STEP NAVIGATION ============
+  function changeStep(n) {
+    document.getElementById(`step-${currentStep}`).classList.remove('active');
+    document.getElementById(`pill-${currentStep}`).classList.remove('active');
+    
+    // Mark done
+    if (n > currentStep) {
+      document.getElementById(`pill-${currentStep}`).classList.add('done');
+    } else {
+      document.getElementById(`pill-${n}`).classList.remove('done');
+    }
+    
+    currentStep = n;
+    document.getElementById(`step-${currentStep}`).classList.add('active');
+    document.getElementById(`pill-${currentStep}`).classList.add('active');
+    
+    document.getElementById('prevBtn').style.display = n > 1 ? 'block' : 'none';
+    
+    const nextBtn = document.getElementById('nextBtn');
+    if (n === 5) {
+      nextBtn.textContent = 'Pesan Sekarang →';
+      nextBtn.onclick = submitOrder;
+    } else {
+      nextBtn.textContent = 'Lanjut →';
+      nextBtn.onclick = nextStep;
+      nextBtn.disabled = false;
+    }
+    
+    // Update preview saat masuk step 4
+    if (n === 4) updatePreview();
+    // Update summary saat masuk step 5
+    if (n === 5) updateSummary();
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
+  function nextStep() {
+    if (currentStep < 5) changeStep(currentStep + 1);
+  }
+  
+  function prevStep() {
+    if (currentStep > 1) changeStep(currentStep - 1);
+  }
+  
+  // ============ THEME & PAKET ============
+  function selectTheme(theme) {
+    selectedTheme = theme;
+    document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+    document.querySelector(`[data-theme="${theme}"]`).classList.add('selected');
+  }
+  
+  function selectPaket(paket) {
+    selectedPaket = paket;
+    document.querySelectorAll('.paket-card').forEach(c => c.classList.remove('selected'));
+    document.querySelector(`[data-paket="${paket}"]`).classList.add('selected');
+  }
+  
+  // ============ DATA COLLECTION ============
+  function collectFormData() {
+    const v = (id) => document.getElementById(id)?.value || '';
+    
+    return {
+      brideName: v('brideName'),
+      brideNick: v('brideNick'),
+      brideOrder: v('brideOrder'),
+      brideFather: v('brideFather'),
+      brideMother: v('brideMother'),
+      brideIG: v('brideIG'),
+      
+      groomName: v('groomName'),
+      groomNick: v('groomNick'),
+      groomOrder: v('groomOrder'),
+      groomFather: v('groomFather'),
+      groomMother: v('groomMother'),
+      groomIG: v('groomIG'),
+      
+      weddingDate: v('weddingDate'),
+      akadStart: v('akadStart'),
+      akadEnd: v('akadEnd'),
+      akadVenue: v('akadVenue'),
+      akadAddress: v('akadAddress'),
+      akadMaps: v('akadMaps'),
+      
+      resepsiStart: v('resepsiStart'),
+      resepsiEnd: v('resepsiEnd'),
+      resepsiVenue: v('resepsiVenue'),
+      resepsiAddress: v('resepsiAddress'),
+      resepsiMaps: v('resepsiMaps'),
+      
+      quoteArabic: v('quoteArabic'),
+      quoteText: v('quoteText'),
+      quoteSource: v('quoteSource'),
+      
+      bank1Name: v('bank1Name'),
+      bank1Num: v('bank1Num'),
+      bank1Holder: v('bank1Holder'),
+      bank2Name: v('bank2Name'),
+      bank2Num: v('bank2Num'),
+      bank2Holder: v('bank2Holder'),
+    };
+  }
+  
+  // ============ PREVIEW ============
+  function updatePreview() {
+    const data = collectFormData();
+    
+    // Preview pakai postMessage atau langsung load via URL parameter (demo only)
+    // Di production: simpan data ke sessionStorage / pass via URL
+    const previewFrame = document.getElementById('previewFrame');
+    
+    // Untuk demo, kita encode data sederhana lewat hash
+    const previewData = encodeURIComponent(JSON.stringify({
+      theme: selectedTheme,
+      isPreview: true,
+      data: data,
+    }));
+    
+    previewFrame.src = `${RENDER_URL}#${previewData}`;
+  }
+  
+  // ============ SUMMARY ============
+  function updateSummary() {
+    const data = collectFormData();
+    const bride = data.brideNick || data.brideName.split(' ')[0] || '—';
+    const groom = data.groomNick || data.groomName.split(' ')[0] || '—';
+    
+    document.getElementById('sumTheme').textContent = TEMA_LABEL[selectedTheme];
+    document.getElementById('sumNames').textContent = `${bride} & ${groom}`;
+    document.getElementById('sumDate').textContent = data.weddingDate || '—';
+    document.getElementById('sumPaket').textContent = PAKET_LABEL[selectedPaket];
+    document.getElementById('sumTotal').textContent = `Rp ${PRICES[selectedPaket].toLocaleString('id-ID')}`;
+  }
+  
+  // ============ COPY ============
+  function copy(text, btn) {
+    navigator.clipboard?.writeText(text);
+    const orig = btn.textContent;
+    btn.textContent = '✓';
+    setTimeout(() => btn.textContent = orig, 1200);
+    showToast('Tersalin!', 'success');
+  }
+  
+  // ============ TOAST ============
+  function showToast(text, type = '') {
+    const toast = document.getElementById('toast');
+    toast.textContent = text;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+  
+  // ============ SUBMIT ORDER ============
+  async function submitOrder() {
+    const data = collectFormData();
+    const buyerContact = document.getElementById('buyerContact').value;
+    
+    // Validasi
+    if (!data.brideName || !data.groomName) {
+      showToast('Isi nama mempelai dulu ya', 'error');
+      changeStep(2);
+      return;
+    }
+    
+    const btn = document.getElementById('nextBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Mengirim...';
+    
+    try {
+      const response = await fetch(`${BOT_API_URL}/orders/new`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          theme: selectedTheme,
+          paket: selectedPaket,
+          buyerContact: buyerContact,
+          data: data,
+        }),
+      });
+      
+      const result = await response.json();
+      
+      if (result.ok && result.orderId) {
+        currentOrderId = result.orderId;
+        showToast('Pesanan terkirim ke owner!', 'success');
+        
+        // Tampilkan order status card
+        document.getElementById('orderStatusCard').classList.add('show');
+        document.getElementById('orderIdDisplay').textContent = result.orderId;
+        document.getElementById('statusDetail').innerHTML = 
+          'Owner sudah mendapat notifikasi via Telegram. Halaman ini akan otomatis update saat pesanan dikonfirmasi.<br><br>Simpan Order ID di atas untuk referensi.';
+        
+        btn.style.display = 'none';
+        document.getElementById('prevBtn').style.display = 'none';
+        
+        startPolling(result.orderId);
+      } else {
+        showToast('Gagal: ' + (result.error || 'Unknown error'), 'error');
+        btn.disabled = false;
+        btn.textContent = 'Pesan Sekarang →';
+      }
+    } catch (err) {
+      showToast('Tidak bisa terhubung ke server bot', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Pesan Sekarang →';
+      console.error(err);
+    }
+  }
+  
+  // ============ POLLING STATUS ============
+  function startPolling(orderId) {
+    pollingInterval = setInterval(async () => {
+      try {
+        const response = await fetch(`${BOT_API_URL}/orders/status/${orderId}`);
+        const result = await response.json();
+        
+        if (result.ok) {
+          updateStatusUI(result.status);
+          if (result.status === 'paid' || result.status === 'rejected') {
+            clearInterval(pollingInterval);
+          }
+        }
+      } catch (err) {
+        console.error('Polling error:', err);
+      }
+    }, 5000);
+  }
+  
+  function updateStatusUI(status) {
+    const pill = document.getElementById('statusPill');
+    const text = document.getElementById('statusText');
+    const detail = document.getElementById('statusDetail');
+    
+    pill.className = 'status-pill ' + status;
+    
+    if (status === 'pending') {
+      text.textContent = 'Menunggu konfirmasi owner...';
+    } else if (status === 'paid') {
+      pill.innerHTML = `<span style="font-size:14px;">✅</span> <span>Terkonfirmasi</span>`;
+      
+      const link = `${RENDER_URL}?id=${currentOrderId}`;
+      detail.innerHTML = `
+        🎉 <strong style="color:var(--success);">Pembayaran terkonfirmasi!</strong><br><br>
+        Link undangan kamu sudah aktif tanpa watermark:<br>
+        <a href="${link}" target="_blank" style="color:var(--accent); word-break: break-all; display:inline-block; margin-top:8px;">${link}</a><br><br>
+        <button class="copy-mini" style="margin-top:8px;" onclick="copy('${window.location.origin}${window.location.pathname.replace('builder.html','')}${link.replace('./','')}', this)">SALIN LINK</button>
+      `;
+      showToast('🎉 Undangan aktif!', 'success');
+    } else if (status === 'rejected') {
+      pill.innerHTML = `<span style="font-size:14px;">❌</span> <span>Ditolak</span>`;
+      detail.innerHTML = 'Pembayaran ditolak owner. Silakan hubungi owner untuk klarifikasi.';
+    }
+  }
+  
+  // ============ CHECK URL FOR EXISTING ORDER ============
+  // Kalau buyer balik lagi dengan ?order=ORD-XXX, langsung ke step 5
+  const urlParams = new URLSearchParams(window.location.search);
+  const existingOrder = urlParams.get('order');
+  if (existingOrder) {
+    currentOrderId = existingOrder;
+    changeStep(5);
+    document.getElementById('orderStatusCard').classList.add('show');
+    document.getElementById('orderIdDisplay').textContent = existingOrder;
+    document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('prevBtn').style.display = 'none';
+    startPolling(existingOrder);
+    
+    // Initial fetch
+    fetch(`${BOT_API_URL}/orders/status/${existingOrder}`)
+      .then(r => r.json())
+      .then(r => { if (r.ok) updateStatusUI(r.status); });
+  }
+</script>
+
+</body>
+</html>
