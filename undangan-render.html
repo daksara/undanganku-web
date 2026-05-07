@@ -3,1326 +3,1759 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Builder Undangan — UndanganKu</title>
+<title>Wedding Invitation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Italiana&family=Allura&family=Cinzel:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Caveat:wght@400;500;600&family=Quicksand:wght@300;400;500;600&family=Marcellus&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   
-  :root {
-    --bg: #0f0d0a;
-    --bg-card: #1a1612;
-    --bg-input: #221d18;
-    --accent: #d4af6c;
-    --accent-bright: #e8c585;
-    --text: #f0e6d2;
-    --text-dim: rgba(240, 230, 210, 0.6);
-    --text-mute: rgba(240, 230, 210, 0.4);
-    --line: rgba(212, 175, 108, 0.18);
-    --success: #6ec789;
-    --danger: #e87a7a;
-  }
-  
-  html, body {
-    background: var(--bg);
-    color: var(--text);
+  body {
     font-family: 'Inter', sans-serif;
-    min-height: 100vh;
+    background: #0d0a08;
+    color: white;
+    overflow-x: hidden;
   }
   
-  .app {
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: var(--bg);
-    padding-bottom: 100px;
-  }
-  
-  /* ============ TOPBAR ============ */
-  .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(15, 13, 10, 0.92);
-    backdrop-filter: blur(16px);
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--line);
+  /* ============ LOADING ============ */
+  #loading {
+    position: fixed;
+    inset: 0;
+    background: #0d0a08;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 19px;
-    letter-spacing: 0.5px;
-  }
-  .logo span { color: var(--accent); }
-  
-  .step-pills {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-  }
-  .pill {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    transition: all 0.3s;
-  }
-  .pill.done { background: var(--accent); }
-  .pill.active {
-    background: var(--accent-bright);
-    width: 22px;
-    border-radius: 4px;
-  }
-  
-  /* ============ STEP CONTAINERS ============ */
-  .step {
-    display: none;
-    padding: 24px 20px;
-    animation: slideIn 0.4s ease;
-  }
-  .step.active { display: block; }
-  
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .step-head {
-    margin-bottom: 24px;
-  }
-  .step-counter {
-    font-family: 'Caveat', cursive;
-    font-size: 18px;
-    color: var(--accent);
-    margin-bottom: 4px;
-  }
-  .step-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    font-weight: 400;
-    line-height: 1.2;
-    margin-bottom: 6px;
-  }
-  .step-subtitle {
-    color: var(--text-dim);
-    font-size: 13px;
-  }
-  
-  /* ============ THEME PICKER ============ */
-  .themes {
-    display: grid;
-    gap: 16px;
-  }
-  
-  .theme-card {
-    background: var(--bg-card);
-    border: 2px solid transparent;
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-  .theme-card.selected {
-    border-color: var(--accent);
-    box-shadow: 0 8px 32px rgba(212, 175, 108, 0.2);
-  }
-  
-  .theme-thumb {
-    height: 180px;
-    position: relative;
-    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-  }
-  
-  /* Royal Classic thumb */
-  .theme-thumb.royal-classic {
-    background: linear-gradient(135deg, #1f1208, #3d2418);
-  }
-  .theme-thumb.royal-classic::before {
-    content: '';
-    position: absolute;
-    inset: 14px;
-    border: 1px solid rgba(212, 175, 108, 0.4);
-  }
-  .theme-thumb.royal-classic .thumb-content {
-    text-align: center;
-    color: #f0e6d2;
-  }
-  .theme-thumb.royal-classic .thumb-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 9px;
-    letter-spacing: 4px;
-    color: #d4af6c;
-    margin-bottom: 6px;
-  }
-  .theme-thumb.royal-classic .thumb-names {
+    z-index: 9999;
+    color: rgba(245, 233, 211, 0.6);
     font-family: 'DM Serif Display', serif;
     font-style: italic;
-    font-size: 28px;
-    line-height: 1;
-  }
-  .theme-thumb.royal-classic .thumb-amp {
-    color: #d4af6c;
-    font-size: 16px;
-    margin: 4px 0;
   }
   
-  /* Sunset Bloom thumb */
-  .theme-thumb.sunset-bloom {
-    background: linear-gradient(135deg, #fef5ed 0%, #fad9c0 50%, #f4a574 100%);
-  }
-  .theme-thumb.sunset-bloom::before {
-    content: '';
-    position: absolute;
-    width: 80px; height: 80px;
+  #loading .spinner {
+    width: 40px; height: 40px;
+    border: 2px solid rgba(212, 175, 108, 0.2);
+    border-top-color: #d4af6c;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.5), transparent);
-    top: -20px; left: -20px;
-  }
-  .theme-thumb.sunset-bloom::after {
-    content: '✿ ✿ ✿';
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    color: #d97c6c;
-    font-size: 12px;
-    letter-spacing: 4px;
-  }
-  .theme-thumb.sunset-bloom .thumb-content {
-    text-align: center;
-    color: #5d3a2e;
-    z-index: 2;
-  }
-  .theme-thumb.sunset-bloom .thumb-label {
-    font-family: 'Caveat', cursive;
-    font-size: 14px;
-    color: #d97c6c;
-    margin-bottom: 4px;
-  }
-  .theme-thumb.sunset-bloom .thumb-names {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 28px;
-    line-height: 1;
-  }
-  .theme-thumb.sunset-bloom .thumb-amp {
-    color: #ec8772;
-    font-size: 22px;
-    margin: 0;
-  }
-  
-  /* Adat Jawa thumb */
-  .theme-thumb.adat-jawa {
-    background: linear-gradient(160deg, #2c1f0e 0%, #4a3520 50%, #2c1f0e 100%);
-    position: relative;
-  }
-  .theme-thumb.adat-jawa::before {
-    content: '';
-    position: absolute;
-    inset: 12px;
-    border: 1px solid rgba(196, 164, 100, 0.35);
-  }
-  .theme-thumb.adat-jawa::after {
-    content: '✦ ✦ ✦';
-    position: absolute;
-    bottom: 18px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(196, 164, 100, 0.5);
-    font-size: 10px;
-    letter-spacing: 6px;
-  }
-  .theme-thumb.adat-jawa .thumb-content {
-    text-align: center;
-    color: #f0e0c0;
-    z-index: 2;
-  }
-  .theme-thumb.adat-jawa .thumb-label {
-    font-size: 8px;
-    letter-spacing: 3px;
-    color: #c4a464;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-  }
-  .theme-thumb.adat-jawa .thumb-names {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 26px;
-    line-height: 1;
-    color: #f0e0c0;
-  }
-  .theme-thumb.adat-jawa .thumb-amp {
-    color: #c4a464;
-    font-size: 14px;
-    margin: 5px 0;
-    letter-spacing: 4px;
-  }
-    padding: 16px 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .theme-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 17px;
-  }
-  .theme-tag {
-    font-size: 10px;
-    color: var(--text-mute);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-  }
-  .theme-card.selected .theme-meta::after {
-    content: '✓';
-    color: var(--accent);
-    font-size: 18px;
-    margin-left: 8px;
-    font-weight: bold;
-  }
-  
-  /* ============ FORM ============ */
-  .form-section {
-    margin-bottom: 28px;
-  }
-  
-  .section-head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--line);
-  }
-  .section-head-icon {
-    font-size: 14px;
-    color: var(--accent);
-  }
-  .section-head-text {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 16px;
-    color: var(--accent-bright);
-  }
-  
-  .form-grid {
-    display: grid;
-    gap: 12px;
-  }
-  .form-grid.cols-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-  
-  label {
-    display: block;
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-weight: 500;
-  }
-  
-  input, textarea, select {
-    width: 100%;
-    padding: 11px 13px;
-    background: var(--bg-input);
-    border: 1px solid var(--line);
-    border-radius: 9px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 13.5px;
-    transition: all 0.2s;
-  }
-  input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--accent);
-    background: rgba(212, 175, 108, 0.05);
-  }
-  textarea { resize: vertical; min-height: 60px; }
-  
-  /* ============ PAKET PICKER ============ */
-  .paket-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-  
-  .paket-card {
-    background: var(--bg-card);
-    border: 2px solid var(--line);
-    border-radius: 12px;
-    padding: 14px 8px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .paket-card.selected {
-    border-color: var(--accent);
-    background: rgba(212, 175, 108, 0.08);
-  }
-  
-  .paket-name {
-    font-size: 11px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 6px;
-  }
-  .paket-price {
-    font-family: 'DM Serif Display', serif;
-    font-size: 18px;
-    color: var(--accent-bright);
-  }
-  .paket-features {
-    font-size: 10px;
-    color: var(--text-mute);
-    margin-top: 4px;
-    line-height: 1.3;
-  }
-  
-  /* ============ PREVIEW ============ */
-  .preview-frame {
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    background: var(--bg-card);
-    margin-bottom: 16px;
-    aspect-ratio: 9/16;
-    max-height: 70vh;
-  }
-  .preview-frame iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-  
-  .preview-cta {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 16px;
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: var(--text-dim);
-  }
-  .preview-cta strong { color: var(--accent-bright); }
-  
-  /* ============ SUMMARY ============ */
-  .summary-card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 20px;
+    animation: spin 0.8s linear infinite;
     margin-bottom: 16px;
   }
-  
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    font-size: 13px;
-  }
-  .summary-row:last-child { border: none; }
-  .summary-row .label { color: var(--text-dim); }
-  .summary-row .value {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    color: var(--text);
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
   
-  .total-row {
-    margin-top: 8px;
-    padding: 14px 0 6px;
-    border-top: 2px solid var(--line);
-    border-bottom: none !important;
-  }
-  .total-row .label {
-    font-size: 14px;
-    color: var(--text);
-    font-weight: 500;
-  }
-  .total-row .value {
-    font-size: 22px;
-    color: var(--accent-bright);
-  }
-  
-  /* ============ ORDER STATUS ============ */
-  .order-status-card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 20px;
-    margin-top: 16px;
+  #loading.hidden {
     display: none;
   }
-  .order-status-card.show { display: block; }
   
-  .order-id {
+  /* ============ ERROR ============ */
+  #error {
+    display: none;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    background: #0d0a08;
+    color: rgba(245, 233, 211, 0.7);
+  }
+  #error.show { display: flex; }
+  #error .icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+  #error .title {
     font-family: 'DM Serif Display', serif;
-    font-size: 16px;
-    color: var(--accent);
-    margin-bottom: 12px;
+    font-size: 24px;
+    color: white;
+    margin-bottom: 8px;
+  }
+  #error .msg {
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 320px;
   }
   
-  .status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: 100px;
+  /* ============ WATERMARK ============ */
+  #watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-size: 100px;
+    font-weight: 900;
+    color: rgba(255, 0, 0, 0.12);
+    pointer-events: none;
+    z-index: 9000;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 12px;
+    display: none;
+  }
+  #watermark.show { display: block; }
+  
+  /* Watermark banner */
+  #preview-banner {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(90deg, rgba(255,80,80,0.95), rgba(255,120,80,0.95));
+    color: white;
+    text-align: center;
+    padding: 8px 16px;
     font-size: 12px;
     font-weight: 500;
-    background: rgba(255, 200, 0, 0.1);
-    color: #fbbf24;
-    border: 1px solid rgba(255, 200, 0, 0.3);
-  }
-  .status-pill.paid {
-    background: rgba(110, 199, 137, 0.12);
-    color: var(--success);
-    border-color: rgba(110, 199, 137, 0.4);
-  }
-  .status-pill.rejected {
-    background: rgba(232, 122, 122, 0.12);
-    color: var(--danger);
-    border-color: rgba(232, 122, 122, 0.4);
-  }
-  
-  .pulse {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: currentColor;
-    animation: pulse 1.5s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.3); }
-  }
-  
-  /* ============ PAYMENT ============ */
-  .bank-card-mini {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .bank-card-mini-info {
-    flex: 1;
-  }
-  .bank-card-mini-name {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 2px;
-  }
-  .bank-card-mini-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 17px;
-    color: var(--accent-bright);
+    z-index: 8000;
     letter-spacing: 1px;
   }
-  .copy-mini {
-    background: rgba(212, 175, 108, 0.1);
-    color: var(--accent);
-    border: 1px solid var(--line);
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 10px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
+  #preview-banner.show { display: block; }
   
-  /* ============ NAV BUTTONS ============ */
-  .nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    padding: 14px 20px 18px;
-    background: linear-gradient(to top, var(--bg) 75%, transparent);
-    display: flex;
-    gap: 10px;
-    z-index: 50;
+  /* ============ CONTAINER ============ */
+  #invitation-root {
+    display: none;
   }
-  
-  .btn {
-    flex: 1;
-    padding: 14px;
-    border-radius: 10px;
-    border: none;
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
-    font-size: 13.5px;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.5px;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent), #b8951f);
-    color: var(--bg);
-  }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(212, 175, 108, 0.3);
-  }
-  .btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
-  .btn-ghost {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text);
-    border: 1px solid var(--line);
-  }
-  
-  /* ============ TOAST ============ */
-  .toast {
-    position: fixed;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-200%);
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    padding: 12px 20px;
-    border-radius: 100px;
-    font-size: 13px;
-    z-index: 200;
-    transition: transform 0.4s;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  }
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-  }
-  .toast.success { border-color: var(--success); color: var(--success); }
-  .toast.error { border-color: var(--danger); color: var(--danger); }
+  #invitation-root.show { display: block; }
 </style>
 </head>
 <body>
 
-<div class="app">
-  <div class="topbar">
-    <div class="logo">Undangan<span>Ku</span></div>
-    <div class="step-pills">
-      <div class="pill active" id="pill-1"></div>
-      <div class="pill" id="pill-2"></div>
-      <div class="pill" id="pill-3"></div>
-      <div class="pill" id="pill-4"></div>
-      <div class="pill" id="pill-5"></div>
-    </div>
-  </div>
-  
-  <!-- ===== STEP 1: TEMA ===== -->
-  <div class="step active" id="step-1">
-    <div class="step-head">
-      <div class="step-counter">step 1 of 5</div>
-      <div class="step-title">Pilih Tema</div>
-      <div class="step-subtitle">Pilih desain yang sesuai dengan karakter pernikahanmu</div>
-    </div>
-    
-    <div class="themes">
-      <div class="theme-card selected" data-theme="royal-classic" onclick="selectTheme('royal-classic')">
-        <div class="theme-thumb royal-classic">
-          <div class="thumb-content">
-            <div class="thumb-label">THE WEDDING OF</div>
-            <div class="thumb-names">Andini</div>
-            <div class="thumb-amp">&amp;</div>
-            <div class="thumb-names">Reza</div>
-          </div>
-        </div>
-        <div class="theme-meta">
-          <div>
-            <div class="theme-name">Royal Classic</div>
-            <div class="theme-tag">Mewah · Elegan · Formal</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="theme-card" data-theme="sunset-bloom" onclick="selectTheme('sunset-bloom')">
-        <div class="theme-thumb sunset-bloom">
-          <div class="thumb-content">
-            <div class="thumb-label">happily ever after</div>
-            <div class="thumb-names">Andini</div>
-            <div class="thumb-amp">&amp;</div>
-            <div class="thumb-names">Reza</div>
-          </div>
-        </div>
-        <div class="theme-meta">
-          <div>
-            <div class="theme-name">Sunset Bloom</div>
-            <div class="theme-tag">Hangat · Romantis · Soft</div>
-          </div>
-        </div>
-      </div>
-      <div class="theme-card" data-theme="adat-jawa" onclick="selectTheme('adat-jawa')">
-        <div class="theme-thumb adat-jawa">
-          <div class="thumb-content">
-            <div class="thumb-label">Ing Salira Kula</div>
-            <div class="thumb-names">Andini</div>
-            <div class="thumb-amp">❧</div>
-            <div class="thumb-names">Reza</div>
-          </div>
-        </div>
-        <div class="theme-meta">
-          <div>
-            <div class="theme-name">Adat Jawa</div>
-            <div class="theme-tag">Klasik · Tradisional · Elegan</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="step" id="step-2">
-    <div class="step-head">
-      <div class="step-counter">step 2 of 5</div>
-      <div class="step-title">Data Undangan</div>
-      <div class="step-subtitle">Lengkapi semua data agar undangan jadi sempurna</div>
-    </div>
-    
-    <!-- Mempelai -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">👰🤵</span>
-        <span class="section-head-text">Mempelai</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>Nama Lengkap Mempelai Wanita</label>
-          <input type="text" id="brideName" placeholder="Andini Putri Maharani" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Panggilan</label>
-          <input type="text" id="brideNick" placeholder="Andini" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Putri ke-berapa</label>
-          <input type="text" id="brideOrder" placeholder="Putri pertama dari" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Nama Ayah Mempelai Wanita</label>
-          <input type="text" id="brideFather" placeholder="Bapak H. Bambang Wijaya" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Nama Ibu Mempelai Wanita</label>
-          <input type="text" id="brideMother" placeholder="Ibu Hj. Sri Wahyuni" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Instagram Mempelai Wanita (opsional)</label>
-          <input type="text" id="brideIG" placeholder="@andiniputri" oninput="updatePreview()">
-        </div>
-        
-        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
-        
-        <div>
-          <label>Nama Lengkap Mempelai Pria</label>
-          <input type="text" id="groomName" placeholder="Reza Pratama Adiputra" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Panggilan</label>
-          <input type="text" id="groomNick" placeholder="Reza" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Putra ke-berapa</label>
-          <input type="text" id="groomOrder" placeholder="Putra kedua dari" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Nama Ayah Mempelai Pria</label>
-          <input type="text" id="groomFather" placeholder="Bapak Drs. Hendra Adiputra" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Nama Ibu Mempelai Pria</label>
-          <input type="text" id="groomMother" placeholder="Ibu Dra. Siti Nurhayati" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Instagram Mempelai Pria (opsional)</label>
-          <input type="text" id="groomIG" placeholder="@rezapratama" oninput="updatePreview()">
-        </div>
-      </div>
-    </div>
-    
-    <!-- Acara -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">📅</span>
-        <span class="section-head-text">Akad &amp; Resepsi</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>Tanggal Pernikahan</label>
-          <input type="date" id="weddingDate" oninput="updatePreview()">
-        </div>
-        
-        <div class="form-grid cols-2">
-          <div>
-            <label>Akad Mulai</label>
-            <input type="time" id="akadStart" value="08:00" oninput="updatePreview()">
-          </div>
-          <div>
-            <label>Akad Selesai</label>
-            <input type="time" id="akadEnd" value="10:00" oninput="updatePreview()">
-          </div>
-        </div>
-        
-        <div>
-          <label>Tempat Akad</label>
-          <input type="text" id="akadVenue" placeholder="Masjid Istiqlal" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Alamat Akad</label>
-          <textarea id="akadAddress" placeholder="Jl. Taman Wijaya Kusuma, Jakarta Pusat" oninput="updatePreview()"></textarea>
-        </div>
-        <div>
-          <label>Link Maps Akad (opsional)</label>
-          <input type="text" id="akadMaps" placeholder="https://maps.google.com/..." oninput="updatePreview()">
-        </div>
-        
-        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
-        
-        <div class="form-grid cols-2">
-          <div>
-            <label>Resepsi Mulai</label>
-            <input type="time" id="resepsiStart" value="11:00" oninput="updatePreview()">
-          </div>
-          <div>
-            <label>Resepsi Selesai</label>
-            <input type="time" id="resepsiEnd" value="15:00" oninput="updatePreview()">
-          </div>
-        </div>
-        
-        <div>
-          <label>Tempat Resepsi</label>
-          <input type="text" id="resepsiVenue" placeholder="Hotel Mulia Ballroom" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Alamat Resepsi</label>
-          <textarea id="resepsiAddress" placeholder="Jl. Asia Afrika No.8, Senayan, Jakarta" oninput="updatePreview()"></textarea>
-        </div>
-        <div>
-          <label>Link Maps Resepsi (opsional)</label>
-          <input type="text" id="resepsiMaps" placeholder="https://maps.google.com/..." oninput="updatePreview()">
-        </div>
-      </div>
-    </div>
-    
-    <!-- Ayat & Quote -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">📖</span>
-        <span class="section-head-text">Ayat / Quote</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>Tulisan Arab (opsional)</label>
-          <textarea id="quoteArabic" placeholder="وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا" oninput="updatePreview()"></textarea>
-        </div>
-        <div>
-          <label>Terjemahan / Quote</label>
-          <textarea id="quoteText" placeholder="Dan di antara tanda-tanda kekuasaan-Nya..." oninput="updatePreview()"></textarea>
-        </div>
-        <div>
-          <label>Sumber</label>
-          <input type="text" id="quoteSource" placeholder="QS. Ar-Rum : 21" oninput="updatePreview()">
-        </div>
-      </div>
-    </div>
-    
-    <!-- Hadiah / Amplop -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">💝</span>
-        <span class="section-head-text">Hadiah Pernikahan</span>
-      </div>
-      
-      <div class="form-grid">
-        <div class="form-grid cols-2">
-          <div>
-            <label>Bank 1</label>
-            <input type="text" id="bank1Name" placeholder="BCA" oninput="updatePreview()">
-          </div>
-          <div>
-            <label>No. Rekening 1</label>
-            <input type="text" id="bank1Num" placeholder="1234567890" oninput="updatePreview()">
-          </div>
-        </div>
-        <div>
-          <label>Atas Nama 1</label>
-          <input type="text" id="bank1Holder" placeholder="Andini Putri" oninput="updatePreview()">
-        </div>
-        
-        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
-        
-        <div class="form-grid cols-2">
-          <div>
-            <label>Bank 2 (opsional)</label>
-            <input type="text" id="bank2Name" placeholder="Mandiri" oninput="updatePreview()">
-          </div>
-          <div>
-            <label>No. Rekening 2</label>
-            <input type="text" id="bank2Num" placeholder="9876543210" oninput="updatePreview()">
-          </div>
-        </div>
-        <div>
-          <label>Atas Nama 2</label>
-          <input type="text" id="bank2Holder" placeholder="Reza Pratama" oninput="updatePreview()">
-        </div>
-      </div>
-    </div>
-    
-    <!-- Kontak Pembeli -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">📞</span>
-        <span class="section-head-text">Kontak Pemesan</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>WhatsApp / Telegram untuk dihubungi owner</label>
-          <input type="tel" id="buyerContact" placeholder="08123456789">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- ===== STEP 3: PAKET ===== -->
-  <div class="step" id="step-3">
-    <div class="step-head">
-      <div class="step-counter">step 3 of 5</div>
-      <div class="step-title">Pilih Paket</div>
-      <div class="step-subtitle">Pilih paket yang sesuai kebutuhanmu</div>
-    </div>
-    
-    <div class="paket-grid">
-      <div class="paket-card" data-paket="basic" onclick="selectPaket('basic')">
-        <div class="paket-name">Basic</div>
-        <div class="paket-price">50K</div>
-        <div class="paket-features">3 bulan aktif</div>
-      </div>
-      <div class="paket-card selected" data-paket="premium" onclick="selectPaket('premium')">
-        <div class="paket-name">Premium</div>
-        <div class="paket-price">75K</div>
-        <div class="paket-features">12 bulan aktif</div>
-      </div>
-      <div class="paket-card" data-paket="custom" onclick="selectPaket('custom')">
-        <div class="paket-name">Custom</div>
-        <div class="paket-price">150K</div>
-        <div class="paket-features">Selamanya + custom domain</div>
-      </div>
-    </div>
-    
-    <div class="preview-cta">
-      💡 <strong>Semua paket termasuk:</strong> Tema yang dipilih, halaman pribadi dengan link unik, RSVP, ucapan tamu, countdown, dan amplop digital. Watermark hilang setelah pembayaran terkonfirmasi.
-    </div>
-  </div>
-  
-  <!-- ===== STEP 4: PREVIEW ===== -->
-  <div class="step" id="step-4">
-    <div class="step-head">
-      <div class="step-counter">step 4 of 5</div>
-      <div class="step-title">Preview Undangan</div>
-      <div class="step-subtitle">Begini tampilan undangan kamu nanti</div>
-    </div>
-    
-    <div class="preview-cta">
-      📱 Geser ke bawah di dalam frame untuk melihat seluruh halaman undangan. Klik "Buka Undangan" untuk masuk.
-    </div>
-    
-    <div class="preview-frame">
-      <iframe id="previewFrame" src="about:blank"></iframe>
-    </div>
-  </div>
-  
-  <!-- ===== STEP 5: BAYAR ===== -->
-  <div class="step" id="step-5">
-    <div class="step-head">
-      <div class="step-counter">step 5 of 5</div>
-      <div class="step-title">Pemesanan</div>
-      <div class="step-subtitle">Selesaikan pembayaran untuk aktivasi undangan</div>
-    </div>
-    
-    <div class="summary-card">
-      <div class="summary-row">
-        <span class="label">Tema</span>
-        <span class="value" id="sumTheme">Royal Classic</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Mempelai</span>
-        <span class="value" id="sumNames">— & —</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Tanggal</span>
-        <span class="value" id="sumDate">—</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Paket</span>
-        <span class="value" id="sumPaket">Premium</span>
-      </div>
-      <div class="summary-row total-row">
-        <span class="label">Total Pembayaran</span>
-        <span class="value" id="sumTotal">Rp 75.000</span>
-      </div>
-    </div>
-    
-    <div class="section-head" style="margin-top: 24px;">
-      <span class="section-head-icon">💳</span>
-      <span class="section-head-text">Transfer ke Rekening</span>
-    </div>
-    
-    <div class="bank-card-mini">
-      <div class="bank-card-mini-info">
-        <div class="bank-card-mini-name">BCA · a.n. Owner</div>
-        <div class="bank-card-mini-num">1234 5678 90</div>
-      </div>
-      <button class="copy-mini" onclick="copy('1234567890', this)">SALIN</button>
-    </div>
-    
-    <div class="bank-card-mini">
-      <div class="bank-card-mini-info">
-        <div class="bank-card-mini-name">Mandiri · a.n. Owner</div>
-        <div class="bank-card-mini-num">9876 5432 10</div>
-      </div>
-      <button class="copy-mini" onclick="copy('9876543210', this)">SALIN</button>
-    </div>
-    
-    <div class="preview-cta" style="margin-top: 16px;">
-      ⚠️ <strong>Cara pesan:</strong> (1) Transfer sesuai nominal di atas, (2) Klik tombol "Pesan Sekarang" di bawah, (3) Owner akan dapat notifikasi via Telegram lengkap dengan data pesananmu, (4) Setelah konfirmasi, link undangan otomatis aktif tanpa watermark.
-    </div>
-    
-    <div class="order-status-card" id="orderStatusCard">
-      <div class="order-id">📋 <span id="orderIdDisplay">—</span></div>
-      <div id="statusPillContainer">
-        <span class="status-pill" id="statusPill">
-          <span class="pulse"></span>
-          <span id="statusText">Menunggu konfirmasi owner...</span>
-        </span>
-      </div>
-      <div id="statusDetail" style="margin-top: 12px; font-size: 12px; color: var(--text-dim); line-height: 1.6;"></div>
-    </div>
-  </div>
-  
-  <!-- ===== NAV BUTTONS ===== -->
-  <div class="nav">
-    <button class="btn btn-ghost" id="prevBtn" onclick="prevStep()" style="display:none;">← Kembali</button>
-    <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Lanjut →</button>
-  </div>
+<div id="loading">
+  <div class="spinner"></div>
+  <div>Memuat undangan...</div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div id="error">
+  <div class="icon">⚠️</div>
+  <div class="title" id="errTitle">Undangan tidak ditemukan</div>
+  <div class="msg" id="errMsg">Pastikan link yang kamu buka benar.</div>
+</div>
+
+<div id="preview-banner">⚠️ MODE PREVIEW — Pembayaran belum dikonfirmasi</div>
+<div id="watermark">PREVIEW</div>
+<div id="invitation-root"></div>
 
 <script>
-  // ============ KONFIGURASI ============
   // GANTI dengan URL Cloudflare Worker bot kamu
   const BOT_API_URL = 'https://telegram-bot.daksara-dev.workers.dev';
   
-  // URL halaman render undangan publik (file undangan-render.html)
-  const RENDER_URL = './undangan-render.html';
+  // ============ INIT ============
+  async function init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('id');
+
+    // Mode 1: Preview via postMessage dari builder (iframe)
+    window.addEventListener('message', (event) => {
+      if (event.data?.type === 'PREVIEW_DATA') {
+        document.getElementById('loading').classList.add('hidden');
+        renderInvitation(event.data.payload);
+      }
+    });
+
+    // Mode 2: Preview lama via hash (fallback)
+    if (window.location.hash) {
+      try {
+        const previewData = JSON.parse(decodeURIComponent(window.location.hash.slice(1)));
+        renderInvitation(previewData);
+        return;
+      } catch (e) {
+        // Ignore, fall through
+      }
+    }
+
+    // Mode 3: Fetch dari bot via order ID
+    if (!orderId) {
+      // Tidak ada orderId dan bukan preview — tunggu postMessage dari builder
+      // Sembunyikan loading, tampil blank sampai postMessage datang
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BOT_API_URL}/orders/data/${orderId}`);
+      const result = await response.json();
+
+      if (!result.ok) {
+        showError(
+          result.error === 'Order not found' ? 'Undangan tidak ditemukan' : 'Akses ditolak',
+          result.error
+        );
+        return;
+      }
+
+      renderInvitation(result);
+    } catch (err) {
+      showError('Gagal memuat', 'Periksa koneksi internet kamu, atau hubungi owner.');
+    }
+  }
   
-  // ============ STATE ============
-  let currentStep = 1;
-  let selectedTheme = 'royal-classic';
-  let selectedPaket = 'premium';
-  let currentOrderId = null;
-  let pollingInterval = null;
+  function showError(title, msg) {
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('errTitle').textContent = title;
+    document.getElementById('errMsg').textContent = msg;
+    document.getElementById('error').classList.add('show');
+  }
   
-  const PRICES = { basic: 50000, premium: 75000, custom: 150000 };
-  const PAKET_LABEL = { basic: 'Basic', premium: 'Premium', custom: 'Custom' };
-  const TEMA_LABEL = {
-    'royal-classic': 'Royal Classic',
-    'sunset-bloom': 'Sunset Bloom',
-    'adat-jawa': 'Adat Jawa',
+  function renderInvitation({ theme, isPreview, data, watermark }) {
+    const html = theme === 'sunset-bloom' 
+      ? renderSunsetBloom(data)
+      : theme === 'adat-jawa'
+      ? renderAdatJawa(data)
+      : renderRoyalClassic(data);
+    
+    document.getElementById('invitation-root').innerHTML = html;
+    document.getElementById('invitation-root').classList.add('show');
+    
+    if (isPreview || watermark) {
+      document.getElementById('watermark').classList.add('show');
+      document.getElementById('preview-banner').classList.add('show');
+      document.body.style.paddingTop = '34px';
+    }
+    
+    document.getElementById('loading').classList.add('hidden');
+    
+    // Init scripts setelah render
+    setTimeout(() => {
+      initInvitationScripts(data);
+      // Hanya load RSVP kalau status paid (bukan preview)
+      if (!isPreview && !watermark) {
+        const orderId = new URLSearchParams(window.location.search).get('id');
+        if (orderId) initRsvp(orderId, theme);
+      }
+    }, 100);
+  }
+  
+  function initInvitationScripts(data) {
+    // Countdown
+    if (data.weddingDate) {
+      const target = new Date(`${data.weddingDate}T${data.akadStart || '08:00'}:00+07:00`).getTime();
+      
+      const update = () => {
+        const diff = target - Date.now();
+        if (diff < 0) return;
+        
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        
+        document.querySelectorAll('[data-cd="d"]').forEach(el => el.textContent = String(d).padStart(2, '0'));
+        document.querySelectorAll('[data-cd="h"]').forEach(el => el.textContent = String(h).padStart(2, '0'));
+        document.querySelectorAll('[data-cd="m"]').forEach(el => el.textContent = String(m).padStart(2, '0'));
+        document.querySelectorAll('[data-cd="s"]').forEach(el => el.textContent = String(s).padStart(2, '0'));
+      };
+      
+      setInterval(update, 1000);
+      update();
+    }
+    
+    // Open invitation
+    const openBtn = document.querySelector('[data-action="open"]');
+    if (openBtn) {
+      openBtn.addEventListener('click', () => {
+        document.body.classList.remove('locked');
+        setTimeout(() => {
+          window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+        }, 100);
+      });
+    }
+    
+    document.body.classList.add('locked');
+    
+    // Fade in observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  }
+  
+  // ============ RENDER ROYAL CLASSIC ============
+  function renderRoyalClassic(d) {
+    const date = formatDate(d.weddingDate);
+    const brideShort = d.brideNick || (d.brideName || '').split(' ')[0] || 'Mempelai Wanita';
+    const groomShort = d.groomNick || (d.groomName || '').split(' ')[0] || 'Mempelai Pria';
+    
+    return `
+<style>
+  body.theme-royal {
+    background: #0d0a08;
+    color: #f0e6d2;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  body.theme-royal.locked .invitation > *:not(.cover) { display: none; }
+  body.theme-royal.locked { overflow: hidden; height: 100vh; }
+  
+  body.theme-royal .invitation {
+    max-width: 480px; margin: 0 auto;
+    background: #0d0a08;
+    position: relative; overflow: hidden;
+  }
+  
+  body.theme-royal .cover {
+    height: 100vh; min-height: 700px;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 40px 30px;
+    background: 
+      radial-gradient(ellipse at top, rgba(212,175,108,0.15), transparent 60%),
+      linear-gradient(180deg, #1a1208, #0d0a08, #1a1208);
+    position: relative; overflow: hidden;
+  }
+  body.theme-royal .cover::before {
+    content: ''; position: absolute; inset: 24px;
+    border: 1px solid rgba(212,175,108,0.25); pointer-events: none;
+  }
+  body.theme-royal .cover-label {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 6px;
+    color: #d4af6c; margin-bottom: 24px;
+  }
+  body.theme-royal .cover-names {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 56px; line-height: 1; margin: 6px 0;
+  }
+  body.theme-royal .cover-amp {
+    font-family: 'Allura', cursive; font-size: 80px;
+    color: #d4af6c; line-height: 0.4; margin: 12px 0;
+  }
+  body.theme-royal .cover-date {
+    margin-top: 32px; padding: 14px 24px;
+    border-top: 1px solid rgba(212,175,108,0.25);
+    border-bottom: 1px solid rgba(212,175,108,0.25);
+    font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 4px;
+    color: #d4af6c; display: inline-block;
+  }
+  body.theme-royal .open-btn {
+    margin-top: 36px; padding: 14px 36px;
+    background: linear-gradient(135deg, #d4af6c, #b8951f);
+    color: #0d0a08; border: none;
+    font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 4px;
+    cursor: pointer; border-radius: 2px;
+    box-shadow: 0 4px 20px rgba(212,175,108,0.3);
+  }
+  
+  body.theme-royal section {
+    padding: 80px 30px; text-align: center; position: relative;
+  }
+  body.theme-royal .section-tag {
+    color: #d4af6c; font-size: 14px; letter-spacing: 8px;
+    margin-bottom: 12px; opacity: 0.7;
+  }
+  body.theme-royal .section-title {
+    font-family: 'Italiana', serif; font-size: 30px;
+    letter-spacing: 4px; margin-bottom: 8px;
+  }
+  body.theme-royal .section-subtitle {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    color: rgba(245,233,211,0.6); font-size: 15px; margin-bottom: 28px;
+  }
+  
+  body.theme-royal .quote-section {
+    background: linear-gradient(180deg, #0d0a08, #15100a, #0d0a08);
+    padding: 100px 40px;
+  }
+  body.theme-royal .quote-arabic {
+    font-size: 28px; line-height: 1.8; color: #e8c585;
+    direction: rtl; margin-bottom: 24px;
+  }
+  body.theme-royal .quote-text {
+    font-style: italic; font-size: 16px; line-height: 1.8;
+    color: rgba(245,233,211,0.7); max-width: 380px; margin: 0 auto 16px;
+  }
+  body.theme-royal .quote-source {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px;
+    color: #d4af6c;
+  }
+  
+  body.theme-royal .person {
+    margin-bottom: 50px;
+  }
+  body.theme-royal .person-photo {
+    width: 200px; height: 200px; margin: 0 auto 20px;
+    border-radius: 50%; padding: 6px;
+    background: linear-gradient(135deg, #2c1f12, #1a1208);
+    border: 2px solid #d4af6c;
+  }
+  body.theme-royal .person-photo-inner {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: linear-gradient(135deg, #3a2818, #1a1208);
+    display: flex; align-items: center; justify-content: center;
+    color: #d4af6c; font-family: 'Allura', cursive; font-size: 80px;
+  }
+  body.theme-royal .person-label {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px;
+    color: #d4af6c; margin-bottom: 10px;
+  }
+  body.theme-royal .person-name {
+    font-style: italic; font-size: 32px; line-height: 1.1; margin-bottom: 8px;
+  }
+  body.theme-royal .person-fullname {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px;
+    color: rgba(245,233,211,0.5); margin-bottom: 14px;
+  }
+  body.theme-royal .person-parents {
+    font-style: italic; font-size: 14px; line-height: 1.6;
+    color: rgba(245,233,211,0.7); max-width: 320px; margin: 0 auto;
+  }
+  body.theme-royal .couple-divider .amp {
+    font-family: 'Allura', cursive; font-size: 64px; color: #d4af6c;
+  }
+  
+  body.theme-royal .countdown {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; max-width: 380px; margin: 24px auto 0;
+  }
+  body.theme-royal .countdown-item {
+    background: linear-gradient(180deg, rgba(212,175,108,0.08), transparent);
+    border: 1px solid rgba(212,175,108,0.25); padding: 16px 8px;
+  }
+  body.theme-royal .countdown-num {
+    font-family: 'Italiana', serif; font-size: 32px; color: #e8c585;
+  }
+  body.theme-royal .countdown-label {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
+    color: rgba(245,233,211,0.6); text-transform: uppercase;
+  }
+  
+  body.theme-royal .event-card {
+    background: linear-gradient(180deg, rgba(212,175,108,0.04), transparent);
+    border: 1px solid rgba(212,175,108,0.25); padding: 32px 24px;
+    margin-bottom: 24px;
+  }
+  body.theme-royal .event-icon { color: #d4af6c; font-size: 28px; margin-bottom: 12px; }
+  body.theme-royal .event-name {
+    font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 4px;
+    color: #d4af6c; margin-bottom: 16px;
+  }
+  body.theme-royal .event-date {
+    font-family: 'Italiana', serif; font-size: 26px; margin: 8px 0;
+  }
+  body.theme-royal .event-time {
+    font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 3px;
+    color: #e8c585; margin: 12px 0; padding: 8px 0;
+    border-top: 1px solid rgba(212,175,108,0.25);
+    border-bottom: 1px solid rgba(212,175,108,0.25);
+  }
+  body.theme-royal .event-venue { font-size: 15px; margin-top: 12px; line-height: 1.5; }
+  body.theme-royal .event-address {
+    font-style: italic; font-size: 13px; color: rgba(245,233,211,0.6);
+    margin-top: 6px; line-height: 1.5;
+  }
+  body.theme-royal .map-btn {
+    display: inline-block; margin-top: 14px; padding: 9px 22px;
+    border: 1px solid #d4af6c; color: #d4af6c;
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px;
+    text-decoration: none;
+  }
+  
+  body.theme-royal .bank-card {
+    background: linear-gradient(135deg, #2c1f12, #1a1208);
+    border: 1px solid rgba(212,175,108,0.25); border-radius: 8px;
+    padding: 24px; margin-bottom: 14px;
+  }
+  body.theme-royal .bank-name {
+    font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 3px;
+    color: #d4af6c; margin-bottom: 14px;
+  }
+  body.theme-royal .bank-number {
+    font-family: 'Marcellus', serif; font-size: 22px;
+    letter-spacing: 2px; margin-bottom: 6px;
+  }
+  body.theme-royal .bank-holder {
+    font-style: italic; font-size: 13px; color: rgba(245,233,211,0.6);
+    margin-bottom: 12px;
+  }
+  body.theme-royal .copy-btn {
+    background: rgba(212,175,108,0.15); color: #d4af6c;
+    border: 1px solid rgba(212,175,108,0.3); padding: 7px 14px;
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px;
+    cursor: pointer;
+  }
+  
+  body.theme-royal .footer {
+    padding: 80px 30px 60px; text-align: center;
+    border-top: 1px solid rgba(212,175,108,0.25);
+  }
+  body.theme-royal .footer-thanks {
+    font-family: 'Italiana', serif; font-size: 26px; letter-spacing: 4px;
+    margin-bottom: 16px;
+  }
+  body.theme-royal .footer-message {
+    font-style: italic; font-size: 14px; line-height: 1.7;
+    color: rgba(245,233,211,0.6); max-width: 320px; margin: 0 auto 28px;
+  }
+  body.theme-royal .footer-couple {
+    font-family: 'Allura', cursive; font-size: 38px; color: #d4af6c;
+  }
+  
+  body.theme-royal .fade-in {
+    opacity: 0; transform: translateY(20px); transition: all 0.8s ease;
+  }
+  body.theme-royal .fade-in.visible {
+    opacity: 1; transform: translateY(0);
+  }
+</style>
+
+<div class="invitation">
+  <section class="cover">
+    <div style="position:relative; z-index:2;">
+      <div style="color:#d4af6c; font-size:16px; letter-spacing:8px; margin-bottom:16px;">✦ ✦ ✦</div>
+      <div class="cover-label">THE WEDDING OF</div>
+      <div class="cover-names">${esc(brideShort)}</div>
+      <div class="cover-amp">&amp;</div>
+      <div class="cover-names">${esc(groomShort)}</div>
+      <div class="cover-date">${date.formatted}</div>
+      <div style="margin-top: 36px;">
+        <button class="open-btn" data-action="open">BUKA UNDANGAN</button>
+      </div>
+    </div>
+  </section>
+  
+  ${d.quoteText || d.quoteArabic ? `
+  <section class="quote-section fade-in">
+    ${d.quoteArabic ? `<div class="quote-arabic">${esc(d.quoteArabic)}</div>` : ''}
+    ${d.quoteText ? `<p class="quote-text">"${esc(d.quoteText)}"</p>` : ''}
+    ${d.quoteSource ? `<div class="quote-source">— ${esc(d.quoteSource)} —</div>` : ''}
+  </section>
+  ` : ''}
+  
+  <section class="fade-in">
+    <div class="section-tag">— ✦ —</div>
+    <h2 class="section-title">The Bride &amp; Groom</h2>
+    <p class="section-subtitle">Dengan memohon rahmat dan ridha Tuhan</p>
+    
+    <div class="person">
+      <div class="person-photo">
+        <div class="person-photo-inner">${(d.brideName || 'A')[0].toUpperCase()}</div>
+      </div>
+      <div class="person-label">THE BRIDE</div>
+      <div class="person-name">${esc(d.brideName || 'Mempelai Wanita')}</div>
+      ${d.brideOrder ? `<div class="person-fullname">${esc(d.brideOrder.toUpperCase())}</div>` : ''}
+      ${d.brideFather || d.brideMother ? `
+        <div class="person-parents">
+          ${esc(d.brideFather || '')}<br>
+          ${d.brideFather && d.brideMother ? '&amp;<br>' : ''}
+          ${esc(d.brideMother || '')}
+        </div>
+      ` : ''}
+    </div>
+    
+    <div class="couple-divider"><div class="amp">&amp;</div></div>
+    
+    <div class="person">
+      <div class="person-photo">
+        <div class="person-photo-inner">${(d.groomName || 'R')[0].toUpperCase()}</div>
+      </div>
+      <div class="person-label">THE GROOM</div>
+      <div class="person-name">${esc(d.groomName || 'Mempelai Pria')}</div>
+      ${d.groomOrder ? `<div class="person-fullname">${esc(d.groomOrder.toUpperCase())}</div>` : ''}
+      ${d.groomFather || d.groomMother ? `
+        <div class="person-parents">
+          ${esc(d.groomFather || '')}<br>
+          ${d.groomFather && d.groomMother ? '&amp;<br>' : ''}
+          ${esc(d.groomMother || '')}
+        </div>
+      ` : ''}
+    </div>
+  </section>
+  
+  ${d.weddingDate ? `
+  <section class="fade-in">
+    <div class="section-tag">— ✦ —</div>
+    <h2 class="section-title">Counting Down</h2>
+    
+    <div class="countdown">
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="d">00</div>
+        <div class="countdown-label">Hari</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="h">00</div>
+        <div class="countdown-label">Jam</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="m">00</div>
+        <div class="countdown-label">Menit</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="s">00</div>
+        <div class="countdown-label">Detik</div>
+      </div>
+    </div>
+  </section>
+  ` : ''}
+  
+  <section class="fade-in">
+    <div class="section-tag">— ✦ —</div>
+    <h2 class="section-title">Save The Date</h2>
+    <p class="section-subtitle">Dengan penuh syukur, kami mengundang Anda</p>
+    
+    ${d.akadVenue ? `
+    <div class="event-card">
+      <div class="event-icon">۞</div>
+      <div class="event-name">AKAD NIKAH</div>
+      <div style="font-style:italic; font-size:14px; color:rgba(245,233,211,0.7);">${date.day}</div>
+      <div class="event-date">${date.formatted}</div>
+      <div class="event-time">${esc(d.akadStart)} — ${esc(d.akadEnd)} WIB</div>
+      <div class="event-venue"><strong>${esc(d.akadVenue)}</strong></div>
+      <div class="event-address">${esc(d.akadAddress || '').replace(/\n/g, '<br>')}</div>
+      ${d.akadMaps ? `<a href="${esc(d.akadMaps)}" target="_blank" class="map-btn">LIHAT LOKASI</a>` : ''}
+    </div>
+    ` : ''}
+    
+    ${d.resepsiVenue ? `
+    <div class="event-card">
+      <div class="event-icon">❀</div>
+      <div class="event-name">RESEPSI</div>
+      <div style="font-style:italic; font-size:14px; color:rgba(245,233,211,0.7);">${date.day}</div>
+      <div class="event-date">${date.formatted}</div>
+      <div class="event-time">${esc(d.resepsiStart)} — ${esc(d.resepsiEnd)} WIB</div>
+      <div class="event-venue"><strong>${esc(d.resepsiVenue)}</strong></div>
+      <div class="event-address">${esc(d.resepsiAddress || '').replace(/\n/g, '<br>')}</div>
+      ${d.resepsiMaps ? `<a href="${esc(d.resepsiMaps)}" target="_blank" class="map-btn">LIHAT LOKASI</a>` : ''}
+    </div>
+    ` : ''}
+  </section>
+  
+  ${d.bank1Num || d.bank2Num ? `
+  <section class="fade-in">
+    <div class="section-tag">— ✦ —</div>
+    <h2 class="section-title">Wedding Gift</h2>
+    <p class="section-subtitle">Amplop Digital — doa restu adalah hadiah terindah</p>
+    
+    ${d.bank1Num ? `
+    <div class="bank-card">
+      <div class="bank-name">— ${esc(d.bank1Name)} —</div>
+      <div class="bank-number">${formatBank(d.bank1Num)}</div>
+      <div class="bank-holder">a.n. ${esc(d.bank1Holder || '')}</div>
+      <button class="copy-btn" onclick="copyText('${d.bank1Num}', this)">SALIN NOMOR</button>
+    </div>
+    ` : ''}
+    
+    ${d.bank2Num ? `
+    <div class="bank-card">
+      <div class="bank-name">— ${esc(d.bank2Name)} —</div>
+      <div class="bank-number">${formatBank(d.bank2Num)}</div>
+      <div class="bank-holder">a.n. ${esc(d.bank2Holder || '')}</div>
+      <button class="copy-btn" onclick="copyText('${d.bank2Num}', this)">SALIN NOMOR</button>
+    </div>
+    ` : ''}
+  </section>
+  ` : ''}
+  
+  <footer class="footer">
+    <div style="color:#d4af6c; font-size:14px; letter-spacing:8px; opacity:0.7; margin-bottom:24px;">✦  ❀  ✦</div>
+    <h2 class="footer-thanks">Terima Kasih</h2>
+    <p class="footer-message">
+      Merupakan suatu kehormatan dan kebahagiaan apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kami.
+    </p>
+    <div class="footer-couple">${esc(brideShort)} &amp; ${esc(groomShort)}</div>
+    <div style="font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px; color: #d4af6c;">— BESERTA KELUARGA —</div>
+  </footer>
+</div>
+
+<script>
+  document.body.classList.add('theme-royal');
+  function copyText(t, btn) {
+    navigator.clipboard?.writeText(t);
+    const o = btn.textContent;
+    btn.textContent = '✓ TERSALIN';
+    setTimeout(() => btn.textContent = o, 1200);
+  }
+</script>
+    `;
+  }
+  
+  // ============ RENDER SUNSET BLOOM ============
+  function renderSunsetBloom(d) {
+    const date = formatDate(d.weddingDate);
+    const brideShort = d.brideNick || (d.brideName || '').split(' ')[0] || 'Mempelai Wanita';
+    const groomShort = d.groomNick || (d.groomName || '').split(' ')[0] || 'Mempelai Pria';
+    
+    return `
+<style>
+  body.theme-bloom {
+    background: #fef5ed;
+    color: #5d3a2e;
+    font-family: 'Quicksand', sans-serif;
+  }
+  body.theme-bloom.locked .invitation > *:not(.cover) { display: none; }
+  body.theme-bloom.locked { overflow: hidden; height: 100vh; }
+  
+  body.theme-bloom .invitation {
+    max-width: 480px; margin: 0 auto;
+    background: #fef5ed;
+    position: relative; overflow: hidden;
+  }
+  
+  body.theme-bloom .cover {
+    height: 100vh; min-height: 700px;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 40px 30px;
+    background: 
+      radial-gradient(ellipse at 30% 20%, rgba(245,179,148,0.5), transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(232,168,158,0.4), transparent 50%),
+      linear-gradient(180deg, #fef5ed, #fde8d5, #fad9c0);
+    position: relative; overflow: hidden;
+  }
+  body.theme-bloom .cover-petal {
+    font-size: 32px; margin-bottom: 8px; color: #ec8772;
+  }
+  body.theme-bloom .cover-label {
+    font-size: 11px; letter-spacing: 6px; color: #d97c6c;
+    margin-bottom: 28px; font-weight: 400;
+  }
+  body.theme-bloom .cover-names {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 56px; line-height: 0.95; color: #5d3a2e;
+  }
+  body.theme-bloom .cover-amp {
+    font-family: 'Allura', cursive; font-size: 80px;
+    color: #ec8772; line-height: 0.5; transform: rotate(-8deg);
+    display: inline-block; margin: 12px 0;
+  }
+  body.theme-bloom .cover-date-divider {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, #d97c6c, transparent);
+    margin: 14px auto;
+  }
+  body.theme-bloom .cover-date {
+    font-family: 'Caveat', cursive; font-weight: 500;
+    font-size: 28px; color: #d97c6c;
+  }
+  body.theme-bloom .open-btn {
+    margin-top: 36px; padding: 14px 36px;
+    background: linear-gradient(135deg, #ec8772, #d97c6c);
+    color: white; border: none;
+    font-weight: 500; font-size: 12px; letter-spacing: 4px;
+    cursor: pointer; border-radius: 100px;
+    box-shadow: 0 8px 24px rgba(217,124,108,0.4);
+  }
+  
+  body.theme-bloom section {
+    padding: 70px 30px; text-align: center;
+  }
+  body.theme-bloom .section-tag {
+    font-family: 'Caveat', cursive; font-size: 22px;
+    color: #ec8772; transform: rotate(-3deg);
+    display: inline-block; margin-bottom: 4px;
+  }
+  body.theme-bloom .section-title {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 32px; color: #5d3a2e; margin-bottom: 10px;
+  }
+  body.theme-bloom .section-subtitle {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    color: #8b6450; font-size: 15px; margin-bottom: 28px;
+  }
+  
+  body.theme-bloom .quote-section {
+    background: linear-gradient(180deg, #fef5ed, #fde8d5);
+  }
+  body.theme-bloom .quote-arabic {
+    font-size: 26px; line-height: 1.9; color: #d97c6c;
+    direction: rtl; margin-bottom: 24px;
+  }
+  body.theme-bloom .quote-text {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 16px; line-height: 1.8; color: #8b6450;
+    max-width: 380px; margin: 0 auto 16px;
+  }
+  body.theme-bloom .quote-source {
+    font-family: 'Caveat', cursive; font-size: 18px; color: #ec8772;
+  }
+  
+  body.theme-bloom .person { margin-bottom: 50px; }
+  body.theme-bloom .person-photo {
+    width: 200px; height: 200px; margin: 0 auto 20px;
+    background: white; padding: 8px; border-radius: 50%;
+    box-shadow: 
+      0 0 0 1px #ec8772, 0 0 0 12px white, 0 0 0 13px #ec8772,
+      0 20px 40px rgba(217,124,108,0.25);
+  }
+  body.theme-bloom .person-photo-inner {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: linear-gradient(135deg, #f5b394, #e8a89e, #ec8772);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-family: 'DM Serif Display', serif;
+    font-style: italic; font-size: 80px;
+  }
+  body.theme-bloom .person-label {
+    font-family: 'Caveat', cursive; font-size: 22px; color: #ec8772;
+    transform: rotate(-2deg); display: inline-block; margin-bottom: 6px;
+  }
+  body.theme-bloom .person-name {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 28px; color: #5d3a2e; line-height: 1.1; margin-bottom: 8px;
+  }
+  body.theme-bloom .person-fullname {
+    font-size: 11px; letter-spacing: 3px; color: #d97c6c; margin-bottom: 14px;
+  }
+  body.theme-bloom .person-parents {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 15px; line-height: 1.6; color: #8b6450;
+    max-width: 320px; margin: 0 auto;
+  }
+  body.theme-bloom .couple-divider .amp {
+    font-family: 'Allura', cursive; font-size: 64px; color: #ec8772;
+    transform: rotate(-8deg); display: inline-block;
+  }
+  
+  body.theme-bloom .countdown-section {
+    background: linear-gradient(180deg, #fde8d5, #fad9c0);
+  }
+  body.theme-bloom .countdown {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; max-width: 380px; margin: 24px auto 0;
+  }
+  body.theme-bloom .countdown-item {
+    background: white; padding: 16px 8px;
+    border-radius: 20px 20px 30px 30px;
+    box-shadow: 0 8px 20px rgba(217,124,108,0.15);
+  }
+  body.theme-bloom .countdown-num {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 32px; color: #ec8772;
+  }
+  body.theme-bloom .countdown-label {
+    font-size: 10px; letter-spacing: 2px; color: #8b6450;
+    text-transform: uppercase;
+  }
+  
+  body.theme-bloom .event-card {
+    background: white; border-radius: 24px; padding: 32px 24px;
+    margin-bottom: 18px; box-shadow: 0 12px 32px rgba(217,124,108,0.12);
+    position: relative;
+  }
+  body.theme-bloom .event-card::before {
+    content: ''; position: absolute; top: 0; left: 30px; right: 30px; height: 4px;
+    background: linear-gradient(90deg, #ec8772, #f4a574, #ec8772);
+    border-radius: 0 0 8px 8px;
+  }
+  body.theme-bloom .event-icon {
+    width: 56px; height: 56px; margin: 0 auto 14px;
+    background: linear-gradient(135deg, #f5b394, #ec8772);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 24px;
+  }
+  body.theme-bloom .event-name {
+    font-family: 'Caveat', cursive; font-size: 28px; color: #ec8772;
+    margin-bottom: 6px;
+  }
+  body.theme-bloom .event-date {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 26px; color: #5d3a2e; margin: 4px 0;
+  }
+  body.theme-bloom .event-time {
+    font-weight: 500; font-size: 12px; letter-spacing: 3px;
+    color: #d97c6c; margin: 14px 0; padding: 10px 0;
+    border-top: 1px dashed rgba(217,124,108,0.3);
+    border-bottom: 1px dashed rgba(217,124,108,0.3);
+  }
+  body.theme-bloom .event-venue {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 20px; color: #5d3a2e; margin-top: 10px;
+  }
+  body.theme-bloom .event-address {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 13px; color: #8b6450; margin-top: 4px; line-height: 1.5;
+  }
+  body.theme-bloom .map-btn {
+    display: inline-block; margin-top: 14px; padding: 9px 22px;
+    background: linear-gradient(135deg, #f5b394, #ec8772);
+    color: white; font-weight: 500; font-size: 11px;
+    letter-spacing: 3px; text-decoration: none; border-radius: 100px;
+  }
+  
+  body.theme-bloom .gift-section {
+    background: linear-gradient(180deg, #fef5ed, #fde8d5);
+  }
+  body.theme-bloom .bank-card {
+    background: linear-gradient(135deg, white, #fef5ed);
+    border-radius: 20px; padding: 24px; margin-bottom: 14px;
+    box-shadow: 0 12px 28px rgba(217,124,108,0.15);
+    position: relative;
+  }
+  body.theme-bloom .bank-card::after {
+    content: '✿'; position: absolute; top: 14px; right: 18px;
+    font-size: 24px; color: #ec8772; opacity: 0.5;
+  }
+  body.theme-bloom .bank-name {
+    font-family: 'Caveat', cursive; font-size: 24px;
+    color: #ec8772; margin-bottom: 10px;
+  }
+  body.theme-bloom .bank-number {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 22px; color: #5d3a2e; margin-bottom: 4px;
+  }
+  body.theme-bloom .bank-holder {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 13px; color: #8b6450; margin-bottom: 12px;
+  }
+  body.theme-bloom .copy-btn {
+    background: linear-gradient(135deg, #f5b394, #ec8772);
+    color: white; border: none; padding: 8px 18px;
+    border-radius: 100px; font-weight: 500; font-size: 10px;
+    letter-spacing: 2px; cursor: pointer;
+  }
+  
+  body.theme-bloom .footer {
+    background: 
+      radial-gradient(ellipse at top, rgba(245,179,148,0.4), transparent 60%),
+      linear-gradient(180deg, #fde8d5, #fef5ed);
+    padding: 70px 30px 50px; text-align: center;
+  }
+  body.theme-bloom .footer-thanks {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 36px; color: #5d3a2e; margin-bottom: 14px;
+  }
+  body.theme-bloom .footer-message {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 15px; line-height: 1.7; color: #8b6450;
+    max-width: 320px; margin: 0 auto 28px;
+  }
+  body.theme-bloom .footer-couple {
+    font-family: 'Allura', cursive; font-size: 46px;
+    color: #ec8772; transform: rotate(-3deg); display: inline-block;
+  }
+  
+  body.theme-bloom .fade-in {
+    opacity: 0; transform: translateY(20px); transition: all 0.8s ease;
+  }
+  body.theme-bloom .fade-in.visible {
+    opacity: 1; transform: translateY(0);
+  }
+</style>
+
+<div class="invitation">
+  <section class="cover">
+    <div style="position:relative; z-index:2;">
+      <div class="cover-petal">✿</div>
+      <div class="cover-label">THE WEDDING OF</div>
+      <div class="cover-names">${esc(brideShort)}</div>
+      <div class="cover-amp">&amp;</div>
+      <div class="cover-names">${esc(groomShort)}</div>
+      <div class="cover-date-divider"></div>
+      <div class="cover-date">— save the date —</div>
+      <div class="cover-date" style="font-size:30px; margin-top:4px;">${date.formatted}</div>
+      <div style="margin-top: 28px;">
+        <button class="open-btn" data-action="open">BUKA UNDANGAN</button>
+      </div>
+    </div>
+  </section>
+  
+  ${d.quoteText || d.quoteArabic ? `
+  <section class="quote-section fade-in">
+    ${d.quoteArabic ? `<div class="quote-arabic">${esc(d.quoteArabic)}</div>` : ''}
+    ${d.quoteText ? `<p class="quote-text">${esc(d.quoteText)}</p>` : ''}
+    ${d.quoteSource ? `<div class="quote-source">— ${esc(d.quoteSource)} —</div>` : ''}
+  </section>
+  ` : ''}
+  
+  <section class="fade-in">
+    <div class="section-tag">happily ever after</div>
+    <h2 class="section-title">The Bride &amp; Groom</h2>
+    <p class="section-subtitle">Dengan memohon rahmat dan ridha Tuhan</p>
+    
+    <div class="person">
+      <div class="person-photo">
+        <div class="person-photo-inner">${(d.brideName || 'A')[0].toUpperCase()}</div>
+      </div>
+      <div class="person-label">the bride</div>
+      <div class="person-name">${esc(d.brideName || 'Mempelai Wanita')}</div>
+      ${d.brideOrder ? `<div class="person-fullname">${esc(d.brideOrder.toUpperCase())}</div>` : ''}
+      ${d.brideFather || d.brideMother ? `
+        <div class="person-parents">
+          ${esc(d.brideFather || '')}<br>
+          ${d.brideFather && d.brideMother ? '&amp;<br>' : ''}
+          ${esc(d.brideMother || '')}
+        </div>
+      ` : ''}
+    </div>
+    
+    <div class="couple-divider"><div class="amp">&amp;</div></div>
+    
+    <div class="person">
+      <div class="person-photo">
+        <div class="person-photo-inner">${(d.groomName || 'R')[0].toUpperCase()}</div>
+      </div>
+      <div class="person-label">the groom</div>
+      <div class="person-name">${esc(d.groomName || 'Mempelai Pria')}</div>
+      ${d.groomOrder ? `<div class="person-fullname">${esc(d.groomOrder.toUpperCase())}</div>` : ''}
+      ${d.groomFather || d.groomMother ? `
+        <div class="person-parents">
+          ${esc(d.groomFather || '')}<br>
+          ${d.groomFather && d.groomMother ? '&amp;<br>' : ''}
+          ${esc(d.groomMother || '')}
+        </div>
+      ` : ''}
+    </div>
+  </section>
+  
+  ${d.weddingDate ? `
+  <section class="countdown-section fade-in">
+    <div class="section-tag">save the date</div>
+    <h2 class="section-title">Counting Down</h2>
+    
+    <div class="countdown">
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="d">00</div>
+        <div class="countdown-label">Hari</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="h">00</div>
+        <div class="countdown-label">Jam</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="m">00</div>
+        <div class="countdown-label">Menit</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="s">00</div>
+        <div class="countdown-label">Detik</div>
+      </div>
+    </div>
+  </section>
+  ` : ''}
+  
+  <section class="fade-in">
+    <div class="section-tag">when &amp; where</div>
+    <h2 class="section-title">Wedding Day</h2>
+    <p class="section-subtitle">Dengan penuh syukur, kami mengundang Anda</p>
+    
+    ${d.akadVenue ? `
+    <div class="event-card">
+      <div class="event-icon">۞</div>
+      <div class="event-name">Akad Nikah</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; color:#8b6450; font-size:14px;">${date.day}</div>
+      <div class="event-date">${date.formatted}</div>
+      <div class="event-time">${esc(d.akadStart)} — ${esc(d.akadEnd)} WIB</div>
+      <div class="event-venue">${esc(d.akadVenue)}</div>
+      <div class="event-address">${esc(d.akadAddress || '').replace(/\n/g, '<br>')}</div>
+      ${d.akadMaps ? `<a href="${esc(d.akadMaps)}" target="_blank" class="map-btn">LIHAT LOKASI</a>` : ''}
+    </div>
+    ` : ''}
+    
+    ${d.resepsiVenue ? `
+    <div class="event-card">
+      <div class="event-icon">✿</div>
+      <div class="event-name">Resepsi</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; color:#8b6450; font-size:14px;">${date.day}</div>
+      <div class="event-date">${date.formatted}</div>
+      <div class="event-time">${esc(d.resepsiStart)} — ${esc(d.resepsiEnd)} WIB</div>
+      <div class="event-venue">${esc(d.resepsiVenue)}</div>
+      <div class="event-address">${esc(d.resepsiAddress || '').replace(/\n/g, '<br>')}</div>
+      ${d.resepsiMaps ? `<a href="${esc(d.resepsiMaps)}" target="_blank" class="map-btn">LIHAT LOKASI</a>` : ''}
+    </div>
+    ` : ''}
+  </section>
+  
+  ${d.bank1Num || d.bank2Num ? `
+  <section class="gift-section fade-in">
+    <div class="section-tag">with love</div>
+    <h2 class="section-title">Wedding Gift</h2>
+    <p class="section-subtitle">Doa restu adalah hadiah terindah</p>
+    
+    ${d.bank1Num ? `
+    <div class="bank-card">
+      <div class="bank-name">${esc(d.bank1Name)}</div>
+      <div class="bank-number">${formatBank(d.bank1Num)}</div>
+      <div class="bank-holder">a.n. ${esc(d.bank1Holder || '')}</div>
+      <button class="copy-btn" onclick="copyText('${d.bank1Num}', this)">SALIN NOMOR</button>
+    </div>
+    ` : ''}
+    
+    ${d.bank2Num ? `
+    <div class="bank-card">
+      <div class="bank-name">${esc(d.bank2Name)}</div>
+      <div class="bank-number">${formatBank(d.bank2Num)}</div>
+      <div class="bank-holder">a.n. ${esc(d.bank2Holder || '')}</div>
+      <button class="copy-btn" onclick="copyText('${d.bank2Num}', this)">SALIN NOMOR</button>
+    </div>
+    ` : ''}
+  </section>
+  ` : ''}
+  
+  <footer class="footer">
+    <div style="color:#ec8772; font-size:16px; letter-spacing:8px; margin-bottom:24px; opacity:0.6;">✿  ✿  ✿</div>
+    <h2 class="footer-thanks">Terima Kasih</h2>
+    <p class="footer-message">
+      Merupakan suatu kehormatan dan kebahagiaan apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+    </p>
+    <div class="footer-couple">${esc(brideShort)} &amp; ${esc(groomShort)}</div>
+    <div style="font-family:'Caveat',cursive; font-size:18px; color:#8b6450; margin-top:6px;">— beserta keluarga —</div>
+  </footer>
+</div>
+
+<script>
+  document.body.classList.add('theme-bloom');
+  function copyText(t, btn) {
+    navigator.clipboard?.writeText(t);
+    const o = btn.textContent;
+    btn.textContent = '✓ TERSALIN';
+    setTimeout(() => btn.textContent = o, 1200);
+  }
+</script>
+    `;
+  }
+  
+  // ============ RENDER ADAT JAWA ============
+  function renderAdatJawa(d) {
+    const date = formatDate(d.weddingDate);
+    const brideShort = d.brideNick || (d.brideName || '').split(' ')[0] || 'Mempelai Wanita';
+    const groomShort = d.groomNick || (d.groomName || '').split(' ')[0] || 'Mempelai Pria';
+
+    return `
+<style>
+  body.theme-jawa {
+    background: #1e1409;
+    color: #f0e0c0;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  body.theme-jawa.locked .invitation > *:not(.cover) { display: none; }
+  body.theme-jawa.locked { overflow: hidden; height: 100vh; }
+
+  body.theme-jawa .invitation {
+    max-width: 480px; margin: 0 auto;
+    background: #1e1409;
+    position: relative; overflow: hidden;
+  }
+
+  /* Batik pattern overlay subtle */
+  body.theme-jawa .invitation::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(139,90,43,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(139,90,43,0.06) 0%, transparent 50%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── COVER ── */
+  body.theme-jawa .cover {
+    height: 100vh; min-height: 700px;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 40px 30px;
+    background:
+      radial-gradient(ellipse at top, rgba(139,90,43,0.18), transparent 55%),
+      radial-gradient(ellipse at bottom, rgba(100,60,20,0.15), transparent 55%),
+      linear-gradient(180deg, #2a1a08, #1e1409, #2a1a08);
+    position: relative; overflow: hidden;
+  }
+  body.theme-jawa .cover::before {
+    content: '';
+    position: absolute; inset: 20px;
+    border: 1px solid rgba(196,164,100,0.2);
+  }
+  body.theme-jawa .cover::after {
+    content: '';
+    position: absolute; inset: 26px;
+    border: 1px solid rgba(196,164,100,0.08);
+  }
+  body.theme-jawa .cover-ornament {
+    font-size: 18px; letter-spacing: 10px;
+    color: rgba(196,164,100,0.5); margin-bottom: 20px;
+  }
+  body.theme-jawa .cover-label {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 5px;
+    color: #c4a464; margin-bottom: 20px; opacity: 0.8;
+  }
+  body.theme-jawa .cover-names {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 54px; line-height: 1; color: #f0e0c0; margin: 4px 0;
+  }
+  body.theme-jawa .cover-amp {
+    font-family: 'Allura', cursive; font-size: 64px;
+    color: #c4a464; line-height: 0.6; margin: 14px 0;
+  }
+  body.theme-jawa .cover-divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(90deg, transparent, #c4a464, transparent);
+    margin: 20px auto 14px;
+  }
+  body.theme-jawa .cover-date {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 4px;
+    color: #c4a464;
+  }
+  body.theme-jawa .open-btn {
+    margin-top: 32px; padding: 13px 32px;
+    background: transparent;
+    border: 1px solid rgba(196,164,100,0.5);
+    color: #c4a464;
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  body.theme-jawa .open-btn:hover {
+    background: rgba(196,164,100,0.1);
+  }
+
+  /* ── SECTION BASE ── */
+  body.theme-jawa section {
+    padding: 70px 28px; text-align: center;
+    position: relative; z-index: 1;
+  }
+  body.theme-jawa .section-ornament {
+    font-size: 13px; letter-spacing: 8px;
+    color: rgba(196,164,100,0.45); margin-bottom: 10px;
+  }
+  body.theme-jawa .section-tag {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 5px;
+    color: #c4a464; margin-bottom: 10px; text-transform: uppercase;
+  }
+  body.theme-jawa .section-title {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 32px; margin-bottom: 8px; color: #f0e0c0;
+  }
+  body.theme-jawa .section-subtitle {
+    font-style: italic; font-size: 14px;
+    color: rgba(240,224,192,0.55); margin-bottom: 28px; line-height: 1.6;
+  }
+  body.theme-jawa .section-line {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, #c4a464, transparent);
+    margin: 0 auto 28px;
+  }
+
+  /* ── QUOTE ── */
+  body.theme-jawa .quote-section {
+    background: linear-gradient(180deg, #2a1a08, #1e1409, #2a1a08);
+    padding: 80px 36px;
+    border-top: 1px solid rgba(196,164,100,0.1);
+    border-bottom: 1px solid rgba(196,164,100,0.1);
+  }
+  body.theme-jawa .quote-arabic {
+    font-size: 26px; line-height: 1.9; color: #d4b87a;
+    direction: rtl; margin-bottom: 22px;
+  }
+  body.theme-jawa .quote-text {
+    font-style: italic; font-size: 15px; line-height: 1.8;
+    color: rgba(240,224,192,0.65); max-width: 360px;
+    margin: 0 auto 14px;
+  }
+  body.theme-jawa .quote-source {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px;
+    color: #c4a464; opacity: 0.7;
+  }
+
+  /* ── MEMPELAI ── */
+  body.theme-jawa .person { margin-bottom: 48px; }
+  body.theme-jawa .person-photo {
+    width: 180px; height: 180px; margin: 0 auto 18px;
+    border-radius: 50%; padding: 5px;
+    border: 1px solid rgba(196,164,100,0.4);
+    background: linear-gradient(135deg, #3a2510, #2a1a08);
+  }
+  body.theme-jawa .person-photo-inner {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: linear-gradient(135deg, #4a3018, #2a1a08);
+    display: flex; align-items: center; justify-content: center;
+    color: #c4a464; font-family: 'Allura', cursive; font-size: 70px;
+  }
+  body.theme-jawa .person-label {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 4px;
+    color: #c4a464; margin-bottom: 10px; text-transform: uppercase;
+  }
+  body.theme-jawa .person-name {
+    font-style: italic; font-size: 30px; line-height: 1.1;
+    color: #f0e0c0; margin-bottom: 8px;
+  }
+  body.theme-jawa .person-fullname {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
+    color: rgba(240,224,192,0.4); margin-bottom: 12px;
+  }
+  body.theme-jawa .person-parents {
+    font-style: italic; font-size: 13px; line-height: 1.7;
+    color: rgba(240,224,192,0.6); max-width: 300px; margin: 0 auto;
+  }
+  body.theme-jawa .couple-divider {
+    margin: 8px 0 48px;
+  }
+  body.theme-jawa .couple-divider .amp {
+    font-family: 'Allura', cursive; font-size: 56px; color: #c4a464;
+  }
+
+  /* ── COUNTDOWN ── */
+  body.theme-jawa .countdown-section {
+    background: linear-gradient(180deg, #2a1a08, #1e1409);
+  }
+  body.theme-jawa .countdown {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; max-width: 360px; margin: 24px auto 0;
+  }
+  body.theme-jawa .countdown-item {
+    border: 1px solid rgba(196,164,100,0.2); padding: 16px 6px;
+    background: rgba(196,164,100,0.04);
+  }
+  body.theme-jawa .countdown-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 30px;
+    color: #d4b87a; font-style: italic;
+  }
+  body.theme-jawa .countdown-label {
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px;
+    color: rgba(240,224,192,0.5); text-transform: uppercase; margin-top: 2px;
+  }
+
+  /* ── EVENT CARD ── */
+  body.theme-jawa .event-card {
+    border: 1px solid rgba(196,164,100,0.2);
+    padding: 28px 20px; margin-bottom: 20px;
+    background: rgba(196,164,100,0.03);
+    position: relative;
+  }
+  body.theme-jawa .event-card::before {
+    content: ''; position: absolute;
+    top: 6px; left: 6px; right: 6px; bottom: 6px;
+    border: 1px solid rgba(196,164,100,0.07);
+    pointer-events: none;
+  }
+  body.theme-jawa .event-icon { color: #c4a464; font-size: 22px; margin-bottom: 10px; }
+  body.theme-jawa .event-name {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 4px;
+    color: #c4a464; margin-bottom: 14px;
+  }
+  body.theme-jawa .event-date {
+    font-style: italic; font-size: 24px; margin: 6px 0; color: #f0e0c0;
+  }
+  body.theme-jawa .event-time {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px;
+    color: #d4b87a; margin: 10px 0; padding: 8px 0;
+    border-top: 1px solid rgba(196,164,100,0.15);
+    border-bottom: 1px solid rgba(196,164,100,0.15);
+  }
+  body.theme-jawa .event-venue {
+    font-size: 15px; margin-top: 10px; line-height: 1.5; color: #f0e0c0;
+  }
+  body.theme-jawa .event-address {
+    font-style: italic; font-size: 12px;
+    color: rgba(240,224,192,0.5); margin-top: 5px; line-height: 1.5;
+  }
+  body.theme-jawa .map-btn {
+    display: inline-block; margin-top: 14px; padding: 8px 20px;
+    border: 1px solid rgba(196,164,100,0.4); color: #c4a464;
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
+    text-decoration: none; transition: all 0.2s;
+  }
+
+  /* ── GIFT ── */
+  body.theme-jawa .gift-section {
+    background: linear-gradient(180deg, #1e1409, #2a1a08, #1e1409);
+    border-top: 1px solid rgba(196,164,100,0.1);
+    border-bottom: 1px solid rgba(196,164,100,0.1);
+  }
+  body.theme-jawa .bank-card {
+    background: linear-gradient(135deg, #3a2510, #2a1a08);
+    border: 1px solid rgba(196,164,100,0.2);
+    padding: 22px; margin-bottom: 12px;
+  }
+  body.theme-jawa .bank-name {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px;
+    color: #c4a464; margin-bottom: 12px;
+  }
+  body.theme-jawa .bank-number {
+    font-family: 'Marcellus', serif; font-size: 20px;
+    letter-spacing: 2px; margin-bottom: 5px; color: #f0e0c0;
+  }
+  body.theme-jawa .bank-holder {
+    font-style: italic; font-size: 12px;
+    color: rgba(240,224,192,0.5); margin-bottom: 10px;
+  }
+  body.theme-jawa .copy-btn {
+    background: rgba(196,164,100,0.1); color: #c4a464;
+    border: 1px solid rgba(196,164,100,0.25); padding: 6px 12px;
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
+    cursor: pointer;
+  }
+
+  /* ── FOOTER ── */
+  body.theme-jawa .footer {
+    padding: 80px 28px 60px; text-align: center;
+    border-top: 1px solid rgba(196,164,100,0.15);
+    background: linear-gradient(180deg, #1e1409, #2a1a08);
+  }
+  body.theme-jawa .footer-ornament {
+    font-size: 12px; letter-spacing: 8px;
+    color: rgba(196,164,100,0.35); margin-bottom: 24px;
+  }
+  body.theme-jawa .footer-thanks {
+    font-style: italic; font-size: 34px;
+    color: #f0e0c0; margin-bottom: 16px;
+  }
+  body.theme-jawa .footer-message {
+    font-style: italic; font-size: 13px; line-height: 1.8;
+    color: rgba(240,224,192,0.55); max-width: 300px;
+    margin: 0 auto 28px;
+  }
+  body.theme-jawa .footer-couple {
+    font-family: 'Allura', cursive; font-size: 42px; color: #c4a464;
+  }
+  body.theme-jawa .footer-sub {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
+    color: rgba(196,164,100,0.4); margin-top: 8px;
+  }
+
+  /* ── FADE IN ── */
+  body.theme-jawa .fade-in {
+    opacity: 0; transform: translateY(18px); transition: all 0.9s ease;
+  }
+  body.theme-jawa .fade-in.visible {
+    opacity: 1; transform: translateY(0);
+  }
+</style>
+
+<div class="invitation">
+  <section class="cover">
+    <div style="position:relative; z-index:2;">
+      <div class="cover-ornament">❧ ✦ ❧</div>
+      <div class="cover-label">Ing Salira Kula — Pernikahan</div>
+      <div class="cover-names">${esc(brideShort)}</div>
+      <div class="cover-amp">❧</div>
+      <div class="cover-names">${esc(groomShort)}</div>
+      <div class="cover-divider"></div>
+      <div class="cover-date">${date.formatted || 'Save the Date'}</div>
+      <div style="margin-top: 32px;">
+        <button class="open-btn" data-action="open">BUKA UNDANGAN</button>
+      </div>
+    </div>
+  </section>
+
+  ${d.quoteText || d.quoteArabic ? `
+  <section class="quote-section fade-in">
+    ${d.quoteArabic ? `<div class="quote-arabic">${esc(d.quoteArabic)}</div>` : ''}
+    ${d.quoteText ? `<p class="quote-text">"${esc(d.quoteText)}"</p>` : ''}
+    ${d.quoteSource ? `<div class="quote-source">— ${esc(d.quoteSource)} —</div>` : ''}
+  </section>
+  ` : ''}
+
+  <section class="fade-in">
+    <div class="section-ornament">❧ ✦ ❧</div>
+    <div class="section-tag">Mempelai</div>
+    <h2 class="section-title">Calon Pengantin</h2>
+    <p class="section-subtitle">Dengan memohon berkah lan ridho Gusti Allah</p>
+    <div class="section-line"></div>
+
+    <div class="person">
+      <div class="person-photo">
+        <div class="person-photo-inner">${(d.brideName || 'A')[0].toUpperCase()}</div>
+      </div>
+      <div class="person-label">Mempelai Wanita</div>
+      <div class="person-name">${esc(d.brideName || 'Mempelai Wanita')}</div>
+      ${d.brideOrder ? `<div class="person-fullname">${esc(d.brideOrder.toUpperCase())}</div>` : ''}
+      ${d.brideFather || d.brideMother ? `
+        <div class="person-parents">
+          ${esc(d.brideFather || '')}<br>
+          ${d.brideFather && d.brideMother ? '&amp;<br>' : ''}
+          ${esc(d.brideMother || '')}
+        </div>
+      ` : ''}
+    </div>
+
+    <div class="couple-divider"><div class="amp">❧</div></div>
+
+    <div class="person">
+      <div class="person-photo">
+        <div class="person-photo-inner">${(d.groomName || 'R')[0].toUpperCase()}</div>
+      </div>
+      <div class="person-label">Mempelai Pria</div>
+      <div class="person-name">${esc(d.groomName || 'Mempelai Pria')}</div>
+      ${d.groomOrder ? `<div class="person-fullname">${esc(d.groomOrder.toUpperCase())}</div>` : ''}
+      ${d.groomFather || d.groomMother ? `
+        <div class="person-parents">
+          ${esc(d.groomFather || '')}<br>
+          ${d.groomFather && d.groomMother ? '&amp;<br>' : ''}
+          ${esc(d.groomMother || '')}
+        </div>
+      ` : ''}
+    </div>
+  </section>
+
+  ${d.weddingDate ? `
+  <section class="countdown-section fade-in">
+    <div class="section-tag">Ngenteni Dinten Agung</div>
+    <h2 class="section-title">Hitung Mundur</h2>
+    <div class="section-line"></div>
+    <div class="countdown">
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="d">00</div>
+        <div class="countdown-label">Hari</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="h">00</div>
+        <div class="countdown-label">Jam</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="m">00</div>
+        <div class="countdown-label">Menit</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" data-cd="s">00</div>
+        <div class="countdown-label">Detik</div>
+      </div>
+    </div>
+  </section>
+  ` : ''}
+
+  <section class="fade-in">
+    <div class="section-ornament">❧ ✦ ❧</div>
+    <div class="section-tag">Dinten lan Panggenan</div>
+    <h2 class="section-title">Upacara Pernikahan</h2>
+    <p class="section-subtitle">Mugi kersa rawuh lan paring pangestu</p>
+    <div class="section-line"></div>
+
+    ${d.akadVenue ? `
+    <div class="event-card">
+      <div class="event-icon">☽</div>
+      <div class="event-name">Akad Nikah</div>
+      <div class="event-date">${date.formatted}</div>
+      <div class="event-time">${esc(d.akadStart)} — ${esc(d.akadEnd)} WIB</div>
+      <div class="event-venue">${esc(d.akadVenue)}</div>
+      <div class="event-address">${esc(d.akadAddress || '').replace(/\n/g, '<br>')}</div>
+      ${d.akadMaps ? `<a href="${esc(d.akadMaps)}" target="_blank" class="map-btn">LIHAT LOKASI</a>` : ''}
+    </div>
+    ` : ''}
+
+    ${d.resepsiVenue ? `
+    <div class="event-card">
+      <div class="event-icon">❧</div>
+      <div class="event-name">Resepsi Pawiwahan</div>
+      <div class="event-date">${date.formatted}</div>
+      <div class="event-time">${esc(d.resepsiStart)} — ${esc(d.resepsiEnd)} WIB</div>
+      <div class="event-venue">${esc(d.resepsiVenue)}</div>
+      <div class="event-address">${esc(d.resepsiAddress || '').replace(/\n/g, '<br>')}</div>
+      ${d.resepsiMaps ? `<a href="${esc(d.resepsiMaps)}" target="_blank" class="map-btn">LIHAT LOKASI</a>` : ''}
+    </div>
+    ` : ''}
+  </section>
+
+  ${d.bank1Num || d.bank2Num ? `
+  <section class="gift-section fade-in">
+    <div class="section-tag">Kado Pengantin</div>
+    <h2 class="section-title">Wedding Gift</h2>
+    <p class="section-subtitle">Doa pangestu panjenengan dados kado ingkang paling endah</p>
+    <div class="section-line"></div>
+
+    ${d.bank1Num ? `
+    <div class="bank-card">
+      <div class="bank-name">${esc(d.bank1Name)}</div>
+      <div class="bank-number">${formatBank(d.bank1Num)}</div>
+      <div class="bank-holder">a.n. ${esc(d.bank1Holder || '')}</div>
+      <button class="copy-btn" onclick="copyText('${d.bank1Num}', this)">SALIN NOMOR</button>
+    </div>
+    ` : ''}
+
+    ${d.bank2Num ? `
+    <div class="bank-card">
+      <div class="bank-name">${esc(d.bank2Name)}</div>
+      <div class="bank-number">${formatBank(d.bank2Num)}</div>
+      <div class="bank-holder">a.n. ${esc(d.bank2Holder || '')}</div>
+      <button class="copy-btn" onclick="copyText('${d.bank2Num}', this)">SALIN NOMOR</button>
+    </div>
+    ` : ''}
+  </section>
+  ` : ''}
+
+  <footer class="footer">
+    <div class="footer-ornament">❧ ✦ ✦ ✦ ❧</div>
+    <h2 class="footer-thanks">Matur Nuwun</h2>
+    <p class="footer-message">
+      Minangka pakurmatan lan kabungahan ageng menawi panjenengan kersa rawuh saha paring donga pangestu.
+    </p>
+    <div class="footer-couple">${esc(brideShort)} &amp; ${esc(groomShort)}</div>
+    <div class="footer-sub">SAHA SAKULAWARGA</div>
+  </footer>
+</div>
+
+<script>
+  document.body.classList.add('theme-jawa');
+  function copyText(t, btn) {
+    navigator.clipboard?.writeText(t);
+    const o = btn.textContent;
+    btn.textContent = '✓ TERSALIN';
+    setTimeout(() => btn.textContent = o, 1200);
+  }
+</script>
+    `;
+  }
+
+  // ============ RSVP ============
+  function initRsvp(orderId, theme) {
+    const isBloom  = theme === 'sunset-bloom';
+    const isJawa   = theme === 'adat-jawa';
+    const isRoyal  = !isBloom && !isJawa;
+
+    const accent    = isBloom ? '#e8825a' : '#c4a464';
+    const accentBg  = isBloom ? '#fff0ea' : 'rgba(196,164,100,0.08)';
+    const border    = isBloom ? '#f0d9cc' : 'rgba(196,164,100,0.25)';
+    const bg        = isBloom ? '#fff8f5' : (isJawa ? '#2a1a08' : '#15100a');
+    const textColor = isBloom ? '#7b4f3a' : '#f0e0c0';
+    const subColor  = isBloom ? '#a0776a' : 'rgba(240,224,192,0.55)';
+    const fontTitle = isBloom ? "'DM Serif Display', serif" : "'Cormorant Garamond', serif";
+    const radius    = isBloom ? '8px' : '0px';
+
+    const root = document.getElementById('invitation-root');
+    const rsvpEl = document.createElement('div');
+    rsvpEl.id = 'rsvp-wrap';
+    rsvpEl.style.cssText = `max-width:480px; margin:0 auto; padding:60px 24px 80px; background:${bg}; font-family:'Cormorant Garamond',serif;`;
+    rsvpEl.innerHTML = `
+      <div style="text-align:center; margin-bottom:28px;">
+        <div style="font-family:${fontTitle}; font-size:28px; color:${textColor}; letter-spacing:2px;">RSVP &amp; Ucapan</div>
+        <div style="font-size:14px; color:${subColor}; font-style:italic; margin-top:6px;">Sampaikan kehadiran &amp; doa terbaikmu</div>
+      </div>
+
+      <div id="rsvp-form">
+        <input id="rsvp-name" type="text" placeholder="Nama kamu" maxlength="60" style="
+          width:100%; box-sizing:border-box; padding:12px 16px;
+          background:${isRoyal ? 'rgba(255,255,255,0.05)' : '#fff'};
+          border:1px solid ${border}; color:${textColor};
+          font-family:'Cormorant Garamond',serif; font-size:16px;
+          margin-bottom:12px; outline:none; border-radius:${radius};
+        "/>
+
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <div id="btn-hadir" onclick="rsvpSelect(true)" style="
+            flex:1; text-align:center; padding:11px;
+            border:1px solid ${border}; cursor:pointer; font-size:14px;
+            color:${subColor}; transition:all .2s; border-radius:${radius};
+          ">✅ Hadir</div>
+          <div id="btn-tidak" onclick="rsvpSelect(false)" style="
+            flex:1; text-align:center; padding:11px;
+            border:1px solid ${border}; cursor:pointer; font-size:14px;
+            color:${subColor}; transition:all .2s; border-radius:${radius};
+          ">❌ Tidak Hadir</div>
+        </div>
+
+        <textarea id="rsvp-msg" placeholder="Ucapan &amp; doa (opsional)" maxlength="200" rows="3" style="
+          width:100%; box-sizing:border-box; padding:12px 16px;
+          background:${isRoyal ? 'rgba(255,255,255,0.05)' : '#fff'};
+          border:1px solid ${border}; color:${textColor};
+          font-family:'Cormorant Garamond',serif; font-size:15px;
+          margin-bottom:14px; resize:none; outline:none; border-radius:${radius};
+        "></textarea>
+
+        <button onclick="rsvpSubmit('${orderId}')" style="
+          width:100%; padding:13px;
+          background:${isRoyal ? 'linear-gradient(135deg,#d4af6c,#b8951f)' : 'linear-gradient(135deg,#e8825a,#d4604a)'};
+          color:${isRoyal ? '#0d0a08' : '#fff'};
+          border:none; font-family:${isRoyal ? "'Cinzel',serif" : "'Inter',sans-serif"};
+          font-size:${isRoyal ? '12px' : '15px'};
+          ${isRoyal ? 'letter-spacing:3px;' : 'font-weight:600;'}
+          cursor:pointer; border-radius:${radius};
+        ">KIRIM RSVP 💌</button>
+        <div id="rsvp-err" style="color:#c0392b; font-size:13px; text-align:center; margin-top:8px; display:none;"></div>
+      </div>
+
+      <div id="rsvp-ok" style="display:none; text-align:center; padding:28px 0;">
+        <div style="font-size:40px; margin-bottom:10px;">🎉</div>
+        <div style="font-family:${fontTitle}; font-size:22px; color:${textColor};">Terima kasih, <span id="rsvp-ok-name"></span>!</div>
+        <div style="font-style:italic; font-size:14px; color:${subColor}; margin-top:6px;">RSVP kamu sudah kami terima.</div>
+      </div>
+
+      <div id="ucapan-list" style="margin-top:32px;"></div>
+    `;
+    root.appendChild(rsvpEl);
+  }
+
+  let _rsvpAttending = null;
+
+  window.rsvpSelect = function(val) {
+    _rsvpAttending = val;
+    const isBloom  = document.body.classList.contains('theme-bloom');
+    const accent   = isBloom ? '#e8825a' : '#c4a464';
+    const accentBg = isBloom ? '#fff0ea' : 'rgba(196,164,100,0.1)';
+    document.getElementById('btn-hadir').style.borderColor  = val  ? accent   : '';
+    document.getElementById('btn-hadir').style.background   = val  ? accentBg : '';
+    document.getElementById('btn-tidak').style.borderColor  = !val ? accent   : '';
+    document.getElementById('btn-tidak').style.background   = !val ? accentBg : '';
   };
-  
-  // ============ STEP NAVIGATION ============
-  function changeStep(n) {
-    document.getElementById(`step-${currentStep}`).classList.remove('active');
-    document.getElementById(`pill-${currentStep}`).classList.remove('active');
-    
-    // Mark done
-    if (n > currentStep) {
-      document.getElementById(`pill-${currentStep}`).classList.add('done');
-    } else {
-      document.getElementById(`pill-${n}`).classList.remove('done');
+
+  window.rsvpSubmit = async function(orderId) {
+    const name    = document.getElementById('rsvp-name').value.trim();
+    const message = document.getElementById('rsvp-msg').value.trim();
+    const errEl   = document.getElementById('rsvp-err');
+
+    if (!name) {
+      errEl.textContent = 'Nama tidak boleh kosong.';
+      errEl.style.display = 'block';
+      return;
     }
-    
-    currentStep = n;
-    document.getElementById(`step-${currentStep}`).classList.add('active');
-    document.getElementById(`pill-${currentStep}`).classList.add('active');
-    
-    document.getElementById('prevBtn').style.display = n > 1 ? 'block' : 'none';
-    
-    const nextBtn = document.getElementById('nextBtn');
-    if (n === 5) {
-      nextBtn.textContent = 'Pesan Sekarang →';
-      nextBtn.onclick = submitOrder;
-    } else {
-      nextBtn.textContent = 'Lanjut →';
-      nextBtn.onclick = nextStep;
-      nextBtn.disabled = false;
+    if (_rsvpAttending === null) {
+      errEl.textContent = 'Pilih kehadiran dulu.';
+      errEl.style.display = 'block';
+      return;
     }
-    
-    // Update preview saat masuk step 4
-    if (n === 4) updatePreview();
-    // Update summary saat masuk step 5
-    if (n === 5) updateSummary();
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    errEl.style.display = 'none';
+
+    try {
+      const res = await fetch(`${BOT_API_URL}/orders/rsvp/${orderId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, attending: _rsvpAttending, message })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Gagal kirim');
+
+      document.getElementById('rsvp-form').style.display = 'none';
+      document.getElementById('rsvp-ok-name').textContent = name;
+      document.getElementById('rsvp-ok').style.display = 'block';
+
+      if (message) appendUcapan(name, _rsvpAttending, message);
+    } catch(e) {
+      errEl.textContent = e.message;
+      errEl.style.display = 'block';
+    }
+  };
+
+  function appendUcapan(name, attending, message) {
+    const isBloom  = document.body.classList.contains('theme-bloom');
+    const isJawa   = document.body.classList.contains('theme-jawa');
+    const border   = isBloom ? '#f0d9cc' : 'rgba(196,164,100,0.2)';
+    const bg       = isBloom ? '#fff' : (isJawa ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.03)');
+    const nameColor = isBloom ? '#7b4f3a' : '#c4a464';
+    const msgColor  = isBloom ? '#6b5045' : 'rgba(240,224,192,0.65)';
+    const radius    = isBloom ? '10px' : '0px';
+
+    const list = document.getElementById('ucapan-list');
+    const item = document.createElement('div');
+    item.style.cssText = `background:${bg}; border:1px solid ${border}; padding:14px 16px; margin-bottom:10px; border-radius:${radius};`;
+    item.innerHTML = `
+      <div style="font-weight:600; color:${nameColor}; font-size:14px;">${esc(name)} <span style="font-weight:400; opacity:0.5;">${attending ? '✅' : '❌'}</span></div>
+      <div style="color:${msgColor}; font-size:14px; margin-top:5px; font-style:italic;">"${esc(message)}"</div>
+    `;
+    list.prepend(item);
+  }
+
+  // ============ HELPERS ============
+  function esc(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
   
-  function nextStep() {
-    if (currentStep < 5) changeStep(currentStep + 1);
-  }
-  
-  function prevStep() {
-    if (currentStep > 1) changeStep(currentStep - 1);
-  }
-  
-  // ============ THEME & PAKET ============
-  function selectTheme(theme) {
-    selectedTheme = theme;
-    document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
-    document.querySelector(`[data-theme="${theme}"]`).classList.add('selected');
-  }
-  
-  function selectPaket(paket) {
-    selectedPaket = paket;
-    document.querySelectorAll('.paket-card').forEach(c => c.classList.remove('selected'));
-    document.querySelector(`[data-paket="${paket}"]`).classList.add('selected');
-  }
-  
-  // ============ DATA COLLECTION ============
-  function collectFormData() {
-    const v = (id) => document.getElementById(id)?.value || '';
-    
+  function formatDate(dateStr) {
+    if (!dateStr) return { formatted: '— · — · —', day: '' };
+    const d = new Date(dateStr);
+    const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
     return {
-      brideName: v('brideName'),
-      brideNick: v('brideNick'),
-      brideOrder: v('brideOrder'),
-      brideFather: v('brideFather'),
-      brideMother: v('brideMother'),
-      brideIG: v('brideIG'),
-      
-      groomName: v('groomName'),
-      groomNick: v('groomNick'),
-      groomOrder: v('groomOrder'),
-      groomFather: v('groomFather'),
-      groomMother: v('groomMother'),
-      groomIG: v('groomIG'),
-      
-      weddingDate: v('weddingDate'),
-      akadStart: v('akadStart'),
-      akadEnd: v('akadEnd'),
-      akadVenue: v('akadVenue'),
-      akadAddress: v('akadAddress'),
-      akadMaps: v('akadMaps'),
-      
-      resepsiStart: v('resepsiStart'),
-      resepsiEnd: v('resepsiEnd'),
-      resepsiVenue: v('resepsiVenue'),
-      resepsiAddress: v('resepsiAddress'),
-      resepsiMaps: v('resepsiMaps'),
-      
-      quoteArabic: v('quoteArabic'),
-      quoteText: v('quoteText'),
-      quoteSource: v('quoteSource'),
-      
-      bank1Name: v('bank1Name'),
-      bank1Num: v('bank1Num'),
-      bank1Holder: v('bank1Holder'),
-      bank2Name: v('bank2Name'),
-      bank2Num: v('bank2Num'),
-      bank2Holder: v('bank2Holder'),
+      formatted: `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`,
+      day: days[d.getDay()],
+      iso: dateStr,
     };
   }
   
-  // ============ PREVIEW ============
-  function updatePreview() {
-    const data = collectFormData();
-    
-    // Preview pakai postMessage atau langsung load via URL parameter (demo only)
-    // Di production: simpan data ke sessionStorage / pass via URL
-    const previewFrame = document.getElementById('previewFrame');
-    
-    // Untuk demo, kita encode data sederhana lewat hash
-    const previewData = encodeURIComponent(JSON.stringify({
-      theme: selectedTheme,
-      isPreview: true,
-      data: data,
-    }));
-    
-    previewFrame.src = `${RENDER_URL}#${previewData}`;
+  function formatBank(num) {
+    if (!num) return '';
+    return String(num).replace(/(.{4})/g, '$1 ').trim();
   }
   
-  // ============ SUMMARY ============
-  function updateSummary() {
-    const data = collectFormData();
-    const bride = data.brideNick || data.brideName.split(' ')[0] || '—';
-    const groom = data.groomNick || data.groomName.split(' ')[0] || '—';
-    
-    document.getElementById('sumTheme').textContent = TEMA_LABEL[selectedTheme];
-    document.getElementById('sumNames').textContent = `${bride} & ${groom}`;
-    document.getElementById('sumDate').textContent = data.weddingDate || '—';
-    document.getElementById('sumPaket').textContent = PAKET_LABEL[selectedPaket];
-    document.getElementById('sumTotal').textContent = `Rp ${PRICES[selectedPaket].toLocaleString('id-ID')}`;
-  }
-  
-  // ============ COPY ============
-  function copy(text, btn) {
-    navigator.clipboard?.writeText(text);
-    const orig = btn.textContent;
-    btn.textContent = '✓';
-    setTimeout(() => btn.textContent = orig, 1200);
-    showToast('Tersalin!', 'success');
-  }
-  
-  // ============ TOAST ============
-  function showToast(text, type = '') {
-    const toast = document.getElementById('toast');
-    toast.textContent = text;
-    toast.className = `toast show ${type}`;
-    setTimeout(() => toast.classList.remove('show'), 3000);
-  }
-  
-  // ============ SUBMIT ORDER ============
-  async function submitOrder() {
-    const data = collectFormData();
-    const buyerContact = document.getElementById('buyerContact').value;
-    
-    // Validasi
-    if (!data.brideName || !data.groomName) {
-      showToast('Isi nama mempelai dulu ya', 'error');
-      changeStep(2);
-      return;
-    }
-    
-    const btn = document.getElementById('nextBtn');
-    btn.disabled = true;
-    btn.textContent = '⏳ Mengirim...';
-    
-    try {
-      const response = await fetch(`${BOT_API_URL}/orders/new`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          theme: selectedTheme,
-          paket: selectedPaket,
-          buyerContact: buyerContact,
-          data: data,
-        }),
-      });
-      
-      const result = await response.json();
-      
-      if (result.ok && result.orderId) {
-        currentOrderId = result.orderId;
-        showToast('Pesanan terkirim ke owner!', 'success');
-        
-        // Tampilkan order status card
-        document.getElementById('orderStatusCard').classList.add('show');
-        document.getElementById('orderIdDisplay').textContent = result.orderId;
-        document.getElementById('statusDetail').innerHTML = 
-          'Owner sudah mendapat notifikasi via Telegram. Halaman ini akan otomatis update saat pesanan dikonfirmasi.<br><br>Simpan Order ID di atas untuk referensi.';
-        
-        btn.style.display = 'none';
-        document.getElementById('prevBtn').style.display = 'none';
-        
-        startPolling(result.orderId);
-      } else {
-        showToast('Gagal: ' + (result.error || 'Unknown error'), 'error');
-        btn.disabled = false;
-        btn.textContent = 'Pesan Sekarang →';
-      }
-    } catch (err) {
-      showToast('Tidak bisa terhubung ke server bot', 'error');
-      btn.disabled = false;
-      btn.textContent = 'Pesan Sekarang →';
-      console.error(err);
-    }
-  }
-  
-  // ============ POLLING STATUS ============
-  function startPolling(orderId) {
-    pollingInterval = setInterval(async () => {
-      try {
-        const response = await fetch(`${BOT_API_URL}/orders/status/${orderId}`);
-        const result = await response.json();
-        
-        if (result.ok) {
-          updateStatusUI(result.status);
-          if (result.status === 'paid' || result.status === 'rejected') {
-            clearInterval(pollingInterval);
-          }
-        }
-      } catch (err) {
-        console.error('Polling error:', err);
-      }
-    }, 5000);
-  }
-  
-  function updateStatusUI(status) {
-    const pill = document.getElementById('statusPill');
-    const text = document.getElementById('statusText');
-    const detail = document.getElementById('statusDetail');
-    
-    pill.className = 'status-pill ' + status;
-    
-    if (status === 'pending') {
-      text.textContent = 'Menunggu konfirmasi owner...';
-    } else if (status === 'paid') {
-      pill.innerHTML = `<span style="font-size:14px;">✅</span> <span>Terkonfirmasi</span>`;
-      
-      const link = `${RENDER_URL}?id=${currentOrderId}`;
-      detail.innerHTML = `
-        🎉 <strong style="color:var(--success);">Pembayaran terkonfirmasi!</strong><br><br>
-        Link undangan kamu sudah aktif tanpa watermark:<br>
-        <a href="${link}" target="_blank" style="color:var(--accent); word-break: break-all; display:inline-block; margin-top:8px;">${link}</a><br><br>
-        <button class="copy-mini" style="margin-top:8px;" onclick="copy('${window.location.origin}${window.location.pathname.replace('builder.html','')}${link.replace('./','')}', this)">SALIN LINK</button>
-      `;
-      showToast('🎉 Undangan aktif!', 'success');
-    } else if (status === 'rejected') {
-      pill.innerHTML = `<span style="font-size:14px;">❌</span> <span>Ditolak</span>`;
-      detail.innerHTML = 'Pembayaran ditolak owner. Silakan hubungi owner untuk klarifikasi.';
-    }
-  }
-  
-  // ============ CHECK URL FOR EXISTING ORDER ============
-  // Kalau buyer balik lagi dengan ?order=ORD-XXX, langsung ke step 5
-  const urlParams = new URLSearchParams(window.location.search);
-  const existingOrder = urlParams.get('order');
-  if (existingOrder) {
-    currentOrderId = existingOrder;
-    changeStep(5);
-    document.getElementById('orderStatusCard').classList.add('show');
-    document.getElementById('orderIdDisplay').textContent = existingOrder;
-    document.getElementById('nextBtn').style.display = 'none';
-    document.getElementById('prevBtn').style.display = 'none';
-    startPolling(existingOrder);
-    
-    // Initial fetch
-    fetch(`${BOT_API_URL}/orders/status/${existingOrder}`)
-      .then(r => r.json())
-      .then(r => { if (r.ok) updateStatusUI(r.status); });
-  }
+  // Start
+  init();
 </script>
 
 </body>
