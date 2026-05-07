@@ -219,7 +219,52 @@
     margin: 0;
   }
   
-  .theme-meta {
+  /* Adat Jawa thumb */
+  .theme-thumb.adat-jawa {
+    background: linear-gradient(160deg, #2c1f0e 0%, #4a3520 50%, #2c1f0e 100%);
+    position: relative;
+  }
+  .theme-thumb.adat-jawa::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(196, 164, 100, 0.35);
+  }
+  .theme-thumb.adat-jawa::after {
+    content: '✦ ✦ ✦';
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(196, 164, 100, 0.5);
+    font-size: 10px;
+    letter-spacing: 6px;
+  }
+  .theme-thumb.adat-jawa .thumb-content {
+    text-align: center;
+    color: #f0e0c0;
+    z-index: 2;
+  }
+  .theme-thumb.adat-jawa .thumb-label {
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: #c4a464;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .theme-thumb.adat-jawa .thumb-names {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1;
+    color: #f0e0c0;
+  }
+  .theme-thumb.adat-jawa .thumb-amp {
+    color: #c4a464;
+    font-size: 14px;
+    margin: 5px 0;
+    letter-spacing: 4px;
+  }
     padding: 16px 18px;
     display: flex;
     justify-content: space-between;
@@ -627,10 +672,24 @@
           </div>
         </div>
       </div>
+      <div class="theme-card" data-theme="adat-jawa" onclick="selectTheme('adat-jawa')">
+        <div class="theme-thumb adat-jawa">
+          <div class="thumb-content">
+            <div class="thumb-label">Ing Salira Kula</div>
+            <div class="thumb-names">Andini</div>
+            <div class="thumb-amp">❧</div>
+            <div class="thumb-names">Reza</div>
+          </div>
+        </div>
+        <div class="theme-meta">
+          <div>
+            <div class="theme-name">Adat Jawa</div>
+            <div class="theme-tag">Klasik · Tradisional · Elegan</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  
-  <!-- ===== STEP 2: DATA UNDANGAN ===== -->
   <div class="step" id="step-2">
     <div class="step-head">
       <div class="step-counter">step 2 of 5</div>
@@ -991,6 +1050,7 @@
   const TEMA_LABEL = {
     'royal-classic': 'Royal Classic',
     'sunset-bloom': 'Sunset Bloom',
+    'adat-jawa': 'Adat Jawa',
   };
   
   // ============ STEP NAVIGATION ============
