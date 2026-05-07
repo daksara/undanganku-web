@@ -19,14 +19,14 @@
 <script>
   const BOT_API_URL = 'https://telegram-bot.daksara-dev.workers.dev';
   const THEME_PAGES = {
-    'royal-classic':      './tema-royal.html',
-    'sunset-bloom':       './tema-bloom.html',
-    'adat-jawa':          './tema-jawa.html',
-    'modern-minimalist':  './tema-royal.html', // fallback royal
+    'royal-classic':     './tema-royal.html',
+    'sunset-bloom':      './tema-bloom.html',
+    'adat-jawa':         './tema-jawa.html',
+    'modern-minimalist': './tema-royal.html',
   };
 
   async function route() {
-    // Preview via hash
+    // Preview via hash — langsung forward ke tema
     if (window.location.hash) {
       try {
         const d = JSON.parse(decodeURIComponent(window.location.hash.slice(1)));
@@ -38,10 +38,7 @@
 
     const id = new URLSearchParams(window.location.search).get('id');
     if (!id) {
-      document.querySelector('.sp').style.display = 'none';
-      document.querySelector('p').style.display = 'none';
-      document.getElementById('err').style.display = 'block';
-      document.getElementById('err').textContent = 'Link tidak valid.';
+      showErr('Link tidak valid.');
       return;
     }
 
@@ -49,20 +46,33 @@
       const res = await fetch(`${BOT_API_URL}/orders/data/${id}`);
       const r = await res.json();
       if (!r.ok) {
-        document.querySelector('.sp').style.display = 'none';
-        document.querySelector('p').style.display = 'none';
-        document.getElementById('err').style.display = 'block';
-        document.getElementById('err').textContent = r.error || 'Undangan tidak ditemukan.';
+        showErr(r.error || 'Undangan tidak ditemukan.');
         return;
       }
+      // Pass seluruh data via hash — tema file tidak perlu fetch ulang
       const theme = r.data?.theme || 'royal-classic';
       const page = THEME_PAGES[theme] || './tema-royal.html';
-      window.location.replace(page + '?id=' + id);
+      const payload = encodeURIComponent(JSON.stringify({
+        theme: theme,
+        isPreview: r.watermark || false,
+        watermark: r.watermark || false,
+        data: r.data,
+        orderId: id,
+      }));
+      window.location.replace(page + '#' + payload);
     } catch(e) {
-      document.getElementById('err').style.display = 'block';
-      document.getElementById('err').textContent = 'Gagal memuat. Periksa koneksi internet.';
+      showErr('Gagal memuat. Periksa koneksi internet.');
     }
   }
+
+  function showErr(msg) {
+    document.querySelector('.sp').style.display = 'none';
+    document.querySelector('p').style.display = 'none';
+    const el = document.getElementById('err');
+    el.style.display = 'block';
+    el.textContent = msg;
+  }
+
   route();
 </script>
 </body>
