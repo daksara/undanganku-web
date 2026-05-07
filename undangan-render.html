@@ -254,6 +254,43 @@
       update();
     }
     
+    // Music player
+    const MUSIC_URL = 'https://www.bensound.com/bensound-music/bensound-romantic.mp3';
+    const audio = new Audio(MUSIC_URL);
+    audio.loop = true;
+    audio.volume = 0.5;
+    let musicPlaying = false;
+
+    // Tombol mute/unmute
+    const musicBtn = document.createElement('button');
+    musicBtn.id = 'music-btn';
+    musicBtn.innerHTML = '♪';
+    musicBtn.style.cssText = `
+      position: fixed; bottom: 24px; right: 20px;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid rgba(200,169,110,0.4);
+      background: rgba(13,10,7,0.85);
+      color: #c8a96e; font-size: 16px;
+      cursor: pointer; z-index: 9999;
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+    `;
+    musicBtn.addEventListener('click', () => {
+      if (musicPlaying) {
+        audio.pause();
+        musicBtn.innerHTML = '♩';
+        musicBtn.style.opacity = '0.5';
+        musicPlaying = false;
+      } else {
+        audio.play();
+        musicBtn.innerHTML = '♪';
+        musicBtn.style.opacity = '1';
+        musicPlaying = true;
+      }
+    });
+    document.body.appendChild(musicBtn);
+
     // Open invitation
     const openBtn = document.querySelector('[data-action="open"]');
     if (openBtn) {
@@ -262,6 +299,14 @@
         setTimeout(() => {
           window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
         }, 100);
+        // Play musik saat buka undangan
+        audio.play().then(() => {
+          musicPlaying = true;
+          musicBtn.style.display = 'flex';
+        }).catch(() => {
+          // Browser block autoplay, tetap tampil tombol
+          musicBtn.style.display = 'flex';
+        });
       });
     }
     
