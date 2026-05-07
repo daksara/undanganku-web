@@ -931,16 +931,48 @@
     <div class="step-head">
       <div class="step-counter">step 4 of 5</div>
       <div class="step-title">Preview Undangan</div>
-      <div class="step-subtitle">Begini tampilan undangan kamu nanti</div>
+      <div class="step-subtitle">Pastikan semua data sudah benar sebelum memesan</div>
     </div>
-    
-    <div class="preview-cta">
-      📱 Geser ke bawah di dalam frame untuk melihat seluruh halaman undangan. Klik "Buka Undangan" untuk masuk.
+
+    <div class="summary-card" id="previewSummary" style="margin-bottom:16px;">
+      <div class="summary-row">
+        <span class="label">Tema</span>
+        <span class="value" id="prevTheme">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Mempelai Wanita</span>
+        <span class="value" id="prevBride">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Mempelai Pria</span>
+        <span class="value" id="prevGroom">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Tanggal</span>
+        <span class="value" id="prevDate">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Akad</span>
+        <span class="value" id="prevAkad">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Resepsi</span>
+        <span class="value" id="prevResepsi">—</span>
+      </div>
     </div>
-    
-    <div class="preview-frame">
-      <iframe id="previewFrame" src="about:blank"></iframe>
-    </div>
+
+    <button onclick="openPreviewTab()" style="
+      width:100%; padding:14px;
+      background: rgba(200,169,110,0.1);
+      border: 1px solid rgba(200,169,110,0.4);
+      color: #c8a96e;
+      font-family: 'Cinzel', serif;
+      font-size: 11px; letter-spacing: 3px;
+      cursor: pointer; margin-bottom: 8px;
+    ">👁️ BUKA PREVIEW DI TAB BARU</button>
+    <p style="text-align:center; font-size:11px; color:rgba(240,230,210,0.4); font-style:italic;">
+      Preview akan terbuka di tab baru. Kembali ke sini untuk lanjut memesan.
+    </p>
   </div>
   
   <!-- ===== STEP 5: BAYAR ===== -->
@@ -1138,37 +1170,32 @@
   }
   
   // ============ PREVIEW ============
-  let previewReady = false;
-  let pendingPayload = null;
-
-  // Listener: render konfirmasi siap terima data
-  window.addEventListener('message', (event) => {
-    if (event.data?.type === 'PREVIEW_READY') {
-      previewReady = true;
-      if (pendingPayload) {
-        const previewFrame = document.getElementById('previewFrame');
-        previewFrame.contentWindow.postMessage({ type: 'PREVIEW_DATA', payload: pendingPayload }, '*');
-        pendingPayload = null;
-      }
-    }
-  });
-
   function updatePreview() {
-    const previewFrame = document.getElementById('previewFrame');
-    const payload = {
+    // Update ringkasan di step 4
+    const data = collectFormData();
+    const el = (id) => document.getElementById(id);
+    if (!el('prevTheme')) return;
+    el('prevTheme').textContent = TEMA_LABEL[selectedTheme] || selectedTheme;
+    el('prevBride').textContent = data.brideName || '—';
+    el('prevGroom').textContent = data.groomName || '—';
+    el('prevDate').textContent = data.weddingDate 
+      ? new Date(data.weddingDate).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })
+      : '—';
+    el('prevAkad').textContent = data.akadVenue 
+      ? `${data.akadStart}–${data.akadEnd} · ${data.akadVenue}` : '—';
+    el('prevResepsi').textContent = data.resepsiVenue 
+      ? `${data.resepsiStart}–${data.resepsiEnd} · ${data.resepsiVenue}` : '—';
+  }
+
+  function openPreviewTab() {
+    const data = collectFormData();
+    const payload = encodeURIComponent(JSON.stringify({
       theme: selectedTheme,
       isPreview: true,
-      data: collectFormData(),
-    };
-
-    if (!previewReady) {
-      pendingPayload = payload;
-      if (previewFrame.src === 'about:blank' || !previewFrame.src) {
-        previewFrame.src = RENDER_URL;
-      }
-    } else {
-      previewFrame.contentWindow.postMessage({ type: 'PREVIEW_DATA', payload }, '*');
-    }
+      watermark: true,
+      data: data,
+    }));
+    window.open(`${RENDER_URL}#${payload}`, '_blank');
   }
   
   // ============ SUMMARY ============
@@ -1233,6 +1260,7 @@
       
       if (result.ok && result.orderId) {
         currentOrderId = result.orderId;
+        localStorage.setItem('undanganku_order', result.orderId);
         showToast('Pesanan terkirim ke owner!', 'success');
         
         // Tampilkan order status card
@@ -1269,6 +1297,7 @@
           updateStatusUI(result.status);
           if (result.status === 'paid' || result.status === 'rejected') {
             clearInterval(pollingInterval);
+              localStorage.removeItem('undanganku_order');
           }
         }
       } catch (err) {
@@ -1303,23 +1332,36 @@
     }
   }
   
-  // ============ CHECK URL FOR EXISTING ORDER ============
-  // Kalau buyer balik lagi dengan ?order=ORD-XXX, langsung ke step 5
+  // ============ CHECK EXISTING ORDER (URL param atau localStorage) ============
   const urlParams = new URLSearchParams(window.location.search);
-  const existingOrder = urlParams.get('order');
+  const existingOrder = urlParams.get('order') || localStorage.getItem('undanganku_order');
   if (existingOrder) {
     currentOrderId = existingOrder;
-    changeStep(5);
-    document.getElementById('orderStatusCard').classList.add('show');
-    document.getElementById('orderIdDisplay').textContent = existingOrder;
-    document.getElementById('nextBtn').style.display = 'none';
-    document.getElementById('prevBtn').style.display = 'none';
-    startPolling(existingOrder);
-    
-    // Initial fetch
+
+    // Cek status dulu — kalau sudah paid/rejected, bersihkan localStorage
     fetch(`${BOT_API_URL}/orders/status/${existingOrder}`)
       .then(r => r.json())
-      .then(r => { if (r.ok) updateStatusUI(r.status); });
+      .then(r => {
+        if (!r.ok) {
+          // Order tidak ditemukan, bersihkan
+          localStorage.removeItem('undanganku_order');
+          return;
+        }
+        // Langsung ke step 5 polling
+        changeStep(5);
+        document.getElementById('orderStatusCard').classList.add('show');
+        document.getElementById('orderIdDisplay').textContent = existingOrder;
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('prevBtn').style.display = 'none';
+        updateStatusUI(r.status);
+        if (r.status === 'pending') {
+          startPolling(existingOrder);
+        } else {
+          // Sudah selesai, bersihkan localStorage
+          localStorage.removeItem('undanganku_order');
+        }
+      })
+      .catch(() => {});
   }
 </script>
 
