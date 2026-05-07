@@ -913,21 +913,11 @@
       <div class="step-subtitle">Pilih paket yang sesuai kebutuhanmu</div>
     </div>
     
-    <div class="paket-grid">
-      <div class="paket-card" data-paket="basic" onclick="selectPaket('basic')">
-        <div class="paket-name">Basic</div>
-        <div class="paket-price">50K</div>
-        <div class="paket-features">3 bulan aktif</div>
-      </div>
-      <div class="paket-card selected" data-paket="premium" onclick="selectPaket('premium')">
-        <div class="paket-name">Premium</div>
-        <div class="paket-price">75K</div>
-        <div class="paket-features">12 bulan aktif</div>
-      </div>
-      <div class="paket-card" data-paket="custom" onclick="selectPaket('custom')">
-        <div class="paket-name">Custom</div>
-        <div class="paket-price">150K</div>
-        <div class="paket-features">Selamanya + custom domain</div>
+    <div class="paket-grid" style="grid-template-columns: 1fr;">
+      <div class="paket-card selected" data-paket="standard" onclick="selectPaket('standard')">
+        <div class="paket-name">Standard</div>
+        <div class="paket-price">Rp 79.000</div>
+        <div class="paket-features">Aktif 3 bulan · Link unik · RSVP · Ucapan tamu</div>
       </div>
     </div>
     
@@ -1033,12 +1023,12 @@
   // ============ STATE ============
   let currentStep = 1;
   let selectedTheme = 'royal-classic';
-  let selectedPaket = 'premium';
+  let selectedPaket = 'standard';
   let currentOrderId = null;
   let pollingInterval = null;
   
-  const PRICES = { basic: 50000, premium: 75000, custom: 150000 };
-  const PAKET_LABEL = { basic: 'Basic', premium: 'Premium', custom: 'Custom' };
+  const PRICES = { standard: 79000 };
+  const PAKET_LABEL = { standard: 'Standard' };
   const TEMA_LABEL = {
     'royal-classic': 'Royal Classic',
     'sunset-bloom': 'Sunset Bloom',
