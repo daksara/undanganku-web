@@ -137,6 +137,7 @@
     text-decoration: none; display: inline-block;
     transition: all 0.3s;
     box-shadow: 0 8px 32px rgba(200,169,110,0.25);
+    position: relative; z-index: 2;
   }
   .btn-primary:hover {
     transform: translateY(-2px);
@@ -411,6 +412,7 @@
     content: '';
     position: absolute; inset: 0;
     background: radial-gradient(ellipse at center, rgba(200,169,110,0.08), transparent 70%);
+    pointer-events: none;
   }
   .cta-ornament {
     font-size: 13px; letter-spacing: 10px;
@@ -430,6 +432,7 @@
     color: var(--cream-dim); text-decoration: none;
     font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
     transition: all 0.2s;
+    position: relative; z-index: 2;
   }
   .cta-ig:hover { border-color: var(--gold); color: var(--gold); }
 
