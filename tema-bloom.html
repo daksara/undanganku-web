@@ -1261,13 +1261,31 @@ body.preview-mode [data-preview-only] { display: block; }
         revealOnScroll();
       }, 900);
       // Auto-play music (allowed because triggered by user gesture)
-      if (audio && audio.src && audio.src.indexOf('{{') !== 0) {
+      var musicSrc = audio ? audio.src : '';
+      var srcIsPlaceholder = !musicSrc || 
+        musicSrc.indexOf('{{') !== -1 || 
+        musicSrc.indexOf('%7B%7B') !== -1 ||
+        musicSrc.indexOf('musicUrl') !== -1 ||
+        musicSrc.endsWith('/');
+      
+      if (audio && !srcIsPlaceholder) {
         audio.volume = 0.6;
         audio.play().then(function() {
           musicBtn.classList.add('show', 'playing');
         }).catch(function() {
-          musicBtn.classList.add('show'); // show button so user can tap manually
+          musicBtn.classList.add('show');
         });
+      } else if (audio) {
+        setTimeout(function() {
+          if (audio.src && audio.src.indexOf('musicUrl') === -1 && audio.src.length > 10) {
+            audio.volume = 0.6;
+            audio.play().then(function() {
+              musicBtn.classList.add('show', 'playing');
+            }).catch(function() {
+              musicBtn.classList.add('show');
+            });
+          }
+        }, 800);
       }
     });
 
