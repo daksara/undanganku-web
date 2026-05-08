@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -1085,10 +1085,9 @@
   }
   
   // Helper: bangun URL link aktif (absolute) — untuk dishare ke tamu
+  // Helper: bangun URL live via static endpoint /u/:id (instant render, no loading)
   function buildLiveUrl(orderId, theme) {
-    const themeFile = THEME_FILE_MAP[theme] || 'tema-royal.html';
-    const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
-    return `${base}${themeFile}?id=${encodeURIComponent(orderId)}`;
+    return `${BOT_API_URL}/u/${encodeURIComponent(orderId)}`;
   }
   
   // ============ STATE ============
