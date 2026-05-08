@@ -2,775 +2,1162 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Undangan Pernikahan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>{{brideShort}} & {{groomShort}} — Wedding Invitation</title>
+<meta property="og:title" content="The Wedding of {{brideShort}} & {{groomShort}}">
+<meta property="og:description" content="{{weddingDateLong}} — Mohon doa restu Anda.">
+<meta property="og:type" content="website">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Italiana&family=Allura&family=Cinzel:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=Marcellus&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cinzel:wght@400;500;600&family=Allura&family=Italiana&display=swap" rel="stylesheet">
+
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: sans-serif; overflow-x: hidden; }
-  #loading {
-    position: fixed; inset: 0; background: #0d0a08;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 9999; color: rgba(245,233,211,0.6);
-    font-family: 'Cormorant Garamond', serif; font-style: italic;
+  :root {
+    --bg: #0a0908;
+    --bg-soft: #14110f;
+    --gold: #c8a96e;
+    --gold-bright: #e0c590;
+    --gold-deep: #8b7045;
+    --cream: #f5e6d4;
+    --cream-soft: rgba(245, 230, 212, 0.85);
+    --cream-mute: rgba(245, 230, 212, 0.55);
+    --line: rgba(200, 169, 110, 0.25);
+    --shadow: 0 12px 40px rgba(0,0,0,0.4);
   }
-  #loading .spinner {
-    width: 40px; height: 40px;
-    border: 2px solid rgba(212,175,108,0.2); border-top-color: #d4af6c;
-    border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px;
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { width: 100%; overflow-x: hidden; }
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-y: auto;
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  #loading.hidden { display: none; }
-  #error { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; background: #0d0a08; color: rgba(245,233,211,0.7); }
-  #error.show { display: flex; }
-  #error .icon { font-size: 48px; margin-bottom: 16px; }
-  #error .title { font-family: 'Cormorant Garamond', serif; font-size: 24px; color: white; margin-bottom: 8px; }
-  #error .msg { font-size: 14px; line-height: 1.6; max-width: 320px; }
-  #watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-30deg); font-size: 100px; font-weight: 900; color: rgba(255,0,0,0.12); pointer-events: none; z-index: 9000; letter-spacing: 12px; display: none; }
-  #watermark.show { display: block; }
-  #preview-banner { display: none; position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(90deg,rgba(255,80,80,0.95),rgba(255,120,80,0.95)); color: white; text-align: center; padding: 8px 16px; font-size: 12px; font-weight: 500; z-index: 8000; letter-spacing: 1px; }
-  #preview-banner.show { display: block; }
-  #invitation-root { display: none; }
-  #invitation-root.show { display: block; }
+  body.locked { overflow: hidden; height: 100vh; }
+
+  /* ============ COVER (Layer 1) ============ */
+  .cover {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at center top, rgba(200,169,110,0.08), transparent 50%),
+      radial-gradient(ellipse at center bottom, rgba(200,169,110,0.06), transparent 50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 28px;
+    transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.6s ease;
+  }
+  .cover.opened {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Gold border frame */
+  .cover::before, .cover::after {
+    content: '';
+    position: absolute;
+    border: 1px solid var(--line);
+    pointer-events: none;
+  }
+  .cover::before {
+    inset: 18px;
+  }
+  .cover::after {
+    inset: 24px;
+    border-color: rgba(200,169,110,0.12);
+  }
+
+  /* Decorative ornament */
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: var(--gold);
+    font-size: 14px;
+    letter-spacing: 4px;
+    opacity: 0;
+    animation: fadeInUp 1.2s 0.3s ease-out forwards;
+  }
+  .ornament .line {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-deep), var(--gold), var(--gold-deep), transparent);
+  }
+
+  .cover-eyebrow {
+    font-family: 'Italiana', serif;
+    font-size: 13px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    margin: 28px 0 8px;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeInUp 1.2s 0.5s ease-out forwards;
+  }
+
+  .cover-thanks {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--cream-mute);
+    text-align: center;
+    max-width: 280px;
+    line-height: 1.6;
+    margin-bottom: 42px;
+    opacity: 0;
+    animation: fadeInUp 1.2s 0.7s ease-out forwards;
+  }
+
+  .cover-names {
+    text-align: center;
+    margin: 0 0 32px;
+    opacity: 0;
+    animation: fadeInUp 1.2s 0.9s ease-out forwards;
+  }
+  .cover-name {
+    font-family: 'Allura', cursive;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--cream);
+    letter-spacing: 1px;
+    display: block;
+  }
+  .cover-amp {
+    font-family: 'Italiana', serif;
+    color: var(--gold);
+    font-size: 26px;
+    font-style: italic;
+    margin: 6px 0;
+    display: block;
+  }
+
+  .cover-date {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    letter-spacing: 8px;
+    color: var(--gold-bright);
+    text-transform: uppercase;
+    margin-bottom: 36px;
+    opacity: 0;
+    animation: fadeInUp 1.2s 1.1s ease-out forwards;
+  }
+
+  .cover-guest {
+    text-align: center;
+    margin-bottom: 36px;
+    opacity: 0;
+    animation: fadeInUp 1.2s 1.2s ease-out forwards;
+  }
+  .cover-guest-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--cream-mute);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .cover-guest-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--cream);
+  }
+
+  .cover-btn {
+    background: linear-gradient(135deg, var(--gold-deep), var(--gold), var(--gold-bright));
+    color: var(--bg);
+    border: none;
+    padding: 16px 42px;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    box-shadow: 0 10px 30px rgba(200, 169, 110, 0.25), inset 0 1px 0 rgba(255,255,255,0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    animation: fadeInUp 1.2s 1.4s ease-out forwards;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 4px 16px rgba(200, 169, 110, 0.3);
+  }
+  .cover-btn::before {
+    content: '✉';
+    margin-right: 10px;
+    font-size: 14px;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============ INVITATION (Layer 2) ============ */
+  .inv {
+    max-width: 480px;
+    margin: 0 auto;
+    background: var(--bg);
+    position: relative;
+    min-height: 100vh;
+  }
+
+  .section {
+    padding: 80px 28px 60px;
+    position: relative;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .section-title {
+    font-family: 'Italiana', serif;
+    font-size: 36px;
+    line-height: 1.2;
+    color: var(--cream);
+    margin-bottom: 14px;
+    font-weight: 400;
+  }
+  .section-script {
+    font-family: 'Allura', cursive;
+    font-size: 38px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  .section-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--cream-soft);
+    max-width: 380px;
+    margin: 0 auto 24px;
+    line-height: 1.7;
+  }
+
+  .ornament-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--gold);
+    font-size: 12px;
+    margin: 24px auto;
+  }
+  .ornament-divider .line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
+  }
+
+  /* ============ Couple Section ============ */
+  .couple {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    margin: 28px 0 8px;
+  }
+  .person {
+    text-align: center;
+  }
+  .person-photo {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, var(--bg-soft), var(--gold-deep));
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-family: 'Italiana', serif;
+    font-size: 32px;
+    overflow: hidden;
+  }
+  .person-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .person-role {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .person-name {
+    font-family: 'Allura', cursive;
+    font-size: 38px;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .person-parent {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--cream-mute);
+    line-height: 1.5;
+  }
+
+  .couple-amp {
+    font-family: 'Italiana', serif;
+    color: var(--gold);
+    font-size: 32px;
+    font-style: italic;
+  }
+
+  /* ============ Countdown ============ */
+  .countdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 28px auto;
+    max-width: 320px;
+  }
+  .cd-box {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    padding: 16px 4px;
+    border-radius: 2px;
+  }
+  .cd-num {
+    font-family: 'Italiana', serif;
+    font-size: 28px;
+    color: var(--gold-bright);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .cd-label {
+    font-family: 'Cinzel', serif;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--cream-mute);
+    text-transform: uppercase;
+  }
+
+  /* ============ Event ============ */
+  .event-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    padding: 32px 22px;
+    margin: 16px auto;
+    max-width: 380px;
+    border-radius: 2px;
+    text-align: center;
+  }
+  .event-icon {
+    font-family: 'Italiana', serif;
+    font-size: 24px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .event-name {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .event-date {
+    font-family: 'Italiana', serif;
+    font-size: 22px;
+    color: var(--cream);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .event-time {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--gold-bright);
+    margin-bottom: 14px;
+  }
+  .event-venue {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--cream-soft);
+    line-height: 1.5;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .event-btn {
+    display: inline-block;
+    padding: 9px 20px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .event-btn:active {
+    background: var(--gold);
+    color: var(--bg);
+  }
+
+  /* ============ Story Timeline ============ */
+  .story-list {
+    margin: 28px auto;
+    max-width: 380px;
+    text-align: left;
+    position: relative;
+    padding-left: 28px;
+  }
+  .story-list::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(180deg, var(--gold-deep), var(--line), var(--gold-deep));
+  }
+  .story-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .story-item::before {
+    content: '';
+    position: absolute;
+    left: -27px;
+    top: 8px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 12px rgba(200,169,110,0.4);
+  }
+  .story-date {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .story-title {
+    font-family: 'Italiana', serif;
+    font-size: 18px;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+  .story-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--cream-mute);
+    line-height: 1.6;
+  }
+
+  /* ============ Gallery ============ */
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin: 24px auto;
+    max-width: 400px;
+  }
+  .gallery-item {
+    aspect-ratio: 1;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold-deep);
+    font-family: 'Italiana', serif;
+  }
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  /* ============ RSVP ============ */
+  .rsvp-form {
+    margin: 24px auto;
+    max-width: 380px;
+    text-align: left;
+  }
+  .rsvp-input, .rsvp-textarea {
+    width: 100%;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    color: var(--cream);
+    padding: 13px 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    margin-bottom: 10px;
+    border-radius: 2px;
+    outline: none;
+    transition: border 0.3s;
+  }
+  .rsvp-input:focus, .rsvp-textarea:focus {
+    border-color: var(--gold);
+  }
+  .rsvp-textarea {
+    min-height: 80px;
+    resize: vertical;
+    font-style: italic;
+  }
+  .rsvp-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .rsvp-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--cream-soft);
+    padding: 11px 14px;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .rsvp-btn.active {
+    background: rgba(200,169,110,0.1);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .rsvp-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+    color: var(--bg);
+    border: none;
+    padding: 14px;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+  .rsvp-status {
+    text-align: center;
+    margin-top: 14px;
+    font-style: italic;
+    font-size: 14px;
+    min-height: 20px;
+  }
+  .rsvp-status.ok { color: var(--gold-bright); }
+  .rsvp-status.err { color: #d4604a; }
+
+  .ucapan-list {
+    margin: 28px auto 0;
+    max-width: 380px;
+    text-align: left;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .ucapan-item {
+    background: var(--bg-soft);
+    border-left: 2px solid var(--gold);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border-radius: 0 2px 2px 0;
+  }
+  .ucapan-name {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--gold-bright);
+    margin-bottom: 4px;
+  }
+  .ucapan-attend {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    color: var(--cream-mute);
+    font-style: italic;
+    margin-left: 6px;
+  }
+  .ucapan-msg {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--cream-soft);
+    line-height: 1.5;
+  }
+
+  /* ============ Gift / Bank ============ */
+  .bank-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    padding: 20px 18px;
+    margin: 12px auto;
+    max-width: 380px;
+    border-radius: 2px;
+    text-align: center;
+  }
+  .bank-name {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .bank-num {
+    font-family: 'Italiana', serif;
+    font-size: 22px;
+    color: var(--cream);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .bank-holder {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--cream-mute);
+    margin-bottom: 12px;
+  }
+  .bank-copy {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 7px 18px;
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ============ Footer ============ */
+  .footer-final {
+    padding: 70px 28px;
+    text-align: center;
+  }
+  .footer-thanks {
+    font-family: 'Allura', cursive;
+    font-size: 44px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 18px;
+  }
+  .footer-couple {
+    font-family: 'Italiana', serif;
+    font-size: 22px;
+    color: var(--cream);
+    margin: 16px 0 8px;
+    letter-spacing: 1px;
+  }
+  .footer-family {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  /* ============ Music Toggle ============ */
+  .music-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    font-size: 16px;
+    box-shadow: var(--shadow);
+  }
+  .music-toggle.show { display: flex; }
+  .music-toggle.playing {
+    animation: spin 4s linear infinite;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* ============ Toast ============ */
+  .toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--bg-soft);
+    color: var(--cream);
+    border: 1px solid var(--gold);
+    padding: 12px 20px;
+    border-radius: 2px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 1100;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ============ Preview Banner ============ */
+  .preview-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(180, 60, 40, 0.95);
+    color: white;
+    text-align: center;
+    padding: 7px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    z-index: 1200;
+    display: none;
+  }
+  .preview-banner.show { display: block; }
+  body.has-banner { padding-top: 30px; }
+  body.has-banner .cover { padding-top: 70px; }
+
+  /* ============ Responsive ============ */
+  @media (max-height: 700px) {
+    .cover-name { font-size: 54px; }
+    .cover-thanks { margin-bottom: 28px; }
+    .cover-eyebrow { margin-top: 20px; }
+  }
+  @media (min-width: 481px) {
+    .inv { box-shadow: 0 0 60px rgba(0,0,0,0.6); }
+  }
 </style>
 </head>
 <body>
-<div id="loading"><div class="spinner"></div><div>Memuat undangan...</div></div>
-<div id="error"><div class="icon">⚠️</div><div class="title" id="errTitle">Undangan tidak ditemukan</div><div class="msg" id="errMsg">Pastikan link yang kamu buka benar.</div></div>
-<div id="preview-banner">⚠️ MODE PREVIEW — Pembayaran belum dikonfirmasi</div>
-<div id="watermark">PREVIEW</div>
-<div id="invitation-root"></div>
-<script>
-  const BOT_API_URL = 'https://telegram-bot.daksara-dev.workers.dev';
 
-  const THEME_KEY = 'royal-classic';
+<!-- ============ PREVIEW BANNER (only on preview mode) ============ -->
+<div class="preview-banner" id="previewBanner">⚠ MODE PREVIEW — PEMBAYARAN BELUM DIKONFIRMASI</div>
 
-  let alreadyRendered = false;
-  function safeRender(payload) {
-    if (alreadyRendered) return;
-    alreadyRendered = true;
-    document.getElementById('loading').classList.add('hidden');
-    renderInvitation(payload);
-  }
+<!-- ============ COVER LAYER ============ -->
+<div class="cover" id="cover">
+  <div class="ornament">
+    <span class="line"></span>
+    <span>✦</span>
+    <span class="line"></span>
+  </div>
 
-  async function init() {
-    // postMessage dari builder (iframe preview) — first-come-first-served
-    window.addEventListener('message', (event) => {
-      if (event.data?.type === 'PREVIEW_DATA') {
-        safeRender(event.data.payload);
-      }
-    });
-    if (window.parent !== window) {
-      window.parent.postMessage({ type: 'PREVIEW_READY' }, '*');
-    }
+  <div class="cover-eyebrow">The Wedding Of</div>
 
-    // Hash dari router atau builder preview — langsung render, tidak fetch ulang
-    if (window.location.hash && window.location.hash.length > 5) {
-      try {
-        const payload = JSON.parse(decodeURIComponent(window.location.hash.slice(1)));
-        safeRender(payload);
-        return;
-      } catch (e) {
-        console.warn('Hash payload invalid, fallback ke fetch', e);
-      }
-    }
+  <div class="cover-thanks">{{coverGreeting}}</div>
 
-    // Fallback: ?id= langsung (tanpa router)
-    const orderId = new URLSearchParams(window.location.search).get('id');
-    if (!orderId) {
-      // Tidak ada hash, tidak ada id → kemungkinan iframe preview yang nunggu postMessage
-      // Jangan tampilkan error, biar postMessage handler yang ambil alih
-      return;
-    }
+  <div class="cover-names">
+    <span class="cover-name">{{brideShort}}</span>
+    <span class="cover-amp">&</span>
+    <span class="cover-name">{{groomShort}}</span>
+  </div>
 
-    // Timeout 12 detik supaya tidak hang kalau worker down
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000);
+  <div class="cover-date">{{weddingDateShort}}</div>
 
-    try {
-      const response = await fetch(`${BOT_API_URL}/orders/data/${orderId}`, {
-        signal: controller.signal,
-        cache: 'default'
-      });
-      clearTimeout(timeoutId);
+  <div class="cover-guest" id="coverGuest" style="display:none;">
+    <div class="cover-guest-label">Kepada Yth.</div>
+    <div class="cover-guest-name" id="coverGuestName">—</div>
+  </div>
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          showError('Undangan tidak ditemukan', 'Pastikan link yang kamu buka benar.');
-        } else if (response.status === 403) {
-          showError('Akses ditolak', 'Pesanan ini ditolak oleh pemilik.');
-        } else {
-          showError('Server bermasalah', 'Coba refresh dalam beberapa saat.');
-        }
-        return;
-      }
+  <button class="cover-btn" id="openBtn">Buka Undangan</button>
 
-      const result = await response.json();
-      if (!result.ok) {
-        showError(
-          result.error === 'Order not found' ? 'Undangan tidak ditemukan' : 'Akses ditolak',
-          result.error || 'Tidak dapat memuat data.'
-        );
-        return;
-      }
-      safeRender(result);
-    } catch (err) {
-      clearTimeout(timeoutId);
-      if (err.name === 'AbortError') {
-        showError('Loading terlalu lama', 'Server lambat merespons. Coba refresh halaman.');
-      } else {
-        showError('Gagal memuat', 'Periksa koneksi internet kamu, atau hubungi owner.');
-      }
-    }
-  }
-
-  function showError(title, msg) {
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('errTitle').textContent = title;
-    document.getElementById('errMsg').textContent = msg;
-    document.getElementById('error').classList.add('show');
-  }
-
-  function renderInvitation({ theme, isPreview, data, watermark }) {
-    document.getElementById('invitation-root').innerHTML = renderRoyalClassic(data);
-    document.getElementById('invitation-root').classList.add('show');
-    if (isPreview || watermark) {
-      document.getElementById('watermark').classList.add('show');
-      document.getElementById('preview-banner').classList.add('show');
-      document.body.style.paddingTop = '34px';
-    }
-    document.getElementById('loading').classList.add('hidden');
-    setTimeout(() => {
-      initInvitationScripts(data);
-      if (!isPreview && !watermark) {
-        const orderId = new URLSearchParams(window.location.search).get('id')
-          || (typeof data === 'object' && data.orderId)
-          || null;
-        // orderId bisa dari hash payload
-        const hashOid = (() => { try { return JSON.parse(decodeURIComponent(window.location.hash.slice(1))).orderId; } catch(e) { return null; } })();
-        const finalId = orderId || hashOid;
-        if (finalId) initRsvp(finalId, THEME_KEY);
-      }
-    }, 100);
-  }
-
-  function initInvitationScripts(data) {
-    if (data.weddingDate) {
-      const target = new Date(`${data.weddingDate}T${data.akadStart || '08:00'}:00+07:00`).getTime();
-      const update = () => {
-        const diff = target - Date.now();
-        if (diff < 0) return;
-        const d = Math.floor(diff / 86400000);
-        const h = Math.floor((diff % 86400000) / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
-        document.querySelectorAll('[data-cd="d"]').forEach(el => el.textContent = String(d).padStart(2,'0'));
-        document.querySelectorAll('[data-cd="h"]').forEach(el => el.textContent = String(h).padStart(2,'0'));
-        document.querySelectorAll('[data-cd="m"]').forEach(el => el.textContent = String(m).padStart(2,'0'));
-        document.querySelectorAll('[data-cd="s"]').forEach(el => el.textContent = String(s).padStart(2,'0'));
-      };
-      setInterval(update, 1000); update();
-    }
-    const MUSIC_URL = 'https://www.bensound.com/bensound-music/bensound-romantic.mp3';
-    const audio = new Audio(MUSIC_URL);
-    audio.loop = true; audio.volume = 0.5;
-    let musicPlaying = false;
-    const musicBtn = document.createElement('button');
-    musicBtn.innerHTML = '♪';
-    musicBtn.style.cssText = 'position:fixed;bottom:24px;right:20px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(200,169,110,0.4);background:rgba(13,10,7,0.85);color:#c8a96e;font-size:16px;cursor:pointer;z-index:9999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);transition:all 0.2s;';
-    musicBtn.addEventListener('click', () => {
-      if (musicPlaying) { audio.pause(); musicBtn.innerHTML = '♩'; musicBtn.style.opacity = '0.5'; musicPlaying = false; }
-      else { audio.play(); musicBtn.innerHTML = '♪'; musicBtn.style.opacity = '1'; musicPlaying = true; }
-    });
-    document.body.appendChild(musicBtn);
-    const openBtn = document.querySelector('[data-action="open"]');
-    if (openBtn) {
-      openBtn.addEventListener('click', () => {
-        document.body.classList.remove('locked');
-        setTimeout(() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' }), 100);
-        audio.play().then(() => { musicPlaying = true; musicBtn.style.display = 'flex'; }).catch(() => { musicBtn.style.display = 'flex'; });
-      });
-    }
-    document.body.classList.add('locked');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-  }
-  // ============ RENDER ROYAL CLASSIC ============
-  function renderRoyalClassic(d) {
-    const date = formatDate(d.weddingDate);
-    const brideShort = d.brideNick || (d.brideName || '').split(' ')[0] || 'Mempelai Wanita';
-    const groomShort = d.groomNick || (d.groomName || '').split(' ')[0] || 'Mempelai Pria';
-    
-    return `
-<style>
-  body.theme-royal {
-    background: #0d0a08;
-    color: #f0e6d2;
-    font-family: 'Cormorant Garamond', serif;
-  }
-  body.theme-royal.locked .invitation > *:not(.cover) { display: none; }
-  body.theme-royal.locked { overflow: hidden; height: 100vh; }
-  
-  body.theme-royal .invitation {
-    max-width: 480px; margin: 0 auto;
-    background: #0d0a08;
-    position: relative; overflow: hidden;
-  }
-  
-  body.theme-royal .cover {
-    height: 100vh; min-height: 700px;
-    display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    text-align: center; padding: 40px 30px;
-    background: 
-      radial-gradient(ellipse at top, rgba(212,175,108,0.15), transparent 60%),
-      linear-gradient(180deg, #1a1208, #0d0a08, #1a1208);
-    position: relative; overflow: hidden;
-  }
-  body.theme-royal .cover::before {
-    content: ''; position: absolute; inset: 24px;
-    border: 1px solid rgba(212,175,108,0.25); pointer-events: none;
-  }
-  body.theme-royal .cover-label {
-    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 6px;
-    color: #d4af6c; margin-bottom: 24px;
-  }
-  body.theme-royal .cover-names {
-    font-family: 'Cormorant Garamond', serif; font-style: italic;
-    font-size: 56px; line-height: 1; margin: 6px 0;
-  }
-  body.theme-royal .cover-amp {
-    font-family: 'Allura', cursive; font-size: 80px;
-    color: #d4af6c; line-height: 0.4; margin: 12px 0;
-  }
-  body.theme-royal .cover-date {
-    margin-top: 32px; padding: 14px 24px;
-    border-top: 1px solid rgba(212,175,108,0.25);
-    border-bottom: 1px solid rgba(212,175,108,0.25);
-    font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 4px;
-    color: #d4af6c; display: inline-block;
-  }
-  body.theme-royal .open-btn {
-    margin-top: 36px; padding: 14px 36px;
-    background: linear-gradient(135deg, #d4af6c, #b8951f);
-    color: #0d0a08; border: none;
-    font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 4px;
-    cursor: pointer; border-radius: 2px;
-    box-shadow: 0 4px 20px rgba(212,175,108,0.3);
-  }
-  
-  body.theme-royal section {
-    padding: 80px 30px; text-align: center; position: relative;
-  }
-  body.theme-royal .section-tag {
-    color: #d4af6c; font-size: 14px; letter-spacing: 8px;
-    margin-bottom: 12px; opacity: 0.7;
-  }
-  body.theme-royal .section-title {
-    font-family: 'Italiana', serif; font-size: 30px;
-    letter-spacing: 4px; margin-bottom: 8px;
-  }
-  body.theme-royal .section-subtitle {
-    font-family: 'Cormorant Garamond', serif; font-style: italic;
-    color: rgba(245,233,211,0.6); font-size: 15px; margin-bottom: 28px;
-  }
-  
-  body.theme-royal .quote-section {
-    background: linear-gradient(180deg, #0d0a08, #15100a, #0d0a08);
-    padding: 100px 40px;
-  }
-  body.theme-royal .quote-arabic {
-    font-size: 28px; line-height: 1.8; color: #e8c585;
-    direction: rtl; margin-bottom: 24px;
-  }
-  body.theme-royal .quote-text {
-    font-style: italic; font-size: 16px; line-height: 1.8;
-    color: rgba(245,233,211,0.7); max-width: 380px; margin: 0 auto 16px;
-  }
-  body.theme-royal .quote-source {
-    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px;
-    color: #d4af6c;
-  }
-  
-  body.theme-royal .person {
-    margin-bottom: 50px;
-  }
-  body.theme-royal .person-photo {
-    width: 200px; height: 200px; margin: 0 auto 20px;
-    border-radius: 50%; padding: 6px;
-    background: linear-gradient(135deg, #2c1f12, #1a1208);
-    border: 2px solid #d4af6c;
-  }
-  body.theme-royal .person-photo-inner {
-    width: 100%; height: 100%; border-radius: 50%;
-    background: linear-gradient(135deg, #3a2818, #1a1208);
-    display: flex; align-items: center; justify-content: center;
-    color: #d4af6c; font-family: 'Allura', cursive; font-size: 80px;
-  }
-  body.theme-royal .person-label {
-    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px;
-    color: #d4af6c; margin-bottom: 10px;
-  }
-  body.theme-royal .person-name {
-    font-style: italic; font-size: 32px; line-height: 1.1; margin-bottom: 8px;
-  }
-  body.theme-royal .person-fullname {
-    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px;
-    color: rgba(245,233,211,0.5); margin-bottom: 14px;
-  }
-  body.theme-royal .person-parents {
-    font-style: italic; font-size: 14px; line-height: 1.6;
-    color: rgba(245,233,211,0.7); max-width: 320px; margin: 0 auto;
-  }
-  body.theme-royal .couple-divider .amp {
-    font-family: 'Allura', cursive; font-size: 64px; color: #d4af6c;
-  }
-  
-  body.theme-royal .countdown {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 8px; max-width: 380px; margin: 24px auto 0;
-  }
-  body.theme-royal .countdown-item {
-    background: linear-gradient(180deg, rgba(212,175,108,0.08), transparent);
-    border: 1px solid rgba(212,175,108,0.25); padding: 16px 8px;
-  }
-  body.theme-royal .countdown-num {
-    font-family: 'Italiana', serif; font-size: 32px; color: #e8c585;
-  }
-  body.theme-royal .countdown-label {
-    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
-    color: rgba(245,233,211,0.6); text-transform: uppercase;
-  }
-  
-  body.theme-royal .event-card {
-    background: linear-gradient(180deg, rgba(212,175,108,0.04), transparent);
-    border: 1px solid rgba(212,175,108,0.25); padding: 32px 24px;
-    margin-bottom: 24px;
-  }
-  body.theme-royal .event-icon { color: #d4af6c; font-size: 28px; margin-bottom: 12px; }
-  body.theme-royal .event-name {
-    font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 4px;
-    color: #d4af6c; margin-bottom: 16px;
-  }
-  body.theme-royal .event-date {
-    font-family: 'Italiana', serif; font-size: 26px; margin: 8px 0;
-  }
-  body.theme-royal .event-time {
-    font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 3px;
-    color: #e8c585; margin: 12px 0; padding: 8px 0;
-    border-top: 1px solid rgba(212,175,108,0.25);
-    border-bottom: 1px solid rgba(212,175,108,0.25);
-  }
-  body.theme-royal .event-venue { font-size: 15px; margin-top: 12px; line-height: 1.5; }
-  body.theme-royal .event-address {
-    font-style: italic; font-size: 13px; color: rgba(245,233,211,0.6);
-    margin-top: 6px; line-height: 1.5;
-  }
-  body.theme-royal .map-btn {
-    display: inline-block; margin-top: 14px; padding: 9px 22px;
-    border: 1px solid #d4af6c; color: #d4af6c;
-    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px;
-    text-decoration: none;
-  }
-  
-  body.theme-royal .bank-card {
-    background: linear-gradient(135deg, #2c1f12, #1a1208);
-    border: 1px solid rgba(212,175,108,0.25); border-radius: 8px;
-    padding: 24px; margin-bottom: 14px;
-  }
-  body.theme-royal .bank-name {
-    font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 3px;
-    color: #d4af6c; margin-bottom: 14px;
-  }
-  body.theme-royal .bank-number {
-    font-family: 'Marcellus', serif; font-size: 22px;
-    letter-spacing: 2px; margin-bottom: 6px;
-  }
-  body.theme-royal .bank-holder {
-    font-style: italic; font-size: 13px; color: rgba(245,233,211,0.6);
-    margin-bottom: 12px;
-  }
-  body.theme-royal .copy-btn {
-    background: rgba(212,175,108,0.15); color: #d4af6c;
-    border: 1px solid rgba(212,175,108,0.3); padding: 7px 14px;
-    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px;
-    cursor: pointer;
-  }
-  
-  body.theme-royal .footer {
-    padding: 80px 30px 60px; text-align: center;
-    border-top: 1px solid rgba(212,175,108,0.25);
-  }
-  body.theme-royal .footer-thanks {
-    font-family: 'Italiana', serif; font-size: 26px; letter-spacing: 4px;
-    margin-bottom: 16px;
-  }
-  body.theme-royal .footer-message {
-    font-style: italic; font-size: 14px; line-height: 1.7;
-    color: rgba(245,233,211,0.6); max-width: 320px; margin: 0 auto 28px;
-  }
-  body.theme-royal .footer-couple {
-    font-family: 'Allura', cursive; font-size: 38px; color: #d4af6c;
-  }
-  
-  body.theme-royal .fade-in {
-    opacity: 0; transform: translateY(20px); transition: all 0.8s ease;
-  }
-  body.theme-royal .fade-in.visible {
-    opacity: 1; transform: translateY(0);
-  }
-</style>
-
-<div class="invitation">
-  <section class="cover">
-    <div style="position:relative; z-index:2;">
-      <div style="color:#d4af6c; font-size:16px; letter-spacing:8px; margin-bottom:16px;">✦ ✦ ✦</div>
-      <div class="cover-label">THE WEDDING OF</div>
-      <div class="cover-names">${esc(brideShort)}</div>
-      <div class="cover-amp">&amp;</div>
-      <div class="cover-names">${esc(groomShort)}</div>
-      <div class="cover-date">${date.formatted}</div>
-      <div style="margin-top: 36px;">
-        <button class="open-btn" data-action="open">BUKA UNDANGAN</button>
-      </div>
-    </div>
-  </section>
-  
-  ${d.quoteText || d.quoteArabic ? `
-  <section class="quote-section fade-in">
-    ${d.quoteArabic ? `<div class="quote-arabic">${esc(d.quoteArabic)}</div>` : ''}
-    ${d.quoteText ? `<p class="quote-text">"${esc(d.quoteText)}"</p>` : ''}
-    ${d.quoteSource ? `<div class="quote-source">— ${esc(d.quoteSource)} —</div>` : ''}
-  </section>
-  ` : ''}
-  
-  <section class="fade-in">
-    <div class="section-tag">— ✦ —</div>
-    <h2 class="section-title">The Bride &amp; Groom</h2>
-    <p class="section-subtitle">Dengan memohon rahmat dan ridha Tuhan</p>
-    
-    <div class="person">
-      <div class="person-photo">
-        <div class="person-photo-inner">${(d.brideName || 'A')[0].toUpperCase()}</div>
-      </div>
-      <div class="person-label">THE BRIDE</div>
-      <div class="person-name">${esc(d.brideName || 'Mempelai Wanita')}</div>
-      ${d.brideOrder ? `<div class="person-fullname">${esc(d.brideOrder.toUpperCase())}</div>` : ''}
-      ${d.brideFather || d.brideMother ? `
-        <div class="person-parents">
-          ${esc(d.brideFather || '')}<br>
-          ${d.brideFather && d.brideMother ? '&amp;<br>' : ''}
-          ${esc(d.brideMother || '')}
-        </div>
-      ` : ''}
-    </div>
-    
-    <div class="couple-divider"><div class="amp">&amp;</div></div>
-    
-    <div class="person">
-      <div class="person-photo">
-        <div class="person-photo-inner">${(d.groomName || 'R')[0].toUpperCase()}</div>
-      </div>
-      <div class="person-label">THE GROOM</div>
-      <div class="person-name">${esc(d.groomName || 'Mempelai Pria')}</div>
-      ${d.groomOrder ? `<div class="person-fullname">${esc(d.groomOrder.toUpperCase())}</div>` : ''}
-      ${d.groomFather || d.groomMother ? `
-        <div class="person-parents">
-          ${esc(d.groomFather || '')}<br>
-          ${d.groomFather && d.groomMother ? '&amp;<br>' : ''}
-          ${esc(d.groomMother || '')}
-        </div>
-      ` : ''}
-    </div>
-  </section>
-  
-  ${d.weddingDate ? `
-  <section class="fade-in">
-    <div class="section-tag">— ✦ —</div>
-    <h2 class="section-title">Counting Down</h2>
-    
-    <div class="countdown">
-      <div class="countdown-item">
-        <div class="countdown-num" data-cd="d">00</div>
-        <div class="countdown-label">Hari</div>
-      </div>
-      <div class="countdown-item">
-        <div class="countdown-num" data-cd="h">00</div>
-        <div class="countdown-label">Jam</div>
-      </div>
-      <div class="countdown-item">
-        <div class="countdown-num" data-cd="m">00</div>
-        <div class="countdown-label">Menit</div>
-      </div>
-      <div class="countdown-item">
-        <div class="countdown-num" data-cd="s">00</div>
-        <div class="countdown-label">Detik</div>
-      </div>
-    </div>
-  </section>
-  ` : ''}
-  
-  <section class="fade-in">
-    <div class="section-tag">— ✦ —</div>
-    <h2 class="section-title">Save The Date</h2>
-    <p class="section-subtitle">Dengan penuh syukur, kami mengundang Anda</p>
-    
-    ${d.akadVenue ? `
-    <div class="event-card">
-      <div class="event-icon">۞</div>
-      <div class="event-name">AKAD NIKAH</div>
-      <div style="font-style:italic; font-size:14px; color:rgba(245,233,211,0.7);">${date.day}</div>
-      <div class="event-date">${date.formatted}</div>
-      <div class="event-time">${esc(d.akadStart)} — ${esc(d.akadEnd)} WIB</div>
-      <div class="event-venue"><strong>${esc(d.akadVenue)}</strong></div>
-      <div class="event-address">${esc(d.akadAddress || '').replace(/\n/g, '<br>')}</div>
-      ${d.akadMaps ? `<a href="${esc(d.akadMaps)}" target="_blank" class="map-btn">LIHAT LOKASI</a>` : ''}
-    </div>
-    ` : ''}
-    
-    ${d.resepsiVenue ? `
-    <div class="event-card">
-      <div class="event-icon">❀</div>
-      <div class="event-name">RESEPSI</div>
-      <div style="font-style:italic; font-size:14px; color:rgba(245,233,211,0.7);">${date.day}</div>
-      <div class="event-date">${date.formatted}</div>
-      <div class="event-time">${esc(d.resepsiStart)} — ${esc(d.resepsiEnd)} WIB</div>
-      <div class="event-venue"><strong>${esc(d.resepsiVenue)}</strong></div>
-      <div class="event-address">${esc(d.resepsiAddress || '').replace(/\n/g, '<br>')}</div>
-      ${d.resepsiMaps ? `<a href="${esc(d.resepsiMaps)}" target="_blank" class="map-btn">LIHAT LOKASI</a>` : ''}
-    </div>
-    ` : ''}
-  </section>
-  
-  ${d.bank1Num || d.bank2Num ? `
-  <section class="fade-in">
-    <div class="section-tag">— ✦ —</div>
-    <h2 class="section-title">Wedding Gift</h2>
-    <p class="section-subtitle">Amplop Digital — doa restu adalah hadiah terindah</p>
-    
-    ${d.bank1Num ? `
-    <div class="bank-card">
-      <div class="bank-name">— ${esc(d.bank1Name)} —</div>
-      <div class="bank-number">${formatBank(d.bank1Num)}</div>
-      <div class="bank-holder">a.n. ${esc(d.bank1Holder || '')}</div>
-      <button class="copy-btn" onclick="copyText('${d.bank1Num}', this)">SALIN NOMOR</button>
-    </div>
-    ` : ''}
-    
-    ${d.bank2Num ? `
-    <div class="bank-card">
-      <div class="bank-name">— ${esc(d.bank2Name)} —</div>
-      <div class="bank-number">${formatBank(d.bank2Num)}</div>
-      <div class="bank-holder">a.n. ${esc(d.bank2Holder || '')}</div>
-      <button class="copy-btn" onclick="copyText('${d.bank2Num}', this)">SALIN NOMOR</button>
-    </div>
-    ` : ''}
-  </section>
-  ` : ''}
-  
-  <footer class="footer">
-    <div style="color:#d4af6c; font-size:14px; letter-spacing:8px; opacity:0.7; margin-bottom:24px;">✦  ❀  ✦</div>
-    <h2 class="footer-thanks">Terima Kasih</h2>
-    <p class="footer-message">
-      Merupakan suatu kehormatan dan kebahagiaan apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kami.
-    </p>
-    <div class="footer-couple">${esc(brideShort)} &amp; ${esc(groomShort)}</div>
-    <div style="font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px; color: #d4af6c;">— BESERTA KELUARGA —</div>
-  </footer>
+  <div class="ornament" style="margin-top: 28px;">
+    <span class="line"></span>
+    <span>✦</span>
+    <span class="line"></span>
+  </div>
 </div>
 
+<!-- ============ INVITATION LAYER ============ -->
+<main class="inv">
+
+  <!-- Section: Greeting -->
+  <section class="section">
+    <div class="ornament-divider">
+      <span class="line"></span><span>✦</span><span class="line"></span>
+    </div>
+    <div class="section-tag">Bismillah</div>
+    <p class="section-text">{{quote}}</p>
+    <div class="section-script">— QS. Ar-Rum 21 —</div>
+  </section>
+
+  <!-- Section: Couple -->
+  <section class="section">
+    <div class="section-tag">The Couple</div>
+    <h2 class="section-title">Mempelai</h2>
+    <p class="section-text">{{coupleIntro}}</p>
+
+    <div class="couple">
+      <div class="person">
+        <div class="person-photo">{{brideInitial}}</div>
+        <div class="person-role">The Bride</div>
+        <div class="person-name">{{brideName}}</div>
+        <div class="person-parent">{{brideParent}}</div>
+      </div>
+      <div class="couple-amp">&</div>
+      <div class="person">
+        <div class="person-photo">{{groomInitial}}</div>
+        <div class="person-role">The Groom</div>
+        <div class="person-name">{{groomName}}</div>
+        <div class="person-parent">{{groomParent}}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Countdown -->
+  <section class="section">
+    <div class="section-tag">Save The Date</div>
+    <h2 class="section-title">Counting Down</h2>
+    <p class="section-text">Menanti hari yang dirahmati</p>
+
+    <div class="countdown">
+      <div class="cd-box"><div class="cd-num" id="cdDays">--</div><div class="cd-label">Hari</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdHours">--</div><div class="cd-label">Jam</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdMin">--</div><div class="cd-label">Menit</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdSec">--</div><div class="cd-label">Detik</div></div>
+    </div>
+  </section>
+
+  <!-- Section: Events -->
+  <section class="section">
+    <div class="section-tag">The Ceremony</div>
+    <h2 class="section-title">Wedding Events</h2>
+
+    {{akadCard}}
+    {{resepsiCard}}
+  </section>
+
+  <!-- Section: Location -->
+  <section class="section" id="locationSection">
+    <div class="section-tag">Location</div>
+    <h2 class="section-title">{{venueName}}</h2>
+    <p class="section-text">{{venueAddress}}</p>
+    {{mapsButton}}
+  </section>
+
+  <!-- Section: Story -->
+  <section class="section" id="storySection">
+    <div class="section-tag">Our Story</div>
+    <h2 class="section-title">Love Story</h2>
+    <p class="section-text">Setiap pertemuan punya alasan</p>
+
+    {{storyTimeline}}
+  </section>
+
+  <!-- Section: Gallery -->
+  <section class="section" id="gallerySection">
+    <div class="section-tag">Memories</div>
+    <h2 class="section-title">Gallery</h2>
+
+    <div class="gallery">
+      {{galleryItems}}
+    </div>
+  </section>
+
+  <!-- Section: RSVP -->
+  <section class="section">
+    <div class="section-tag">Confirmation</div>
+    <h2 class="section-title">RSVP & Ucapan</h2>
+    <p class="section-text">Sampaikan kehadiran & doa terbaikmu</p>
+
+    <form class="rsvp-form" id="rsvpForm" onsubmit="return false;">
+      <input type="text" class="rsvp-input" id="rsvpName" placeholder="Nama kamu" required>
+      <div class="rsvp-buttons">
+        <button type="button" class="rsvp-btn" id="btnHadir" onclick="setAttend(true)">✓ Hadir</button>
+        <button type="button" class="rsvp-btn" id="btnTidak" onclick="setAttend(false)">✗ Tidak Hadir</button>
+      </div>
+      <textarea class="rsvp-textarea" id="rsvpMsg" placeholder="Ucapan & doa (opsional)"></textarea>
+      <button type="submit" class="rsvp-submit" onclick="submitRsvp()">Kirim RSVP ✉</button>
+      <div class="rsvp-status" id="rsvpStatus"></div>
+    </form>
+
+    <div class="ucapan-list" id="ucapanList"></div>
+  </section>
+
+  <!-- Section: Gift -->
+  <section class="section" id="giftSection">
+    <div class="section-tag">Wedding Gift</div>
+    <h2 class="section-title">Amplop Digital</h2>
+    <p class="section-text">Doa restu adalah hadiah terindah</p>
+
+    {{bankCards}}
+  </section>
+
+  <!-- Footer -->
+  <section class="footer-final">
+    <div class="ornament-divider">
+      <span class="line"></span><span>✦</span><span class="line"></span>
+    </div>
+    <div class="footer-thanks">Terima Kasih</div>
+    <p class="section-text">Merupakan suatu kehormatan apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kami.</p>
+    <div class="footer-couple">{{brideShort}} & {{groomShort}}</div>
+    <div class="footer-family">— Beserta Keluarga —</div>
+    <div class="ornament-divider" style="margin-top: 28px;">
+      <span class="line"></span><span>✦</span><span class="line"></span>
+    </div>
+  </section>
+</main>
+
+<!-- Music toggle -->
+<button class="music-toggle" id="musicBtn" onclick="toggleMusic()">♪</button>
+
+<!-- Audio -->
+<audio id="bgMusic" loop preload="metadata">
+  <source src="{{musicUrl}}" type="audio/mpeg">
+</audio>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
 <script>
-  document.body.classList.add('theme-royal');
-  function copyText(t, btn) {
-    navigator.clipboard?.writeText(t);
-    const o = btn.textContent;
-    btn.textContent = '✓ TERSALIN';
-    setTimeout(() => btn.textContent = o, 1200);
+  // Data injected by generator (or fallback for preview)
+  const DATA = window._invitationData || null;
+  const ORDER_ID = '{{orderId}}';
+  const THEME = 'royal-classic';
+  const BOT_API = 'https://telegram-bot.daksara-dev.workers.dev';
+  const IS_PREVIEW = {{isPreview}};
+
+  // ============ Cover open ============
+  document.getElementById('openBtn').addEventListener('click', () => {
+    const cover = document.getElementById('cover');
+    cover.classList.add('opened');
+    document.body.classList.remove('locked');
+
+    // Auto-play music
+    const audio = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    audio.play().then(() => {
+      musicBtn.classList.add('show', 'playing');
+      musicBtn.textContent = '♪';
+    }).catch(err => {
+      console.log('Music autoplay blocked', err);
+      musicBtn.classList.add('show');
+      musicBtn.textContent = '▶';
+    });
+
+    // Trigger reveal animations
+    setTimeout(initSectionReveal, 600);
+  });
+
+  // Lock scroll until cover opened
+  document.body.classList.add('locked');
+
+  // Show preview banner if applicable
+  if (IS_PREVIEW) {
+    document.getElementById('previewBanner').classList.add('show');
+    document.body.classList.add('has-banner');
   }
-<\/script>
-    `;
+
+  // ============ Section reveal on scroll ============
+  function initSectionReveal() {
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    sections.forEach(s => observer.observe(s));
+    // First section visible immediately
+    sections[0]?.classList.add('visible');
   }
-  
+
+  // ============ Countdown ============
+  (function initCountdown() {
+    const target = new Date('{{weddingTimestamp}}').getTime();
+    if (isNaN(target)) return;
+
+    function update() {
+      const now = Date.now();
+      const diff = target - now;
+      if (diff < 0) {
+        ['cdDays','cdHours','cdMin','cdSec'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = '0';
+        });
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v).padStart(2, '0'); };
+      set('cdDays', d);
+      set('cdHours', h);
+      set('cdMin', m);
+      set('cdSec', s);
+    }
+    update();
+    setInterval(update, 1000);
+  })();
+
+  // ============ Music toggle ============
+  function toggleMusic() {
+    const audio = document.getElementById('bgMusic');
+    const btn = document.getElementById('musicBtn');
+    if (audio.paused) {
+      audio.play();
+      btn.classList.add('playing');
+      btn.textContent = '♪';
+    } else {
+      audio.pause();
+      btn.classList.remove('playing');
+      btn.textContent = '▶';
+    }
+  }
+
   // ============ RSVP ============
-  function initRsvp(orderId, theme) {
-    const isBloom  = theme === 'sunset-bloom';
-    const isJawa   = theme === 'adat-jawa';
-    const isRoyal  = !isBloom && !isJawa;
-
-    const accent    = isBloom ? '#e8825a' : '#c4a464';
-    const accentBg  = isBloom ? '#fff0ea' : 'rgba(196,164,100,0.08)';
-    const border    = isBloom ? '#f0d9cc' : 'rgba(196,164,100,0.25)';
-    const bg        = isBloom ? '#fff8f5' : (isJawa ? '#2a1a08' : '#15100a');
-    const textColor = isBloom ? '#7b4f3a' : '#f0e0c0';
-    const subColor  = isBloom ? '#a0776a' : 'rgba(240,224,192,0.55)';
-    const fontTitle = isBloom ? "'DM Serif Display', serif" : "'Cormorant Garamond', serif";
-    const radius    = isBloom ? '8px' : '0px';
-
-    const root = document.getElementById('invitation-root');
-    const rsvpEl = document.createElement('div');
-    rsvpEl.id = 'rsvp-wrap';
-    rsvpEl.style.cssText = `max-width:480px; margin:0 auto; padding:60px 24px 80px; background:${bg}; font-family:'Cormorant Garamond',serif;`;
-    rsvpEl.innerHTML = `
-      <div style="text-align:center; margin-bottom:28px;">
-        <div style="font-family:${fontTitle}; font-size:28px; color:${textColor}; letter-spacing:2px;">RSVP &amp; Ucapan</div>
-        <div style="font-size:14px; color:${subColor}; font-style:italic; margin-top:6px;">Sampaikan kehadiran &amp; doa terbaikmu</div>
-      </div>
-
-      <div id="rsvp-form">
-        <input id="rsvp-name" type="text" placeholder="Nama kamu" maxlength="60" style="
-          width:100%; box-sizing:border-box; padding:12px 16px;
-          background:${isRoyal ? 'rgba(255,255,255,0.05)' : '#fff'};
-          border:1px solid ${border}; color:${textColor};
-          font-family:'Cormorant Garamond',serif; font-size:16px;
-          margin-bottom:12px; outline:none; border-radius:${radius};
-        "/>
-
-        <div style="display:flex; gap:10px; margin-bottom:12px;">
-          <div id="btn-hadir" onclick="rsvpSelect(true)" style="
-            flex:1; text-align:center; padding:11px;
-            border:1px solid ${border}; cursor:pointer; font-size:14px;
-            color:${subColor}; transition:all .2s; border-radius:${radius};
-          ">✅ Hadir</div>
-          <div id="btn-tidak" onclick="rsvpSelect(false)" style="
-            flex:1; text-align:center; padding:11px;
-            border:1px solid ${border}; cursor:pointer; font-size:14px;
-            color:${subColor}; transition:all .2s; border-radius:${radius};
-          ">❌ Tidak Hadir</div>
-        </div>
-
-        <textarea id="rsvp-msg" placeholder="Ucapan &amp; doa (opsional)" maxlength="200" rows="3" style="
-          width:100%; box-sizing:border-box; padding:12px 16px;
-          background:${isRoyal ? 'rgba(255,255,255,0.05)' : '#fff'};
-          border:1px solid ${border}; color:${textColor};
-          font-family:'Cormorant Garamond',serif; font-size:15px;
-          margin-bottom:14px; resize:none; outline:none; border-radius:${radius};
-        "></textarea>
-
-        <button onclick="rsvpSubmit('${orderId}')" style="
-          width:100%; padding:13px;
-          background:${isRoyal ? 'linear-gradient(135deg,#d4af6c,#b8951f)' : 'linear-gradient(135deg,#e8825a,#d4604a)'};
-          color:${isRoyal ? '#0d0a08' : '#fff'};
-          border:none; font-family:${isRoyal ? "'Cinzel',serif" : "'Inter',sans-serif"};
-          font-size:${isRoyal ? '12px' : '15px'};
-          ${isRoyal ? 'letter-spacing:3px;' : 'font-weight:600;'}
-          cursor:pointer; border-radius:${radius};
-        ">KIRIM RSVP 💌</button>
-        <div id="rsvp-err" style="color:#c0392b; font-size:13px; text-align:center; margin-top:8px; display:none;"></div>
-      </div>
-
-      <div id="rsvp-ok" style="display:none; text-align:center; padding:28px 0;">
-        <div style="font-size:40px; margin-bottom:10px;">🎉</div>
-        <div style="font-family:${fontTitle}; font-size:22px; color:${textColor};">Terima kasih, <span id="rsvp-ok-name"></span>!</div>
-        <div style="font-style:italic; font-size:14px; color:${subColor}; margin-top:6px;">RSVP kamu sudah kami terima.</div>
-      </div>
-
-      <div id="ucapan-list" style="margin-top:32px;"></div>
-    `;
-    root.appendChild(rsvpEl);
+  let rsvpAttend = null;
+  function setAttend(val) {
+    rsvpAttend = val;
+    document.getElementById('btnHadir').classList.toggle('active', val === true);
+    document.getElementById('btnTidak').classList.toggle('active', val === false);
   }
 
-  let _rsvpAttending = null;
-
-  window.rsvpSelect = function(val) {
-    _rsvpAttending = val;
-    const isBloom  = document.body.classList.contains('theme-bloom');
-    const accent   = isBloom ? '#e8825a' : '#c4a464';
-    const accentBg = isBloom ? '#fff0ea' : 'rgba(196,164,100,0.1)';
-    document.getElementById('btn-hadir').style.borderColor  = val  ? accent   : '';
-    document.getElementById('btn-hadir').style.background   = val  ? accentBg : '';
-    document.getElementById('btn-tidak').style.borderColor  = !val ? accent   : '';
-    document.getElementById('btn-tidak').style.background   = !val ? accentBg : '';
-  };
-
-  window.rsvpSubmit = async function(orderId) {
-    const name    = document.getElementById('rsvp-name').value.trim();
-    const message = document.getElementById('rsvp-msg').value.trim();
-    const errEl   = document.getElementById('rsvp-err');
+  async function submitRsvp() {
+    if (IS_PREVIEW) {
+      showToast('Mode preview — RSVP dinonaktifkan');
+      return;
+    }
+    const name = document.getElementById('rsvpName').value.trim();
+    const msg = document.getElementById('rsvpMsg').value.trim();
+    const status = document.getElementById('rsvpStatus');
 
     if (!name) {
-      errEl.textContent = 'Nama tidak boleh kosong.';
-      errEl.style.display = 'block';
+      status.textContent = 'Mohon isi nama terlebih dahulu';
+      status.className = 'rsvp-status err';
       return;
     }
-    if (_rsvpAttending === null) {
-      errEl.textContent = 'Pilih kehadiran dulu.';
-      errEl.style.display = 'block';
+    if (rsvpAttend === null) {
+      status.textContent = 'Mohon pilih kehadiran';
+      status.className = 'rsvp-status err';
       return;
     }
-    errEl.style.display = 'none';
 
+    status.textContent = 'Mengirim...';
+    status.className = 'rsvp-status';
     try {
-      const res = await fetch(`${BOT_API_URL}/orders/rsvp/${orderId}`, {
+      const res = await fetch(BOT_API + '/orders/rsvp/' + ORDER_ID, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, attending: _rsvpAttending, message })
+        body: JSON.stringify({ name, attending: rsvpAttend, message: msg })
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Gagal kirim');
+      const j = await res.json();
+      if (!j.ok) throw new Error(j.error || 'Gagal kirim');
 
-      document.getElementById('rsvp-form').style.display = 'none';
-      document.getElementById('rsvp-ok-name').textContent = name;
-      document.getElementById('rsvp-ok').style.display = 'block';
-
-      if (message) appendUcapan(name, _rsvpAttending, message);
-    } catch(e) {
-      errEl.textContent = e.message;
-      errEl.style.display = 'block';
+      status.textContent = '✓ Terima kasih atas konfirmasinya!';
+      status.className = 'rsvp-status ok';
+      document.getElementById('rsvpName').value = '';
+      document.getElementById('rsvpMsg').value = '';
+      rsvpAttend = null;
+      document.getElementById('btnHadir').classList.remove('active');
+      document.getElementById('btnTidak').classList.remove('active');
+      loadUcapan();
+    } catch (e) {
+      status.textContent = 'Gagal kirim: ' + (e.message || 'error');
+      status.className = 'rsvp-status err';
     }
-  };
-
-  function appendUcapan(name, attending, message) {
-    const isBloom  = document.body.classList.contains('theme-bloom');
-    const isJawa   = document.body.classList.contains('theme-jawa');
-    const border   = isBloom ? '#f0d9cc' : 'rgba(196,164,100,0.2)';
-    const bg       = isBloom ? '#fff' : (isJawa ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.03)');
-    const nameColor = isBloom ? '#7b4f3a' : '#c4a464';
-    const msgColor  = isBloom ? '#6b5045' : 'rgba(240,224,192,0.65)';
-    const radius    = isBloom ? '10px' : '0px';
-
-    const list = document.getElementById('ucapan-list');
-    const item = document.createElement('div');
-    item.style.cssText = `background:${bg}; border:1px solid ${border}; padding:14px 16px; margin-bottom:10px; border-radius:${radius};`;
-    item.innerHTML = `
-      <div style="font-weight:600; color:${nameColor}; font-size:14px;">${esc(name)} <span style="font-weight:400; opacity:0.5;">${attending ? '✅' : '❌'}</span></div>
-      <div style="color:${msgColor}; font-size:14px; margin-top:5px; font-style:italic;">"${esc(message)}"</div>
-    `;
-    list.prepend(item);
   }
 
-  // ============ HELPERS ============
-  function esc(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+  async function loadUcapan() {
+    if (IS_PREVIEW || !ORDER_ID) return;
+    try {
+      const res = await fetch(BOT_API + '/orders/rsvp/' + ORDER_ID);
+      const j = await res.json();
+      if (!j.ok || !Array.isArray(j.list)) return;
+      const list = j.list.slice().reverse();
+      const ul = document.getElementById('ucapanList');
+      if (!list.length) {
+        ul.innerHTML = '<div style="text-align:center;font-style:italic;color:var(--cream-mute);padding:14px;font-size:13px;">Jadilah yang pertama mengirim ucapan ✦</div>';
+        return;
+      }
+      ul.innerHTML = list.map(item => {
+        const attend = item.attending ? '<span class="ucapan-attend">— hadir</span>' : '<span class="ucapan-attend">— tidak hadir</span>';
+        const safeName = String(item.name || '').replace(/[<>&]/g, '');
+        const safeMsg = String(item.message || '').replace(/[<>&]/g, '');
+        return '<div class="ucapan-item"><div class="ucapan-name">' + safeName + attend + '</div>' +
+          (safeMsg ? '<div class="ucapan-msg">"' + safeMsg + '"</div>' : '') + '</div>';
+      }).join('');
+    } catch (e) { console.warn('Load ucapan failed', e); }
   }
-  
-  function formatDate(dateStr) {
-    if (!dateStr) return { formatted: '— · — · —', day: '' };
-    const d = new Date(dateStr);
-    const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-    const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-    return {
-      formatted: `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`,
-      day: days[d.getDay()],
-      iso: dateStr,
-    };
+  if (!IS_PREVIEW && ORDER_ID && ORDER_ID !== '{{order' + 'Id}}') {
+    setTimeout(loadUcapan, 800);
   }
-  
-  function formatBank(num) {
-    if (!num) return '';
-    return String(num).replace(/(.{4})/g, '$1 ').trim();
+
+  // ============ Bank copy ============
+  function copyBank(num, btn) {
+    if (navigator.clipboard) navigator.clipboard.writeText(num);
+    const orig = btn.textContent;
+    btn.textContent = '✓ Tersalin';
+    showToast('Nomor rekening tersalin');
+    setTimeout(() => { btn.textContent = orig; }, 1500);
   }
-  
-  // Start
-  init();
+  window.copyBank = copyBank;
+
+  // ============ Toast ============
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ============ Cover guest name (from URL ?to=) ============
+  (function() {
+    const guest = new URLSearchParams(window.location.search).get('to');
+    if (guest && guest.length < 50) {
+      document.getElementById('coverGuest').style.display = 'block';
+      document.getElementById('coverGuestName').textContent = decodeURIComponent(guest);
+    }
+  })();
 </script>
 </body>
 </html>
