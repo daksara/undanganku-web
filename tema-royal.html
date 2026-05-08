@@ -47,12 +47,19 @@
 
   const THEME_KEY = 'royal-classic';
 
+  let alreadyRendered = false;
+  function safeRender(payload) {
+    if (alreadyRendered) return;
+    alreadyRendered = true;
+    document.getElementById('loading').classList.add('hidden');
+    renderInvitation(payload);
+  }
+
   async function init() {
-    // postMessage dari builder (iframe preview)
+    // postMessage dari builder (iframe preview) — first-come-first-served
     window.addEventListener('message', (event) => {
       if (event.data?.type === 'PREVIEW_DATA') {
-        document.getElementById('loading').classList.add('hidden');
-        renderInvitation(event.data.payload);
+        safeRender(event.data.payload);
       }
     });
     if (window.parent !== window) {
@@ -60,28 +67,62 @@
     }
 
     // Hash dari router atau builder preview — langsung render, tidak fetch ulang
-    if (window.location.hash) {
+    if (window.location.hash && window.location.hash.length > 5) {
       try {
         const payload = JSON.parse(decodeURIComponent(window.location.hash.slice(1)));
-        renderInvitation(payload);
+        safeRender(payload);
         return;
-      } catch (e) {}
+      } catch (e) {
+        console.warn('Hash payload invalid, fallback ke fetch', e);
+      }
     }
 
     // Fallback: ?id= langsung (tanpa router)
     const orderId = new URLSearchParams(window.location.search).get('id');
-    if (!orderId) return;
+    if (!orderId) {
+      // Tidak ada hash, tidak ada id → kemungkinan iframe preview yang nunggu postMessage
+      // Jangan tampilkan error, biar postMessage handler yang ambil alih
+      return;
+    }
+
+    // Timeout 12 detik supaya tidak hang kalau worker down
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     try {
-      const response = await fetch(`${BOT_API_URL}/orders/data/${orderId}`);
-      const result = await response.json();
-      if (!result.ok) {
-        showError(result.error === 'Order not found' ? 'Undangan tidak ditemukan' : 'Akses ditolak', result.error);
+      const response = await fetch(`${BOT_API_URL}/orders/data/${orderId}`, {
+        signal: controller.signal,
+        cache: 'default'
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          showError('Undangan tidak ditemukan', 'Pastikan link yang kamu buka benar.');
+        } else if (response.status === 403) {
+          showError('Akses ditolak', 'Pesanan ini ditolak oleh pemilik.');
+        } else {
+          showError('Server bermasalah', 'Coba refresh dalam beberapa saat.');
+        }
         return;
       }
-      renderInvitation(result);
+
+      const result = await response.json();
+      if (!result.ok) {
+        showError(
+          result.error === 'Order not found' ? 'Undangan tidak ditemukan' : 'Akses ditolak',
+          result.error || 'Tidak dapat memuat data.'
+        );
+        return;
+      }
+      safeRender(result);
     } catch (err) {
-      showError('Gagal memuat', 'Periksa koneksi internet kamu, atau hubungi owner.');
+      clearTimeout(timeoutId);
+      if (err.name === 'AbortError') {
+        showError('Loading terlalu lama', 'Server lambat merespons. Coba refresh halaman.');
+      } else {
+        showError('Gagal memuat', 'Periksa koneksi internet kamu, atau hubungi owner.');
+      }
     }
   }
 
@@ -93,7 +134,7 @@
   }
 
   function renderInvitation({ theme, isPreview, data, watermark }) {
-    document.getElementById('invitation-root').innerHTML = renderTheme(data);
+    document.getElementById('invitation-root').innerHTML = renderRoyalClassic(data);
     document.getElementById('invitation-root').classList.add('show');
     if (isPreview || watermark) {
       document.getElementById('watermark').classList.add('show');
@@ -729,7 +770,6 @@
   }
   
   // Start
-  init();
   init();
 </script>
 </body>
