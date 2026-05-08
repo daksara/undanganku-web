@@ -531,14 +531,28 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
   }
   .bank-card-mini-info {
     flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   .bank-card-mini-name {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 2px;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    min-width: 64px;
+  }
+  .bank-card-mini-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--line);
+    flex-shrink: 0;
   }
   .bank-card-mini-num {
     font-family: 'DM Serif Display', serif;
@@ -1018,16 +1032,26 @@
     
     <div class="section-head" style="margin-top: 24px;">
       <span class="section-head-icon">💳</span>
-      <span class="section-head-text">Transfer ke Rekening</span>
+      <span class="section-head-text">Transfer ke Rekening atau E-Wallet</span>
     </div>
     
     <div class="bank-card-mini">
-  <div class="bank-card-mini-info">
-    <div class="bank-card-mini-name">SeaBank · a.n. Willy Anugrah</div>
-    <div class="bank-card-mini-num">9010 9567 9260</div>
-  </div>
-  <button class="copy-mini" onclick="copy('901095679260', this)">SALIN</button>
-</div>
+      <div class="bank-card-mini-info">
+        <div class="bank-card-mini-name">SeaBank</div>
+        <div class="bank-card-mini-divider"></div>
+        <div class="bank-card-mini-num">9010 9567 9260</div>
+      </div>
+      <button class="copy-mini" onclick="copy('901095679260', this)">SALIN</button>
+    </div>
+
+    <div class="bank-card-mini" style="margin-top: 8px;">
+      <div class="bank-card-mini-info">
+        <div class="bank-card-mini-name">Dana</div>
+        <div class="bank-card-mini-divider"></div>
+        <div class="bank-card-mini-num">0896 0562 3197</div>
+      </div>
+      <button class="copy-mini" onclick="copy('089605623197', this)">SALIN</button>
+    </div>
     
     <div class="preview-cta" style="margin-top: 16px;">
       ⚠️ <strong>Cara pesan:</strong> (1) Transfer sesuai nominal di atas, (2) Klik tombol "Pesan Sekarang" di bawah, (3) Owner akan dapat notifikasi via Telegram lengkap dengan data pesananmu, (4) Setelah konfirmasi, link undangan otomatis aktif tanpa watermark.
