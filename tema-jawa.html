@@ -1042,6 +1042,13 @@ body.preview-mode [data-preview-only] { display: block; }
     // Handle audio src
     var audio = document.getElementById('bgMusic');
     if (audio && replacements.musicUrl) audio.src = replacements.musicUrl;
+    
+    // Fix maps links — browser resolve {{akadMaps}} jadi absolute URL, perlu override manual
+    var mapAkad = document.querySelector('[data-map-akad]');
+    if (mapAkad && replacements.akadMaps) mapAkad.href = replacements.akadMaps;
+    
+    var mapResepsi = document.querySelector('[data-map-resepsi]');
+    if (mapResepsi && replacements.resepsiMaps) mapResepsi.href = replacements.resepsiMaps;
   }
 
   // ===== Apply data =====
@@ -1093,16 +1100,33 @@ body.preview-mode [data-preview-only] { display: block; }
 
     // Bank
     var banks = [];
-    if (d.bank1Num) banks.push({ name: d.bank1Name || 'Bank', num: d.bank1Num, holder: d.bank1Holder || '' });
-    if (d.bank2Num) banks.push({ name: d.bank2Name || 'Bank', num: d.bank2Num, holder: d.bank2Holder || '' });
+    if (d.bank1Num) banks.push({ name: d.bank1Name || 'Transfer', num: d.bank1Num, holder: d.bank1Holder || '' });
+    if (d.bank2Num) banks.push({ name: d.bank2Name || 'Transfer', num: d.bank2Num, holder: d.bank2Holder || '' });
     var giftSection = document.getElementById('giftSection');
     if (banks.length === 0) {
       giftSection.style.display = 'none';
     } else {
+      var ICONS = {
+        'GoPay': '💚', 'OVO': '💜', 'Dana': '🔵',
+        'ShopeePay': '🟠', 'LinkAja': '❤️',
+        'BCA': '🏦', 'BRI': '🏦', 'BNI': '🏦',
+        'Mandiri': '🏦', 'BSI': '🏦', 'CIMB Niaga': '🏦',
+        'SeaBank': '🏦', 'Jenius': '🏦', 'Jago': '🏦',
+      };
+      var EWALLET = ['GoPay', 'OVO', 'Dana', 'ShopeePay', 'LinkAja'];
       var bHtml = '';
       for (var k = 0; k < banks.length; k++) {
         var b = banks[k];
-        bHtml += '<div class="bank-card"><div class="bank-name">' + esc(b.name) + '</div><div class="bank-num">' + esc(b.num) + '</div><div class="bank-holder">a.n. ' + esc(b.holder) + '</div><button class="copy-btn" data-bank-num="' + esc(b.num) + '">SALIN NOMOR</button></div>';
+        var icon = ICONS[b.name] || '💳';
+        var isEwallet = EWALLET.indexOf(b.name) !== -1;
+        var numLabel = isEwallet ? 'No. HP / Akun' : 'No. Rekening';
+        bHtml += '<div class="bank-card">' +
+          '<div class="bank-name">' + icon + ' ' + esc(b.name) + '</div>' +
+          '<div style="font-size:11px;letter-spacing:0.15em;color:var(--gold-soft);opacity:0.7;margin-bottom:4px;">' + numLabel + '</div>' +
+          '<div class="bank-num">' + esc(b.num) + '</div>' +
+          '<div class="bank-holder">a.n. ' + esc(b.holder) + '</div>' +
+          '<button class="copy-btn" data-bank-num="' + esc(b.num) + '">SALIN</button>' +
+          '</div>';
       }
       document.getElementById('bankList').innerHTML = bHtml;
     }
@@ -1115,7 +1139,25 @@ body.preview-mode [data-preview-only] { display: block; }
       var target = new Date(dateStr + 'T' + timeStr + ':00+07:00').getTime();
       var update = function() {
         var diff = target - Date.now();
-        if (diff < 0) diff = 0;
+        
+        // Hari H sudah lewat
+        if (diff <= 0) {
+          var dEl = document.querySelector('[data-cd="d"]'); if (dEl) dEl.textContent = '00';
+          var hEl = document.querySelector('[data-cd="h"]'); if (hEl) hEl.textContent = '00';
+          var mEl = document.querySelector('[data-cd="m"]'); if (mEl) mEl.textContent = '00';
+          var sEl = document.querySelector('[data-cd="s"]'); if (sEl) sEl.textContent = '00';
+          var cdEl = document.getElementById('countdown');
+          if (cdEl && !cdEl.getAttribute('data-done')) {
+            cdEl.setAttribute('data-done', '1');
+            cdEl.innerHTML = '<div style="grid-column:1/-1; padding:20px 0; text-align:center;">' +
+              '<div style="font-family:\'Allura\',cursive; font-size:36px; color:var(--gold); line-height:1.2;">Alhamdulillah</div>' +
+              '<div style="font-size:13px; font-style:italic; color:var(--cream-soft); margin-top:8px; opacity:0.85;">' +
+              'Kami telah resmi menjadi sepasang suami istri.<br>Terima kasih atas doa dan kehadiran kalian.' +
+              '</div></div>';
+          }
+          return;
+        }
+        
         var days = Math.floor(diff / 86400000);
         var hours = Math.floor((diff % 86400000) / 3600000);
         var mins = Math.floor((diff % 3600000) / 60000);
