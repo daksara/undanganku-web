@@ -961,6 +961,90 @@ body.preview-mode [data-preview-only] { display: block; }
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
   function setText(sel, val) { var el = document.querySelector(sel); if (el) el.textContent = val; }
 
+  // ===== Fill DOM placeholders (untuk preview mode / fetch mode) =====
+  function formatDateLong(dateStr) {
+    if (!dateStr) return '';
+    var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function formatDateShort(dateStr) {
+    if (!dateStr) return '';
+    var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear();
+  }
+  function buildMapUrl(venue) {
+    if (!venue) return '#';
+    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(venue);
+  }
+  function firstWord(str) {
+    return (str || '').split(' ')[0] || str || '';
+  }
+  
+  function fillDOM(d) {
+    // Replace semua teks node yang berisi {{placeholder}} di seluruh DOM
+    var replacements = {
+      brideName: d.brideName || '',
+      brideShort: firstWord(d.brideName),
+      brideParents: d.brideParents || '',
+      groomName: d.groomName || '',
+      groomShort: firstWord(d.groomName),
+      groomParents: d.groomParents || '',
+      weddingDateLong: formatDateLong(d.weddingDate),
+      weddingDateShort: formatDateShort(d.weddingDate),
+      akadStart: d.akadStart || '08:00',
+      akadEnd: d.akadEnd || '10:00',
+      akadVenue: d.akadVenue || '',
+      akadMaps: d.akadMaps || buildMapUrl(d.akadVenue),
+      resepsiStart: d.resepsiStart || '11:00',
+      resepsiEnd: d.resepsiEnd || '15:00',
+      resepsiVenue: d.resepsiVenue || '',
+      resepsiMaps: d.resepsiMaps || buildMapUrl(d.resepsiVenue),
+      quote: d.quote || 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu istri-istri dari jenismu sendiri',
+      quoteSource: d.quoteSource || 'QS. Ar-Rum: 21',
+      musicUrl: d.musicUrl || 'https://www.bensound.com/bensound-music/bensound-romantic.mp3',
+    };
+    
+    // Replace text nodes yang berisi {{key}}
+    function walkAndReplace(node) {
+      if (node.nodeType === 3) { // TEXT_NODE
+        var t = node.textContent;
+        if (t.indexOf('{{') !== -1) {
+          var newT = t.replace(/\{\{(\w+)\}\}/g, function(m, key) {
+            return replacements.hasOwnProperty(key) ? replacements[key] : m;
+          });
+          if (newT !== t) node.textContent = newT;
+        }
+      } else if (node.nodeType === 1) { // ELEMENT_NODE
+        // Handle attributes (href, src, etc.)
+        ['href', 'src', 'data-src'].forEach(function(attr) {
+          var val = node.getAttribute(attr);
+          if (val && val.indexOf('{{') !== -1) {
+            var newVal = val.replace(/\{\{(\w+)\}\}/g, function(m, key) {
+              return replacements.hasOwnProperty(key) ? replacements[key] : m;
+            });
+            if (newVal !== val) node.setAttribute(attr, newVal);
+          }
+        });
+        // Recurse children (skip script + style)
+        var tag = node.tagName && node.tagName.toLowerCase();
+        if (tag !== 'script' && tag !== 'style') {
+          for (var i = 0; i < node.childNodes.length; i++) {
+            walkAndReplace(node.childNodes[i]);
+          }
+        }
+      }
+    }
+    
+    walkAndReplace(document.body);
+    
+    // Handle audio src
+    var audio = document.getElementById('bgMusic');
+    if (audio && replacements.musicUrl) audio.src = replacements.musicUrl;
+  }
+
   // ===== Apply data =====
   function applyData(payload) {
     if (!payload || !payload.data) return;
@@ -970,6 +1054,9 @@ body.preview-mode [data-preview-only] { display: block; }
       document.body.classList.add('preview-mode');
       document.getElementById('previewBanner').classList.add('show');
     }
+
+    // Fill semua {{placeholder}} di HTML (untuk mode preview/fetch dimana generator tidak jalan)
+    fillDOM(d);
 
     // Recipient name from URL ?to=
     var recipient = new URLSearchParams(window.location.search).get('to');
