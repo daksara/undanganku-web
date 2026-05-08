@@ -1072,8 +1072,24 @@
   // GANTI dengan URL Cloudflare Worker bot kamu
   const BOT_API_URL = 'https://telegram-bot.daksara-dev.workers.dev';
   
-  // URL halaman render undangan publik (file undangan-render.html)
-  const RENDER_URL = './undangan-render.html';
+  // Map tema -> file HTML (link langsung tanpa router redirect = lebih cepat)
+  const THEME_FILE_MAP = {
+    'royal-classic': 'tema-royal.html',
+    'sunset-bloom': 'tema-bloom.html',
+    'adat-jawa': 'tema-jawa.html',
+  };
+  
+  // Helper: dapatkan file path tema (relative)
+  function getThemeFile(theme) {
+    return './' + (THEME_FILE_MAP[theme] || 'tema-royal.html');
+  }
+  
+  // Helper: bangun URL link aktif (absolute) — untuk dishare ke tamu
+  function buildLiveUrl(orderId, theme) {
+    const themeFile = THEME_FILE_MAP[theme] || 'tema-royal.html';
+    const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+    return `${base}${themeFile}?id=${encodeURIComponent(orderId)}`;
+  }
   
   // ============ STATE ============
   let currentStep = 1;
@@ -1218,11 +1234,10 @@
       watermark: true,
       data: data,
     }));
-    // Buka di tab baru dengan hash — undangan-render.html handle hash fallback
-    const url = `${RENDER_URL}#${payload}`;
-    const tab = window.open('', '_blank');
-    tab.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preview Undangan</title><style>body{margin:0;background:#111;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#fff;flex-direction:column;gap:12px;}.sp{width:36px;height:36px;border:2px solid rgba(200,169,110,0.2);border-top-color:#c8a96e;border-radius:50%;animation:spin 0.8s linear infinite;}@keyframes spin{to{transform:rotate(360deg);}}</style></head><body><div class="sp"></div><div style="font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.4);">Memuat preview...</div><script>window.location.replace('${url}'.replace(/'/g, "\'"));<\/script></body></html>`);
-    tab.document.close();
+    // Buka tema file LANGSUNG dengan hash (no router redirect = instan)
+    const themeFile = getThemeFile(selectedTheme);
+    const url = `${themeFile}#${payload}`;
+    window.open(url, '_blank');
   }
   
   // ============ SUMMARY ============
@@ -1287,7 +1302,9 @@
       
       if (result.ok && result.orderId) {
         currentOrderId = result.orderId;
+        // Simpan order ID + theme (theme dibutuhkan saat restore polling utk build link benar)
         localStorage.setItem('undanganku_order', result.orderId);
+        localStorage.setItem('undanganku_theme', selectedTheme);
         showToast('Pesanan terkirim ke owner!', 'success');
         
         // Tampilkan order status card
@@ -1324,7 +1341,8 @@
           updateStatusUI(result.status);
           if (result.status === 'paid' || result.status === 'rejected') {
             clearInterval(pollingInterval);
-              localStorage.removeItem('undanganku_order');
+            localStorage.removeItem('undanganku_order');
+            localStorage.removeItem('undanganku_theme');
           }
         }
       } catch (err) {
@@ -1345,13 +1363,17 @@
     } else if (status === 'paid') {
       pill.innerHTML = `<span style="font-size:14px;">✅</span> <span>Terkonfirmasi</span>`;
       
-      const link = `${RENDER_URL}?id=${currentOrderId}`;
+      // Link langsung ke tema file (no router redirect = lebih cepat untuk tamu)
+      const liveUrl = buildLiveUrl(currentOrderId, selectedTheme);
+      
       detail.innerHTML = `
         🎉 <strong style="color:var(--success);">Pembayaran terkonfirmasi!</strong><br><br>
         Link undangan kamu sudah aktif tanpa watermark:<br>
-        <a href="${link}" target="_blank" style="color:var(--accent); word-break: break-all; display:inline-block; margin-top:8px;">${link}</a><br><br>
-        <button class="copy-mini" style="margin-top:8px;" onclick="copy('${window.location.origin}${window.location.pathname.replace('builder.html','')}${link.replace('./','')}', this)">SALIN LINK</button>
+        <a href="${liveUrl}" target="_blank" style="color:var(--accent); word-break: break-all; display:inline-block; margin-top:8px;">${liveUrl}</a><br><br>
+        <button class="copy-mini" style="margin-top:8px;" onclick="copyLiveUrl(this)">SALIN LINK</button>
       `;
+      // Simpan link untuk tombol copy (hindari escape issue di onclick string)
+      window._liveUrlForCopy = liveUrl;
       showToast('🎉 Undangan aktif!', 'success');
     } else if (status === 'rejected') {
       pill.innerHTML = `<span style="font-size:14px;">❌</span> <span>Ditolak</span>`;
@@ -1359,21 +1381,50 @@
     }
   }
   
+  // Helper terpisah untuk copy live URL (lebih aman dari escape issue)
+  function copyLiveUrl(btn) {
+    const url = window._liveUrlForCopy || '';
+    navigator.clipboard?.writeText(url);
+    const orig = btn.textContent;
+    btn.textContent = '✓ TERSALIN';
+    setTimeout(() => btn.textContent = orig, 1500);
+    showToast('Link tersalin!', 'success');
+  }
+  
   // ============ CHECK EXISTING ORDER (URL param atau localStorage) ============
   const urlParams = new URLSearchParams(window.location.search);
   const existingOrder = urlParams.get('order') || localStorage.getItem('undanganku_order');
   if (existingOrder) {
     currentOrderId = existingOrder;
+    
+    // Restore theme dari localStorage (kalau ada) supaya buildLiveUrl benar
+    const savedTheme = localStorage.getItem('undanganku_theme');
+    if (savedTheme && THEME_FILE_MAP[savedTheme]) {
+      selectedTheme = savedTheme;
+    }
 
     // Cek status dulu — kalau sudah paid/rejected, bersihkan localStorage
     fetch(`${BOT_API_URL}/orders/status/${existingOrder}`)
       .then(r => r.json())
-      .then(r => {
+      .then(async (r) => {
         if (!r.ok) {
           // Order tidak ditemukan, bersihkan
           localStorage.removeItem('undanganku_order');
+          localStorage.removeItem('undanganku_theme');
           return;
         }
+        
+        // Kalau theme belum ke-restore dari localStorage, fetch detail order untuk dapat theme
+        if (!savedTheme || !THEME_FILE_MAP[savedTheme]) {
+          try {
+            const dataRes = await fetch(`${BOT_API_URL}/orders/data/${existingOrder}`);
+            const dataJson = await dataRes.json();
+            if (dataJson.ok && dataJson.data && dataJson.data.theme) {
+              selectedTheme = dataJson.data.theme;
+            }
+          } catch (e) { /* abaikan, fallback default */ }
+        }
+        
         // Langsung ke step 5 polling
         changeStep(5);
         document.getElementById('orderStatusCard').classList.add('show');
@@ -1386,6 +1437,7 @@
         } else {
           // Sudah selesai, bersihkan localStorage
           localStorage.removeItem('undanganku_order');
+          localStorage.removeItem('undanganku_theme');
         }
       })
       .catch(() => {});
