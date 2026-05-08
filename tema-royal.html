@@ -42,6 +42,32 @@
 <div id="preview-banner">⚠️ MODE PREVIEW — Pembayaran belum dikonfirmasi</div>
 <div id="watermark">PREVIEW</div>
 <div id="invitation-root"></div>
+
+<!-- ===== DEBUG PANEL (REMOVE AFTER FIX) ===== -->
+<div id="debugPanel" style="position:fixed;top:0;left:0;right:0;background:#000;color:#0f0;font-family:monospace;font-size:11px;line-height:1.5;padding:8px;max-height:50vh;overflow:auto;z-index:99999;border-bottom:2px solid #0f0;white-space:pre-wrap;word-break:break-all;">[DEBUG MODE] Loading...</div>
+<script>
+  // Catch ALL errors (sebelum script utama)
+  window.__debugLog = [];
+  window.__addDebug = function(label, val) {
+    const ts = new Date().toISOString().substr(11, 12);
+    const line = `[${ts}] ${label}: ${typeof val === 'object' ? JSON.stringify(val).substr(0, 200) : val}`;
+    window.__debugLog.push(line);
+    const panel = document.getElementById('debugPanel');
+    if (panel) panel.textContent = window.__debugLog.join('\n');
+  };
+  
+  window.addEventListener('error', function(e) {
+    window.__addDebug('❌ ERROR', e.message + ' at ' + (e.filename || '?') + ':' + (e.lineno || '?'));
+  });
+  window.addEventListener('unhandledrejection', function(e) {
+    window.__addDebug('❌ PROMISE REJ', e.reason?.message || String(e.reason));
+  });
+  
+  __addDebug('✅ Debug panel initialized', '');
+  __addDebug('URL', window.location.href);
+  __addDebug('Hash length', window.location.hash.length);
+  __addDebug('Search params', window.location.search);
+</script>
 <script>
   const BOT_API_URL = 'https://telegram-bot.daksara-dev.workers.dev';
 
@@ -49,41 +75,64 @@
 
   let alreadyRendered = false;
   function safeRender(payload) {
-    if (alreadyRendered) return;
+    __addDebug('🎨 safeRender called', { alreadyRendered, hasPayload: !!payload, hasData: !!payload?.data });
+    if (alreadyRendered) {
+      __addDebug('⚠️ Skip: already rendered', '');
+      return;
+    }
     alreadyRendered = true;
     document.getElementById('loading').classList.add('hidden');
-    renderInvitation(payload);
+    try {
+      renderInvitation(payload);
+      __addDebug('✅ renderInvitation done', '');
+    } catch (e) {
+      __addDebug('❌ renderInvitation threw', e.message + ' / ' + e.stack?.substr(0, 200));
+    }
   }
 
   async function init() {
+    __addDebug('🚀 init() start', '');
+    
     // postMessage dari builder (iframe preview) — first-come-first-served
     window.addEventListener('message', (event) => {
+      __addDebug('📨 message received', event.data?.type);
       if (event.data?.type === 'PREVIEW_DATA') {
         safeRender(event.data.payload);
       }
     });
     if (window.parent !== window) {
+      __addDebug('📤 sending PREVIEW_READY to parent', '');
       window.parent.postMessage({ type: 'PREVIEW_READY' }, '*');
     }
 
     // Hash dari router atau builder preview — langsung render, tidak fetch ulang
     if (window.location.hash && window.location.hash.length > 5) {
+      __addDebug('🔍 found hash, length=' + window.location.hash.length, '');
       try {
-        const payload = JSON.parse(decodeURIComponent(window.location.hash.slice(1)));
+        const decoded = decodeURIComponent(window.location.hash.slice(1));
+        __addDebug('🔓 hash decoded, length=' + decoded.length, decoded.substr(0, 100));
+        const payload = JSON.parse(decoded);
+        __addDebug('📦 payload parsed', { theme: payload.theme, hasData: !!payload.data, dataKeys: Object.keys(payload.data || {}).length });
         safeRender(payload);
         return;
       } catch (e) {
+        __addDebug('❌ hash parse failed', e.message);
         console.warn('Hash payload invalid, fallback ke fetch', e);
       }
+    } else {
+      __addDebug('ℹ️ no hash or too short', '');
     }
 
     // Fallback: ?id= langsung (tanpa router)
     const orderId = new URLSearchParams(window.location.search).get('id');
+    __addDebug('🆔 orderId from query', orderId || '(none)');
+    
     if (!orderId) {
-      // Tidak ada hash, tidak ada id → kemungkinan iframe preview yang nunggu postMessage
-      // Jangan tampilkan error, biar postMessage handler yang ambil alih
+      __addDebug('🛑 No hash + no id → waiting for postMessage', '');
       return;
     }
+
+    __addDebug('📡 fetching ' + BOT_API_URL + '/orders/data/' + orderId, '');
 
     // Timeout 12 detik supaya tidak hang kalau worker down
     const controller = new AbortController();
@@ -95,6 +144,7 @@
         cache: 'default'
       });
       clearTimeout(timeoutId);
+      __addDebug('📨 fetch response', { status: response.status, ok: response.ok });
 
       if (!response.ok) {
         if (response.status === 404) {
@@ -108,6 +158,8 @@
       }
 
       const result = await response.json();
+      __addDebug('📦 result parsed', { ok: result.ok, hasData: !!result.data });
+      
       if (!result.ok) {
         showError(
           result.error === 'Order not found' ? 'Undangan tidak ditemukan' : 'Akses ditolak',
@@ -118,6 +170,7 @@
       safeRender(result);
     } catch (err) {
       clearTimeout(timeoutId);
+      __addDebug('❌ fetch error', err.name + ' / ' + err.message);
       if (err.name === 'AbortError') {
         showError('Loading terlalu lama', 'Server lambat merespons. Coba refresh halaman.');
       } else {
@@ -134,8 +187,30 @@
   }
 
   function renderInvitation({ theme, isPreview, data, watermark }) {
-    document.getElementById('invitation-root').innerHTML = renderRoyalClassic(data);
-    document.getElementById('invitation-root').classList.add('show');
+    __addDebug('🖼️ renderInvitation entry', { theme, isPreview, watermark, hasData: !!data });
+    
+    if (typeof renderRoyalClassic !== 'function') {
+      __addDebug('❌ renderRoyalClassic NOT a function!', typeof renderRoyalClassic);
+      return;
+    }
+    __addDebug('✅ renderRoyalClassic is a function', '');
+    
+    const root = document.getElementById('invitation-root');
+    if (!root) {
+      __addDebug('❌ #invitation-root not found!', '');
+      return;
+    }
+    
+    try {
+      const html = renderRoyalClassic(data);
+      __addDebug('✅ HTML generated, length=' + html.length, '');
+      root.innerHTML = html;
+      root.classList.add('show');
+      __addDebug('✅ DOM injected', '');
+    } catch (e) {
+      __addDebug('❌ renderRoyalClassic threw', e.message);
+      return;
+    }
     if (isPreview || watermark) {
       document.getElementById('watermark').classList.add('show');
       document.getElementById('preview-banner').classList.add('show');
