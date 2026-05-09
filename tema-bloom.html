@@ -729,7 +729,7 @@ body.preview-mode [data-preview-only] { display: block; }
 
 @media (min-width: 600px) {
   .section { padding: 100px 32px; }
-  .cover-name { font-size: 76px; }
+  .cover-name { font-size: clamp(40px, 16vw, 80px); }
 }
 </style>
 </head>
@@ -979,18 +979,20 @@ body.preview-mode [data-preview-only] { display: block; }
     if (!venue) return '#';
     return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(venue);
   }
-  function firstWord(str) {
-    return (str || '').split(' ')[0] || str || '';
+  function getShortName(name, nick) {
+    if (nick && nick.trim()) return nick.trim();
+    var parts = (name || '').trim().split(/\s+/);
+    return parts.length <= 2 ? (name || '').trim() : parts[0];
   }
   
   function fillDOM(d) {
     // Replace semua teks node yang berisi {{placeholder}} di seluruh DOM
     var replacements = {
       brideName: d.brideName || '',
-      brideShort: firstWord(d.brideName),
+      brideShort: getShortName(d.brideName, d.brideNick),
       brideParents: d.brideParents || '',
       groomName: d.groomName || '',
-      groomShort: firstWord(d.groomName),
+      groomShort: getShortName(d.groomName, d.groomNick),
       groomParents: d.groomParents || '',
       weddingDateLong: formatDateLong(d.weddingDate),
       weddingDateShort: formatDateShort(d.weddingDate),
@@ -1039,6 +1041,13 @@ body.preview-mode [data-preview-only] { display: block; }
     }
     
     walkAndReplace(document.body);
+    
+    // Auto-resize font cover-name kalau nama panjang
+    document.querySelectorAll('.cover-name').forEach(function(el) {
+      var len = el.textContent.trim().length;
+      if (len > 12) el.style.fontSize = 'clamp(24px, 9vw, 48px)';
+      else if (len > 8) el.style.fontSize = 'clamp(28px, 11vw, 56px)';
+    });
     
     // Handle audio src
     var audio = document.getElementById('bgMusic');
