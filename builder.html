@@ -889,11 +889,11 @@
         <div class="form-grid cols-2">
           <div>
             <label>Akad Mulai</label>
-            <input type="time" id="akadStart" value="08:00" oninput="updatePreview()">
+            <input type="text" id="akadStart" value="08:00" placeholder="08:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
           </div>
           <div>
             <label>Akad Selesai</label>
-            <input type="time" id="akadEnd" value="10:00" oninput="updatePreview()">
+            <input type="text" id="akadEnd" value="10:00" placeholder="10:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
           </div>
         </div>
         
@@ -915,11 +915,11 @@
         <div class="form-grid cols-2">
           <div>
             <label>Resepsi Mulai</label>
-            <input type="time" id="resepsiStart" value="11:00" oninput="updatePreview()">
+            <input type="text" id="resepsiStart" value="11:00" placeholder="11:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
           </div>
           <div>
             <label>Resepsi Selesai</label>
-            <input type="time" id="resepsiEnd" value="15:00" oninput="updatePreview()">
+            <input type="text" id="resepsiEnd" value="15:00" placeholder="15:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
           </div>
         </div>
         
@@ -1306,6 +1306,20 @@
   };
   
   // ============ STEP NAVIGATION ============
+  // Format jam HH:MM otomatis
+  function formatJam(input) {
+    let v = input.value.replace(/\D/g, '');
+    if (v.length >= 3) v = v.slice(0, 2) + ':' + v.slice(2, 4);
+    if (v.length === 5) {
+      const h = parseInt(v.slice(0, 2));
+      const m = parseInt(v.slice(3, 5));
+      if (h > 23) v = '23' + v.slice(2);
+      if (m > 59) v = v.slice(0, 3) + '59';
+    }
+    input.value = v;
+    updatePreview();
+  }
+
   // Sumber pembelian toggle
   let sumberPembelian = 'transfer';
   function setSumber(s) {
