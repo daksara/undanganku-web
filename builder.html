@@ -1151,7 +1151,7 @@
   </div>
   
   <!-- ===== STEP 3b: DATA PREMIUM (show/hide) ===== -->
-  <div class="step" id="step-3b" style="display:none;">
+  <div class="step" id="step-3b">
     <div class="step-head">
       <div class="step-counter">step 3b of 5</div>
       <div class="step-title">👑 Data Premium</div>
@@ -1416,31 +1416,34 @@
   
   // ============ STEP NAVIGATION ============
   function changeStep(n) {
-    // Handle step 3b (premium data) — hanya show kalau premium
-    const step3b = document.getElementById('step-3b');
+    // Sembunyikan step sekarang
+    const curId = currentStep === '3b' ? 'step-3b' : `step-${currentStep}`;
+    const curEl = document.getElementById(curId);
+    if (curEl) { curEl.classList.remove('active'); curEl.style.display = 'none'; }
     
-    document.getElementById(`step-${currentStep === '3b' ? '3b' : currentStep}`).classList.remove('active');
-    if (currentStep !== '3b') {
-      document.getElementById(`pill-${currentStep}`).classList.remove('active');
-    }
-    
-    // Mark done
-    if (typeof n === 'number' && typeof currentStep === 'number' && n > currentStep) {
-      document.getElementById(`pill-${currentStep}`).classList.add('done');
-    } else if (typeof n === 'number' && typeof currentStep === 'number') {
-      document.getElementById(`pill-${n}`).classList.remove('done');
+    // Update pill
+    const pillNum = (currentStep === '3b') ? 3 : currentStep;
+    const pillEl = document.getElementById(`pill-${pillNum}`);
+    if (pillEl) {
+      pillEl.classList.remove('active');
+      const nextNum = (n === '3b') ? 3 : (typeof n === 'number' ? n : 4);
+      if (nextNum > pillNum) pillEl.classList.add('done');
     }
     
     currentStep = n;
-    document.getElementById(`step-${n === '3b' ? '3b' : n}`).classList.add('active');
-    if (n !== '3b') {
-      document.getElementById(`pill-${n}`).classList.add('active');
-    } else {
-      document.getElementById('pill-3').classList.add('active');
-    }
     
+    // Tampilkan step baru
+    const newId = n === '3b' ? 'step-3b' : `step-${n}`;
+    const newEl = document.getElementById(newId);
+    if (newEl) { newEl.style.display = 'block'; newEl.classList.add('active'); }
+    
+    // Update pill baru
+    const newPillNum = (n === '3b') ? 3 : (typeof n === 'number' ? n : 3);
+    const newPillEl = document.getElementById(`pill-${newPillNum}`);
+    if (newPillEl) { newPillEl.classList.remove('done'); newPillEl.classList.add('active'); }
+    
+    // Tombol
     document.getElementById('prevBtn').style.display = (n === 1) ? 'none' : 'block';
-    
     const nextBtn = document.getElementById('nextBtn');
     if (n === 5) {
       nextBtn.textContent = 'Pesan Sekarang →';
@@ -1451,39 +1454,20 @@
       nextBtn.disabled = false;
     }
     
-    // Update preview saat masuk step 4
     if (n === 4) updatePreview();
-    // Update summary saat masuk step 5
     if (n === 5) updateSummary();
-    
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   
   function nextStep() {
-    // Kalau dari step 3, cek apakah premium → masuk 3b dulu
-    if (currentStep === 3 && selectedPaket === 'premium') {
-      changeStep('3b');
-      return;
-    }
-    // Kalau dari 3b, lanjut ke 4
-    if (currentStep === '3b') {
-      changeStep(4);
-      return;
-    }
+    if (currentStep === 3 && selectedPaket === 'premium') { changeStep('3b'); return; }
+    if (currentStep === '3b') { changeStep(4); return; }
     if (currentStep < 5) changeStep(currentStep + 1);
   }
   
   function prevStep() {
-    // Kalau dari 4 dan premium, balik ke 3b
-    if (currentStep === 4 && selectedPaket === 'premium') {
-      changeStep('3b');
-      return;
-    }
-    // Kalau dari 3b, balik ke 3
-    if (currentStep === '3b') {
-      changeStep(3);
-      return;
-    }
+    if (currentStep === 4 && selectedPaket === 'premium') { changeStep('3b'); return; }
+    if (currentStep === '3b') { changeStep(3); return; }
     if (currentStep > 1) changeStep(currentStep - 1);
   }
 
