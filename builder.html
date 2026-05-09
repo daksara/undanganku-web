@@ -531,28 +531,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
   }
   .bank-card-mini-info {
     flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 10px;
   }
   .bank-card-mini-name {
-    font-family: 'Cinzel', serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    min-width: 64px;
-  }
-  .bank-card-mini-divider {
-    width: 1px;
-    height: 20px;
-    background: var(--line);
-    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 2px;
   }
   .bank-card-mini-num {
     font-family: 'DM Serif Display', serif;
@@ -922,8 +908,19 @@
       
       <div class="form-grid">
         <div>
-          <label>WhatsApp / Telegram untuk dihubungi owner</label>
-          <input type="tel" id="buyerContact" placeholder="08123456789">
+          <label>Nomor WhatsApp</label>
+          <input type="tel" id="buyerContact" placeholder="08xxxxxxxxxx" inputmode="numeric"
+            style="letter-spacing:0.5px;">
+          <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
+            ⚡ Link undangan aktif akan dikirimkan via WhatsApp setelah konfirmasi pembayaran.
+          </div>
+        </div>
+        <div>
+          <label>Instagram (opsional)</label>
+          <input type="text" id="buyerInstagram" placeholder="@namakamu" oninput="updatePreview()">
+          <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
+            Untuk dihubungi jika ada pertanyaan.
+          </div>
         </div>
       </div>
     </div>
@@ -1032,13 +1029,12 @@
     
     <div class="section-head" style="margin-top: 24px;">
       <span class="section-head-icon">💳</span>
-      <span class="section-head-text">Transfer ke Rekening atau E-Wallet</span>
+      <span class="section-head-text">Transfer ke Rekening</span>
     </div>
     
     <div class="bank-card-mini">
       <div class="bank-card-mini-info">
         <div class="bank-card-mini-name">SeaBank</div>
-        <div class="bank-card-mini-divider"></div>
         <div class="bank-card-mini-num">9010 9567 9260</div>
       </div>
       <button class="copy-mini" onclick="copy('901095679260', this)">SALIN</button>
@@ -1047,7 +1043,6 @@
     <div class="bank-card-mini" style="margin-top: 8px;">
       <div class="bank-card-mini-info">
         <div class="bank-card-mini-name">Dana</div>
-        <div class="bank-card-mini-divider"></div>
         <div class="bank-card-mini-num">0896 0562 3197</div>
       </div>
       <button class="copy-mini" onclick="copy('089605623197', this)">SALIN</button>
@@ -1296,7 +1291,14 @@
   // ============ SUBMIT ORDER ============
   async function submitOrder() {
     const data = collectFormData();
-    const buyerContact = document.getElementById('buyerContact').value;
+    const buyerContact = document.getElementById('buyerContact').value.trim();
+    const buyerInstagram = document.getElementById('buyerInstagram')?.value.trim() || '';
+    
+    // Validasi kontak WA wajib diisi
+    if (!buyerContact) {
+      showToast('Isi nomor WhatsApp dulu ya', 'error');
+      return;
+    }
     
     // Validasi
     if (!data.brideName || !data.groomName) {
@@ -1317,6 +1319,7 @@
           theme: selectedTheme,
           paket: selectedPaket,
           buyerContact: buyerContact,
+          buyerInstagram: buyerInstagram,
           ...data,
         }),
       });
