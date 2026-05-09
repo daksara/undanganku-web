@@ -80,6 +80,62 @@
     border-radius: 4px;
   }
   
+  /* ============ PREMIUM DATA SECTION ============ */
+  .premium-data-section {
+    display: none;
+    margin-top: 24px;
+    border: 1px solid rgba(212,175,108,0.4);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .premium-data-section.show { display: block; }
+  .premium-data-header {
+    background: linear-gradient(135deg, rgba(212,175,108,0.15), rgba(184,149,90,0.05));
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(212,175,108,0.2);
+  }
+  .premium-data-title {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .premium-data-body { padding: 18px; }
+  .tutorial-box {
+    background: rgba(212,175,108,0.06);
+    border: 1px solid rgba(212,175,108,0.2);
+    border-radius: 8px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .tutorial-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 12px 14px;
+    text-align: left;
+    color: var(--accent);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tutorial-toggle .arrow { transition: transform 0.2s; font-size: 10px; }
+  .tutorial-toggle.open .arrow { transform: rotate(180deg); }
+  .tutorial-content { display: none; padding: 0 14px 14px; font-size: 12px; color: var(--text-dim); line-height: 1.7; }
+  .tutorial-content.show { display: block; }
+  .tutorial-step { display: flex; gap: 8px; margin-bottom: 8px; }
+  .tutorial-num { min-width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #0a0a0a; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .wa-note { background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.2); border-radius: 8px; padding: 10px 12px; font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-top: 8px; }
+  .wa-note strong { color: #25d366; }
+  .story-row { display: grid; grid-template-columns: 90px 1fr; gap: 8px; margin-bottom: 8px; }
+
   /* ============ STEP CONTAINERS ============ */
   .step {
     display: none;
@@ -1094,6 +1150,93 @@
     </div>
   </div>
   
+  <!-- ===== STEP 3b: DATA PREMIUM (show/hide) ===== -->
+  <div class="step" id="step-3b" style="display:none;">
+    <div class="step-head">
+      <div class="step-counter">step 3b of 5</div>
+      <div class="step-title">👑 Data Premium</div>
+      <div class="step-subtitle">Isi data tambahan untuk fitur Premium kamu</div>
+    </div>
+
+    <!-- GALERI FOTO -->
+    <div class="premium-data-section show">
+      <div class="premium-data-header">
+        <div class="premium-data-title">📸 Galeri Foto (4 foto)</div>
+      </div>
+      <div class="premium-data-body">
+
+        <!-- Tutorial accordion -->
+        <div class="tutorial-box">
+          <button class="tutorial-toggle" type="button" onclick="toggleTutorial(this)">
+            📖 CARA DAPAT LINK FOTO <span class="arrow">▼</span>
+          </button>
+          <div class="tutorial-content">
+            <p style="margin-bottom:10px; color:var(--accent); font-size:11px; font-weight:600;">Via Google Drive (Paling Mudah):</p>
+            <div class="tutorial-step"><div class="tutorial-num">1</div><div>Buka <strong>Google Drive</strong> di HP → upload foto yang diinginkan</div></div>
+            <div class="tutorial-step"><div class="tutorial-num">2</div><div>Tap foto → tap titik 3 (⋯) → pilih <strong>"Bagikan"</strong></div></div>
+            <div class="tutorial-step"><div class="tutorial-num">3</div><div>Ubah akses ke <strong>"Siapa saja yang memiliki link"</strong></div></div>
+            <div class="tutorial-step"><div class="tutorial-num">4</div><div>Tap <strong>"Salin link"</strong> → paste di kolom di bawah</div></div>
+            <p style="margin-top:10px; font-size:11px; color:var(--text-mute);">Contoh link: https://drive.google.com/file/d/xxxx/view</p>
+
+            <p style="margin-top:14px; margin-bottom:8px; color:var(--accent); font-size:11px; font-weight:600;">Via Instagram:</p>
+            <div class="tutorial-step"><div class="tutorial-num">1</div><div>Buka foto di Instagram → tap titik 3 (⋯) → <strong>"Salin tautan"</strong></div></div>
+            <div class="tutorial-step"><div class="tutorial-num">2</div><div>Paste di kolom di bawah</div></div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div><label>Link Foto 1</label><input type="url" id="photo1" placeholder="https://drive.google.com/... atau link Instagram" oninput="updatePreview()"></div>
+          <div><label>Link Foto 2</label><input type="url" id="photo2" placeholder="https://drive.google.com/..." oninput="updatePreview()"></div>
+          <div><label>Link Foto 3</label><input type="url" id="photo3" placeholder="https://drive.google.com/..." oninput="updatePreview()"></div>
+          <div><label>Link Foto 4</label><input type="url" id="photo4" placeholder="https://drive.google.com/..." oninput="updatePreview()"></div>
+        </div>
+
+        <div class="wa-note">
+          📱 <strong>Tidak punya link?</strong> Tidak masalah! Kosongkan field di atas dan kirim 4 foto ke <strong>WhatsApp owner</strong> setelah memesan. Foto akan ditambahkan dalam 1×24 jam.
+        </div>
+      </div>
+    </div>
+
+    <!-- LOVE STORY -->
+    <div class="premium-data-section show" style="margin-top:16px;">
+      <div class="premium-data-header">
+        <div class="premium-data-title">💌 Love Story (opsional)</div>
+      </div>
+      <div class="premium-data-body">
+        <p style="font-size:12px; color:var(--text-dim); margin-bottom:14px; line-height:1.6;">Ceritakan perjalanan cinta kalian dalam 3 momen. Akan ditampilkan sebagai timeline di undangan.</p>
+        <div class="form-grid">
+          <div class="story-row">
+            <div><label>Tahun / Waktu 1</label><input type="text" id="story1When" placeholder="2020" oninput="updatePreview()"></div>
+            <div><label>Cerita</label><input type="text" id="story1Text" placeholder="Pertama bertemu di kampus" oninput="updatePreview()"></div>
+          </div>
+          <div class="story-row">
+            <div><label>Tahun / Waktu 2</label><input type="text" id="story2When" placeholder="2022" oninput="updatePreview()"></div>
+            <div><label>Cerita</label><input type="text" id="story2Text" placeholder="Mulai berpacaran" oninput="updatePreview()"></div>
+          </div>
+          <div class="story-row">
+            <div><label>Tahun / Waktu 3</label><input type="text" id="story3When" placeholder="2024" oninput="updatePreview()"></div>
+            <div><label>Cerita</label><input type="text" id="story3Text" placeholder="Lamaran" oninput="updatePreview()"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUOTE CUSTOM -->
+    <div class="premium-data-section show" style="margin-top:16px;">
+      <div class="premium-data-header">
+        <div class="premium-data-title">✦ Kutipan Custom (opsional)</div>
+      </div>
+      <div class="premium-data-body">
+        <p style="font-size:12px; color:var(--text-dim); margin-bottom:14px; line-height:1.6;">Ganti kutipan default (QS Ar-Rum 21) dengan kutipan pilihan kamu.</p>
+        <div class="form-grid">
+          <div><label>Kutipan / Quote</label><textarea id="customQuote" placeholder="Dan di antara tanda-tanda kekuasaan-Nya..." style="resize:vertical;min-height:70px;" oninput="updatePreview()"></textarea></div>
+          <div><label>Sumber</label><input type="text" id="customQuoteSource" placeholder="QS. Ar-Rum : 21" oninput="updatePreview()"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <!-- ===== STEP 4: PREVIEW ===== -->
   <div class="step" id="step-4">
     <div class="step-head">
@@ -1273,21 +1416,30 @@
   
   // ============ STEP NAVIGATION ============
   function changeStep(n) {
-    document.getElementById(`step-${currentStep}`).classList.remove('active');
-    document.getElementById(`pill-${currentStep}`).classList.remove('active');
+    // Handle step 3b (premium data) — hanya show kalau premium
+    const step3b = document.getElementById('step-3b');
+    
+    document.getElementById(`step-${currentStep === '3b' ? '3b' : currentStep}`).classList.remove('active');
+    if (currentStep !== '3b') {
+      document.getElementById(`pill-${currentStep}`).classList.remove('active');
+    }
     
     // Mark done
-    if (n > currentStep) {
+    if (typeof n === 'number' && typeof currentStep === 'number' && n > currentStep) {
       document.getElementById(`pill-${currentStep}`).classList.add('done');
-    } else {
+    } else if (typeof n === 'number' && typeof currentStep === 'number') {
       document.getElementById(`pill-${n}`).classList.remove('done');
     }
     
     currentStep = n;
-    document.getElementById(`step-${currentStep}`).classList.add('active');
-    document.getElementById(`pill-${currentStep}`).classList.add('active');
+    document.getElementById(`step-${n === '3b' ? '3b' : n}`).classList.add('active');
+    if (n !== '3b') {
+      document.getElementById(`pill-${n}`).classList.add('active');
+    } else {
+      document.getElementById('pill-3').classList.add('active');
+    }
     
-    document.getElementById('prevBtn').style.display = n > 1 ? 'block' : 'none';
+    document.getElementById('prevBtn').style.display = (n === 1) ? 'none' : 'block';
     
     const nextBtn = document.getElementById('nextBtn');
     if (n === 5) {
@@ -1308,11 +1460,38 @@
   }
   
   function nextStep() {
+    // Kalau dari step 3, cek apakah premium → masuk 3b dulu
+    if (currentStep === 3 && selectedPaket === 'premium') {
+      changeStep('3b');
+      return;
+    }
+    // Kalau dari 3b, lanjut ke 4
+    if (currentStep === '3b') {
+      changeStep(4);
+      return;
+    }
     if (currentStep < 5) changeStep(currentStep + 1);
   }
   
   function prevStep() {
+    // Kalau dari 4 dan premium, balik ke 3b
+    if (currentStep === 4 && selectedPaket === 'premium') {
+      changeStep('3b');
+      return;
+    }
+    // Kalau dari 3b, balik ke 3
+    if (currentStep === '3b') {
+      changeStep(3);
+      return;
+    }
     if (currentStep > 1) changeStep(currentStep - 1);
+  }
+
+  // Tutorial toggle
+  function toggleTutorial(btn) {
+    btn.classList.toggle('open');
+    const content = btn.nextElementSibling;
+    content.classList.toggle('show');
   }
   
   // ============ THEME & PAKET ============
@@ -1370,6 +1549,20 @@
       bank2Name: v('bank2Name'),
       bank2Num: v('bank2Num'),
       bank2Holder: v('bank2Holder'),
+      
+      // Premium features
+      photo1: v('photo1'),
+      photo2: v('photo2'),
+      photo3: v('photo3'),
+      photo4: v('photo4'),
+      story1When: v('story1When'),
+      story1Text: v('story1Text'),
+      story2When: v('story2When'),
+      story2Text: v('story2Text'),
+      story3When: v('story3When'),
+      story3Text: v('story3Text'),
+      customQuote: v('customQuote'),
+      customQuoteSource: v('customQuoteSource'),
     };
   }
   
@@ -1459,6 +1652,16 @@
     btn.textContent = '⏳ Mengirim...';
     
     try {
+      const data = collectFormData();
+      
+      // Build premium fields
+      const galleryImages = [data.photo1, data.photo2, data.photo3, data.photo4].filter(u => u && u.trim());
+      const stories = [
+        { when: data.story1When, text: data.story1Text },
+        { when: data.story2When, text: data.story2Text },
+        { when: data.story3When, text: data.story3Text },
+      ].filter(s => s.when || s.text);
+      
       const response = await fetch(`${BOT_API_URL}/orders/new`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1468,6 +1671,11 @@
           buyerContact: buyerContact,
           buyerInstagram: buyerInstagram,
           ...data,
+          // Override dengan premium data yang sudah diproses
+          galleryImages,
+          stories,
+          quote: data.customQuote || data.quoteText || '',
+          quoteSource: data.customQuoteSource || data.quoteSource || '',
         }),
       });
       
