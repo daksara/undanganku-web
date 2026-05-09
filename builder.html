@@ -361,146 +361,42 @@
   /* ============ PAKET PICKER ============ */
   .paket-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
     margin-bottom: 24px;
   }
   
   .paket-card {
     background: var(--bg-card);
     border: 2px solid var(--line);
-    border-radius: 16px;
-    padding: 20px 18px;
-    text-align: left;
+    border-radius: 12px;
+    padding: 14px 8px;
+    text-align: center;
     cursor: pointer;
-    transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
+    transition: all 0.2s;
   }
   .paket-card.selected {
     border-color: var(--accent);
-    background: rgba(212, 175, 108, 0.07);
+    background: rgba(212, 175, 108, 0.08);
   }
-  .paket-card:active { transform: scale(0.99); }
-
-  /* Premium card — mencolok */
-  .paket-card.premium-card {
-    border-color: var(--accent);
-    background: linear-gradient(135deg, rgba(212,175,108,0.12) 0%, rgba(184,149,106,0.06) 100%);
-  }
-  .paket-card.premium-card.selected {
-    background: linear-gradient(135deg, rgba(212,175,108,0.18) 0%, rgba(184,149,106,0.1) 100%);
-    border-color: var(--accent-bright);
-    box-shadow: 0 0 0 1px var(--accent), 0 8px 28px rgba(212,175,108,0.2);
-  }
-  .paket-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: linear-gradient(135deg, var(--accent), #c8870a);
-    color: #0a0a0a;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    text-transform: uppercase;
-  }
-  .paket-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  .paket-icon {
-    font-size: 20px;
-    line-height: 1;
-  }
+  
   .paket-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
+    font-size: 11px;
+    color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 1.5px;
+    margin-bottom: 6px;
   }
   .paket-price {
     font-family: 'DM Serif Display', serif;
-    font-size: 26px;
+    font-size: 18px;
     color: var(--accent-bright);
-    margin-bottom: 2px;
-    line-height: 1;
-  }
-  .paket-price-sub {
-    font-size: 10px;
-    color: var(--text-mute);
-    letter-spacing: 0.5px;
-    margin-bottom: 12px;
   }
   .paket-features {
-    font-size: 12px;
-    color: var(--text-dim);
+    font-size: 10px;
+    color: var(--text-mute);
     margin-top: 4px;
     line-height: 1.3;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .paket-feature-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 7px;
-  }
-  .paket-feature-item .check {
-    color: var(--accent);
-    font-size: 12px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .paket-feature-item.premium-feat {
-    color: var(--accent-bright);
-    font-weight: 500;
-  }
-  .paket-feature-item.premium-feat .check {
-    color: var(--accent-bright);
-  }
-  .paket-divider {
-    height: 1px;
-    background: var(--line);
-    margin: 10px 0;
-  }
-  .paket-select-indicator {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 14px;
-    font-size: 11px;
-    color: var(--text-mute);
-    letter-spacing: 0.5px;
-  }
-  .paket-select-indicator .radio {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 2px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s;
-  }
-  .paket-card.selected .paket-select-indicator .radio {
-    border-color: var(--accent);
-    background: var(--accent);
-  }
-  .paket-card.selected .paket-select-indicator .radio::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #0a0a0a;
-  }
-  .paket-card.selected .paket-select-indicator {
-    color: var(--accent);
   }
   
   /* ============ PREVIEW ============ */
@@ -1035,62 +931,19 @@
     <div class="step-head">
       <div class="step-counter">step 3 of 5</div>
       <div class="step-title">Pilih Paket</div>
-      <div class="step-subtitle">Pilih paket yang paling sesuai kebutuhanmu</div>
+      <div class="step-subtitle">Pilih paket yang sesuai kebutuhanmu</div>
     </div>
     
-    <div class="paket-grid">
-
-      <!-- STANDARD -->
+    <div class="paket-grid" style="grid-template-columns: 1fr;">
       <div class="paket-card selected" data-paket="standard" onclick="selectPaket('standard')">
-        <div class="paket-header">
-          <span class="paket-icon">🎀</span>
-          <span class="paket-name">Standard</span>
-        </div>
+        <div class="paket-name">Standard</div>
         <div class="paket-price">Rp 99.000</div>
-        <div class="paket-price-sub">Aktif 3 bulan</div>
-        <div class="paket-features">
-          <div class="paket-feature-item"><span class="check">✓</span><span>3 pilihan tema undangan</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Cover + Buka Undangan</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>RSVP & ucapan tamu</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Countdown hari H</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Amplop digital (2 rekening)</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Musik auto-play</span></div>
-        </div>
-        <div class="paket-select-indicator">
-          <div class="radio"></div>
-          <span>Pilih Standard</span>
-        </div>
+        <div class="paket-features">Aktif 3 bulan · Link unik · RSVP · Ucapan tamu</div>
       </div>
-
-      <!-- PREMIUM -->
-      <div class="paket-card premium-card" data-paket="premium" onclick="selectPaket('premium')">
-        <div class="paket-badge">✦ TERPOPULER</div>
-        <div class="paket-header">
-          <span class="paket-icon">👑</span>
-          <span class="paket-name">Premium</span>
-        </div>
-        <div class="paket-price">Rp 149.000</div>
-        <div class="paket-price-sub">Aktif 6 bulan — 2× lebih lama</div>
-        <div class="paket-features">
-          <div class="paket-feature-item"><span class="check">✓</span><span>Semua fitur Standard</span></div>
-          <div class="paket-divider"></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Galeri foto (4 foto)</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Love Story timeline</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Kutipan / quote custom</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Nama tamu personal di cover</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Revisi data 1× gratis</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Prioritas konfirmasi &lt; 1 jam</span></div>
-        </div>
-        <div class="paket-select-indicator">
-          <div class="radio"></div>
-          <span>Pilih Premium</span>
-        </div>
-      </div>
-
     </div>
     
     <div class="preview-cta">
-      💡 <strong>Semua paket termasuk:</strong> Link undangan unik, tanpa watermark setelah konfirmasi, RSVP, countdown, dan amplop digital.
+      💡 <strong>Semua paket termasuk:</strong> Tema yang dipilih, halaman pribadi dengan link unik, RSVP, ucapan tamu, countdown, dan amplop digital. Watermark hilang setelah pembayaran terkonfirmasi.
     </div>
   </div>
   
@@ -1566,6 +1419,13 @@
   
   // ============ CHECK EXISTING ORDER (URL param atau localStorage) ============
   const urlParams = new URLSearchParams(window.location.search);
+  
+  // Pre-select paket dari URL ?paket=premium (dari landing page)
+  const presetPaket = urlParams.get('paket');
+  if (presetPaket && PRICES[presetPaket]) {
+    selectPaket(presetPaket);
+  }
+  
   const existingOrder = urlParams.get('order') || localStorage.getItem('undanganku_order');
   if (existingOrder) {
     currentOrderId = existingOrder;
