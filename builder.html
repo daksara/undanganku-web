@@ -1094,6 +1094,161 @@
     </div>
   </div>
   
+  <!-- ===== STEP 3b: DATA PREMIUM (hanya muncul jika pilih premium) ===== -->
+  <div class="step" id="step-3b">
+    <div class="step-head">
+      <div class="step-counter">step 3b of 5</div>
+      <div class="step-title">👑 Data Premium</div>
+      <div class="step-subtitle">Isi data tambahan untuk fitur Premium kamu</div>
+    </div>
+
+    <!-- FOTO COUPLE -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-head-icon">💑</span>
+        <span class="section-head-text">Foto Cover (opsional)</span>
+      </div>
+      <div>
+        <label>Link Foto Couple</label>
+        <input type="url" id="couplePhotoUrl" placeholder="https://drive.google.com/file/d/...">
+        <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
+          📸 Foto kalian berdua akan tampil di frame cover undangan. Gunakan foto portrait (tegak) untuk hasil terbaik.
+        </div>
+      </div>
+      <!-- Panduan link -->
+      <details style="margin-top:12px; border:1px solid rgba(200,169,110,0.2); border-radius:8px; overflow:hidden;">
+        <summary style="padding:11px 14px; cursor:pointer; font-family:'Cinzel',serif; font-size:9px; letter-spacing:1.5px; color:var(--accent); list-style:none; display:flex; align-items:center; justify-content:space-between;">
+          <span>📋 CARA DAPAT LINK FOTO</span><span style="opacity:0.6;">▼</span>
+        </summary>
+        <div style="padding:14px; border-top:1px solid rgba(200,169,110,0.1); display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
+            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">1</span>
+            <span>Buka <strong style="color:var(--text);">drive.google.com</strong> → upload foto couple</span>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
+            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">2</span>
+            <span>Klik kanan foto → <strong style="color:var(--text);">"Dapatkan link"</strong></span>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
+            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">3</span>
+            <span>Ubah akses ke <strong style="color:var(--text);">"Siapa saja yang punya link"</strong> → Salin</span>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
+            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">4</span>
+            <span>Tempel link di field di atas ✅</span>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- GALERI FOTO -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-head-icon">🖼️</span>
+        <span class="section-head-text">Galeri Foto (4 foto)</span>
+      </div>
+
+      <!-- Panduan cara dapat link foto -->
+      <details style="margin-bottom:16px; border:1px solid rgba(200,169,110,0.25); border-radius:10px; overflow:hidden;">
+        <summary style="padding:13px 14px; cursor:pointer; font-family:'Cinzel',serif; font-size:10px; letter-spacing:1.5px; color:var(--accent); list-style:none; display:flex; align-items:center; justify-content:space-between;">
+          <span>📋 CARA DAPAT LINK FOTO</span><span style="opacity:0.6;">▼</span>
+        </summary>
+        <div style="padding:14px; border-top:1px solid rgba(200,169,110,0.15);">
+
+          <!-- Google Drive -->
+          <div style="margin-bottom:14px;">
+            <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--accent); margin-bottom:8px;">GOOGLE DRIVE</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
+                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">1</span>
+                <span>Buka <strong style="color:var(--text);">drive.google.com</strong> → upload foto kamu</span>
+              </div>
+              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
+                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">2</span>
+                <span>Klik kanan foto → <strong style="color:var(--text);">"Dapatkan link"</strong></span>
+              </div>
+              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
+                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">3</span>
+                <span>Ubah akses ke <strong style="color:var(--text);">"Siapa saja yang punya link"</strong> → Salin link</span>
+              </div>
+              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
+                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">4</span>
+                <span>Tempel link di field foto di bawah ✅</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div style="border-top:1px solid rgba(200,169,110,0.1); margin:12px 0;"></div>
+
+          <!-- Google Photos -->
+          <div>
+            <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--accent); margin-bottom:8px;">GOOGLE PHOTOS (lebih mudah)</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
+                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">1</span>
+                <span>Buka foto di <strong style="color:var(--text);">Google Photos</strong></span>
+              </div>
+              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
+                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">2</span>
+                <span>Tap ikon <strong style="color:var(--text);">⋮ → Buat link</strong> → Salin</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </details>
+
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label>Link Foto 1</label>
+          <input type="url" id="galleryPhoto1" placeholder="https://drive.google.com/... atau link Instagram">
+        </div>
+        <div>
+          <label>Link Foto 2</label>
+          <input type="url" id="galleryPhoto2" placeholder="https://drive.google.com/...">
+        </div>
+        <div>
+          <label>Link Foto 3</label>
+          <input type="url" id="galleryPhoto3" placeholder="https://drive.google.com/...">
+        </div>
+        <div>
+          <label>Link Foto 4</label>
+          <input type="url" id="galleryPhoto4" placeholder="https://drive.google.com/...">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LOVE STORY -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-head-icon">❤️</span>
+        <span class="section-head-text">Love Story (opsional)</span>
+      </div>
+      <p style="font-size:12px; color:var(--text-dim); margin-bottom:14px; line-height:1.6;">
+        Ceritakan kisah cinta kalian. Akan ditampilkan di undangan.
+      </p>
+
+      <div style="border:1px solid rgba(200,169,110,0.15); border-radius:10px; padding:14px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+          <div>
+            <label>Tahun / Waktu</label>
+            <input type="text" id="ls1Year" placeholder="2021" oninput="updatePreview()">
+          </div>
+          <div>
+            <label>Judul Singkat</label>
+            <input type="text" id="ls1Title" placeholder="Pertama Bertemu" oninput="updatePreview()">
+          </div>
+        </div>
+        <div>
+          <label>Cerita</label>
+          <textarea id="ls1Story" rows="3" placeholder="Kami pertama bertemu di..." style="width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(200,169,110,0.25); border-radius:8px; padding:10px 12px; color:var(--text); font-size:13px; resize:vertical; font-family:inherit;" oninput="updatePreview()"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== STEP 4: PREVIEW ===== -->
   <div class="step" id="step-4">
     <div class="step-head">
@@ -1296,6 +1451,13 @@
   let selectedPaket = 'standard';
   let currentOrderId = null;
   let pollingInterval = null;
+
+  // Urutan step dinamis: step 3b hanya muncul kalau premium
+  function getStepOrder() {
+    return selectedPaket === 'premium'
+      ? [1, 2, 3, '3b', 4, 5]
+      : [1, 2, 3, 4, 5];
+  }
   
   const PRICES = { standard: 99000, premium: 149000 };
   const PAKET_LABEL = { standard: 'Standard', premium: 'Premium 👑' };
@@ -1350,24 +1512,29 @@
   }
 
   function changeStep(n) {
+    // Sembunyikan step aktif
     document.getElementById(`step-${currentStep}`).classList.remove('active');
-    document.getElementById(`pill-${currentStep}`).classList.remove('active');
-    
-    // Mark done
-    if (n > currentStep) {
-      document.getElementById(`pill-${currentStep}`).classList.add('done');
-    } else {
-      document.getElementById(`pill-${n}`).classList.remove('done');
+    const pill = document.getElementById(`pill-${currentStep}`);
+    if (pill) {
+      const order = getStepOrder();
+      const prevIdx = order.indexOf(currentStep);
+      const nextIdx = order.indexOf(n);
+      if (nextIdx > prevIdx) pill.classList.add('done');
+      else pill.classList.remove('done');
     }
-    
+
     currentStep = n;
     document.getElementById(`step-${currentStep}`).classList.add('active');
-    document.getElementById(`pill-${currentStep}`).classList.add('active');
-    
-    document.getElementById('prevBtn').style.display = n > 1 ? 'block' : 'none';
-    
+    const newPill = document.getElementById(`pill-${currentStep}`);
+    if (newPill) {
+      newPill.classList.add('active');
+      newPill.classList.remove('done');
+    }
+
+    document.getElementById('prevBtn').style.display = currentStep !== 1 ? 'block' : 'none';
+
     const nextBtn = document.getElementById('nextBtn');
-    if (n === 5) {
+    if (currentStep === 5) {
       nextBtn.textContent = 'Pesan Sekarang →';
       nextBtn.onclick = submitOrder;
     } else {
@@ -1375,21 +1542,25 @@
       nextBtn.onclick = nextStep;
       nextBtn.disabled = false;
     }
-    
+
     // Update preview saat masuk step 4
     if (n === 4) updatePreview();
     // Update summary saat masuk step 5
     if (n === 5) updateSummary();
-    
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   
   function nextStep() {
-    if (currentStep < 5) changeStep(currentStep + 1);
+    const order = getStepOrder();
+    const idx = order.indexOf(currentStep);
+    if (idx < order.length - 1) changeStep(order[idx + 1]);
   }
-  
+
   function prevStep() {
-    if (currentStep > 1) changeStep(currentStep - 1);
+    const order = getStepOrder();
+    const idx = order.indexOf(currentStep);
+    if (idx > 0) changeStep(order[idx - 1]);
   }
   
   // ============ THEME & PAKET ============
@@ -1447,6 +1618,20 @@
       bank2Name: v('bank2Name'),
       bank2Num: v('bank2Num'),
       bank2Holder: v('bank2Holder'),
+
+      // ===== PREMIUM FIELDS =====
+      couplePhotoUrl: v('couplePhotoUrl'),
+
+      galleryPhotos: [
+        v('galleryPhoto1'),
+        v('galleryPhoto2'),
+        v('galleryPhoto3'),
+        v('galleryPhoto4'),
+      ].filter(Boolean),
+
+      loveStory: [
+        { year: v('ls1Year'), title: v('ls1Title'), story: v('ls1Story') },
+      ].filter(m => m.year || m.title || m.story),
     };
   }
   
