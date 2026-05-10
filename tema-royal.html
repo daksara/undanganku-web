@@ -1043,10 +1043,10 @@ body.preview-mode [data-preview-only] { display: block; }
     var replacements = {
       brideName: d.brideName || '',
       brideShort: getShortName(d.brideName, d.brideNick),
-      brideParents: d.brideParents || '',
+      brideParents: d.brideParents || ('Putri ' + (d.brideOrder ? 'ke-' + d.brideOrder + ' ' : '') + 'dari ' + (d.brideFather || 'Bapak') + ' & ' + (d.brideMother || 'Ibu')),
       groomName: d.groomName || '',
       groomShort: getShortName(d.groomName, d.groomNick),
-      groomParents: d.groomParents || '',
+      groomParents: d.groomParents || ('Putra ' + (d.groomOrder ? 'ke-' + d.groomOrder + ' ' : '') + 'dari ' + (d.groomFather || 'Bapak') + ' & ' + (d.groomMother || 'Ibu')),
       weddingDateLong: formatDateLong(d.weddingDate),
       weddingDateShort: formatDateShort(d.weddingDate),
       akadStart: d.akadStart || '08:00',
