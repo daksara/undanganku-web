@@ -457,6 +457,16 @@ body.preview-mode { padding-top: 32px; }
 }
 
 /* Quote */
+.quote-arabic {
+  font-family: 'Amiri', 'Traditional Arabic', serif;
+  font-size: 22px;
+  color: var(--gold);
+  text-align: center;
+  direction: rtl;
+  margin-bottom: 14px;
+  line-height: 1.8;
+}
+
 .quote-block {
   font-style: italic;
   font-size: 17px;
@@ -880,6 +890,7 @@ body.preview-mode [data-preview-only] { display: block; }
   <section class="section reveal">
     <div class="section-tag">Sacred Words</div>
     <div class="quote-block">
+      <div class="quote-arabic" id="quoteArabic">{{quoteArabic}}</div>
       <span id="quoteText">{{quote}}</span>
       <span class="quote-source">— {{quoteSource}}</span>
     </div>
@@ -1048,6 +1059,7 @@ body.preview-mode [data-preview-only] { display: block; }
       resepsiMaps: d.resepsiMaps || buildMapUrl(d.resepsiVenue),
       quote: d.quote || 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu istri-istri dari jenismu sendiri',
       quoteSource: d.quoteSource || 'QS. Ar-Rum: 21',
+      quoteArabic: d.quoteArabic || 'بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْم',
       musicUrl: d.musicUrl || 'https://undanganku-web.vercel.app/music/romantic.mp3',
     };
     
