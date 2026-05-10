@@ -442,6 +442,14 @@ body.preview-mode { padding-top: 32px; }
   color: var(--gold);
   margin-bottom: 6px;
 }
+.story-title {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: var(--cream-soft);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
 .story-text {
   font-size: 15px;
   color: var(--cream-soft);
@@ -733,6 +741,32 @@ body.preview-mode [data-preview-only] { display: block; }
   .section { padding: 100px 32px; }
   .cover-name { font-size: clamp(40px, 16vw, 80px); }
 }
+
+/* Cover couple photo */
+.cover-photo-wrap {
+  position: relative;
+  width: 200px;
+  margin: 4px auto 0;
+}
+.cover-photo-oval {
+  width: 200px;
+  height: 260px;
+  border-radius: 50% / 50%;
+  overflow: hidden;
+  border: 3px solid var(--gold);
+  box-shadow: 0 0 0 6px rgba(212,175,108,0.12), 0 8px 32px rgba(0,0,0,0.3);
+  background: rgba(212,175,108,0.06);
+}
+.cover-photo-oval img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.cover-photo-oval.no-photo {
+  display: none;
+}
+
 </style>
 </head>
 <body>
@@ -746,6 +780,12 @@ body.preview-mode [data-preview-only] { display: block; }
   <div class="cover-content">
     <div class="cover-ornament">✦ ✦ ✦</div>
     <div class="cover-overline">The Wedding Of</div>
+    <div class="cover-photo-wrap" id="coverPhotoWrap">
+      <div class="cover-photo-oval {{couplePhotoClass}}" id="coverPhotoOval">
+        <img src="{{couplePhotoUrl}}" alt="Foto Couple" id="coverPhotoImg">
+      </div>
+    </div>
+
 
     <div class="cover-couple">
       <div class="cover-name">{{brideShort}}</div>
@@ -1083,8 +1123,23 @@ body.preview-mode [data-preview-only] { display: block; }
       if (rEl) rEl.textContent = decodeURIComponent(recipient);
     }
 
+
+    // Cover photo
+    var couplePhotoUrl = d.couplePhotoUrl || '';
+    var coverOval = document.getElementById('coverPhotoOval');
+    var coverImg = document.getElementById('coverPhotoImg');
+    if (coverOval && coverImg) {
+      if (couplePhotoUrl) {
+        coverImg.src = couplePhotoUrl;
+        coverOval.classList.remove('no-photo');
+        coverOval.classList.add('has-photo');
+      } else {
+        coverOval.classList.add('no-photo');
+      }
+    }
+
     // Story
-    var stories = Array.isArray(d.stories) ? d.stories : [];
+    var stories = Array.isArray(d.loveStory) ? d.loveStory : [];
     var storySection = document.getElementById('storySection');
     if (stories.length === 0) {
       storySection.style.display = 'none';
@@ -1092,13 +1147,17 @@ body.preview-mode [data-preview-only] { display: block; }
       var html = '';
       for (var i = 0; i < stories.length; i++) {
         var s = stories[i];
-        html += '<div class="story-item"><div class="story-when">' + esc(s.when || '') + '</div><div class="story-text">' + esc(s.text || '') + '</div></div>';
+        html += '<div class="story-item">' +
+          '<div class="story-when">' + esc(s.year || '') + '</div>' +
+          (s.title ? '<div class="story-title">' + esc(s.title) + '</div>' : '') +
+          '<div class="story-text">' + esc(s.story || '') + '</div>' +
+          '</div>';
       }
       document.getElementById('storyList').innerHTML = html;
     }
 
     // Gallery
-    var images = Array.isArray(d.galleryImages) ? d.galleryImages : [];
+    var images = Array.isArray(d.galleryPhotos) ? d.galleryPhotos : [];
     var gallerySection = document.getElementById('gallerySection');
     if (images.length === 0) {
       gallerySection.style.display = 'none';
