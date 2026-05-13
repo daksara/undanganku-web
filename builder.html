@@ -1005,6 +1005,60 @@
       </div>
     </div>
     
+    <!-- Musik -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-head-icon">🎵</span>
+        <span class="section-head-text">Musik Latar</span>
+      </div>
+      
+      <div class="form-grid">
+        <div>
+          <label>Pilih Musik</label>
+          <select id="musicChoice" onchange="updateMusicPreview()">
+            <option value="romantic">🎹 Romantic Piano (default)</option>
+            <option value="acoustic-love">🎸 Acoustic Love</option>
+            <option value="piano-elegant">🎼 Piano Elegant</option>
+            <option value="javanese-gamelan">🎶 Gamelan Jawa</option>
+            <option value="nature-garden">🌿 Nature Garden</option>
+            <option value="islami-nasheed">☪️ Islami Nasheed</option>
+            <option value="keroncong-love">🎻 Keroncong Love</option>
+            <option value="waltz-classic">💃 Waltz Classic</option>
+          </select>
+          <div style="font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.5;">
+            🎧 Musik akan otomatis diputar saat tamu membuka undangan.
+          </div>
+        </div>
+        <!-- Mini player preview -->
+        <div id="musicPreviewBox" style="
+          background: var(--bg-card);
+          border: 1px solid var(--line);
+          border-radius: 10px;
+          padding: 12px 14px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        ">
+          <button type="button" id="musicPlayBtn" onclick="toggleMusicPreview()" style="
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--accent);
+            background: rgba(212,175,108,0.1);
+            color: var(--accent);
+            font-size: 14px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+          ">▶</button>
+          <div>
+            <div id="musicPreviewName" style="font-size:13px; color:var(--text); font-weight:500;">Romantic Piano</div>
+            <div style="font-size:10px; color:var(--text-mute);">Tap untuk dengarkan preview</div>
+          </div>
+        </div>
+        <audio id="musicPreviewAudio" preload="none"></audio>
+      </div>
+    </div>
+
     <!-- Kontak Pembeli -->
     <div class="form-section">
       <div class="section-head">
@@ -1514,6 +1568,15 @@
   }
 
   function changeStep(n) {
+    // Stop music preview if leaving step 2
+    if (currentStep === 2 && n !== 2 && musicPlaying) {
+      const audio = document.getElementById('musicPreviewAudio');
+      if (audio) { audio.pause(); audio.currentTime = 0; }
+      musicPlaying = false;
+      const btn = document.getElementById('musicPlayBtn');
+      if (btn) btn.textContent = '▶';
+    }
+
     // Sembunyikan step aktif
     document.getElementById(`step-${currentStep}`).classList.remove('active');
     const pill = document.getElementById(`pill-${currentStep}`);
@@ -1570,6 +1633,19 @@
     selectedTheme = theme;
     document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
     document.querySelector(`[data-theme="${theme}"]`).classList.add('selected');
+    
+    // Auto-suggest best music for this theme
+    const themeMusicMap = {
+      'royal-classic': 'piano-elegant',
+      'sunset-bloom': 'acoustic-love',
+      'adat-jawa': 'javanese-gamelan',
+    };
+    const suggested = themeMusicMap[theme];
+    const musicSelect = document.getElementById('musicChoice');
+    if (suggested && musicSelect) {
+      musicSelect.value = suggested;
+      updateMusicPreview();
+    }
   }
   
   function selectPaket(paket) {
@@ -1578,11 +1654,74 @@
     document.querySelector(`[data-paket="${paket}"]`).classList.add('selected');
   }
   
+  // ============ MUSIC OPTIONS ============
+  const MUSIC_BASE_URL = 'https://undanganku-web.vercel.app/music/';
+  const MUSIC_OPTIONS = {
+    'romantic':         { label: 'Romantic Piano',   file: 'romantic.mp3' },
+    'acoustic-love':   { label: 'Acoustic Love',    file: 'acoustic-love.mp3' },
+    'piano-elegant':   { label: 'Piano Elegant',    file: 'piano-elegant.mp3' },
+    'javanese-gamelan':{ label: 'Gamelan Jawa',     file: 'javanese-gamelan.mp3' },
+    'nature-garden':   { label: 'Nature Garden',    file: 'nature-garden.mp3' },
+    'islami-nasheed':  { label: 'Islami Nasheed',   file: 'islami-nasheed.mp3' },
+    'keroncong-love':  { label: 'Keroncong Love',   file: 'keroncong-love.mp3' },
+    'waltz-classic':   { label: 'Waltz Classic',    file: 'waltz-classic.mp3' },
+  };
+
+  let musicPlaying = false;
+
+  function getMusicUrl() {
+    const choice = document.getElementById('musicChoice')?.value || 'romantic';
+    const opt = MUSIC_OPTIONS[choice];
+    return opt ? MUSIC_BASE_URL + opt.file : MUSIC_BASE_URL + 'romantic.mp3';
+  }
+
+  function updateMusicPreview() {
+    const choice = document.getElementById('musicChoice').value;
+    const opt = MUSIC_OPTIONS[choice];
+    document.getElementById('musicPreviewName').textContent = opt ? opt.label : 'Romantic Piano';
+    // Stop current preview if playing
+    const audio = document.getElementById('musicPreviewAudio');
+    if (audio && musicPlaying) {
+      audio.pause();
+      audio.currentTime = 0;
+      musicPlaying = false;
+      document.getElementById('musicPlayBtn').textContent = '▶';
+    }
+    // Update audio source
+    if (audio) audio.src = getMusicUrl();
+    updatePreview();
+  }
+
+  function toggleMusicPreview() {
+    const audio = document.getElementById('musicPreviewAudio');
+    const btn = document.getElementById('musicPlayBtn');
+    if (!audio) return;
+    if (!audio.src || audio.src === window.location.href) {
+      audio.src = getMusicUrl();
+    }
+    if (musicPlaying) {
+      audio.pause();
+      btn.textContent = '▶';
+      musicPlaying = false;
+    } else {
+      audio.play().then(() => {
+        btn.textContent = '⏸';
+        musicPlaying = true;
+      }).catch(() => {
+        showToast('Tidak bisa memutar audio', 'error');
+      });
+    }
+  }
+
+  // Stop music preview when leaving step 2
+  const origChangeStep = changeStep;
+
   // ============ DATA COLLECTION ============
   function collectFormData() {
     const v = (id) => document.getElementById(id)?.value || '';
     
     return {
+      musicUrl: getMusicUrl(),
       brideName: v('brideName'),
       brideNick: v('brideNick'),
       brideOrder: v('brideOrder'),
