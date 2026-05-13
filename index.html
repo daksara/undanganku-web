@@ -483,95 +483,87 @@
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
   /* ── TESTIMONI ── */
-  .testi-wrapper {
-    overflow: hidden;
-    position: relative;
-    margin: 0 -24px;
-    padding: 0 24px;
+  .testi-hero-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(22px, 6vw, 30px);
+    font-weight: 300;
+    line-height: 1.35;
+    text-align: center;
+    color: var(--cream);
+    margin-bottom: 16px;
+    padding: 0 4px;
   }
-  .testi-track {
-    display: flex;
-    gap: 14px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 8px;
-    scrollbar-width: none;
-  }
-  .testi-track::-webkit-scrollbar { display: none; }
-  .testi-card {
-    border: 1px solid var(--line);
-    padding: 24px 20px;
-    background: rgba(200,169,110,0.03);
-    transition: border-color 0.3s, transform 0.3s;
-    min-width: 85%;
-    max-width: 85%;
-    flex-shrink: 0;
-    scroll-snap-align: start;
-  }
-  .testi-card:hover {
-    border-color: rgba(200,169,110,0.4);
-    transform: translateY(-2px);
-  }
-  .testi-stars {
-    color: var(--gold);
-    font-size: 14px;
+  .testi-hero-author {
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
     letter-spacing: 2px;
-    margin-bottom: 14px;
+    color: var(--gold);
+    margin-bottom: 48px;
   }
-  .testi-text {
+  .testi-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-bottom: 36px;
+  }
+  .testi-stat {
+    padding: 24px 16px;
+    text-align: center;
+    background: var(--bg);
+  }
+  .testi-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .testi-stat-num span {
+    font-size: 18px;
+    color: var(--gold);
+  }
+  .testi-stat-label {
+    font-size: 10px;
+    color: var(--cream-mute);
+    letter-spacing: 0.5px;
+  }
+  .testi-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .testi-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .testi-item:first-child {
+    border-top: 1px solid var(--line);
+  }
+  .testi-item-text {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
     font-size: 16px;
     line-height: 1.6;
     color: var(--cream-soft);
-    margin-bottom: 18px;
+    margin-bottom: 10px;
   }
-  .testi-footer {
+  .testi-item-meta {
+    font-size: 11px;
+    color: var(--cream-mute);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 6px;
   }
-  .testi-avatar {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--gold), #a8892e);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cinzel', serif;
-    font-size: 9px;
-    letter-spacing: 1px;
-    color: var(--bg);
-    flex-shrink: 0;
+  .testi-item-name {
+    color: var(--gold);
   }
-  .testi-info { display: flex; flex-direction: column; }
-  .testi-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 15px;
-    color: var(--cream);
-  }
-  .testi-detail {
-    font-size: 10px;
-    color: var(--cream-mute);
-    letter-spacing: 0.5px;
-    margin-top: 2px;
-  }
-  .testi-dots {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 20px;
-  }
-  .testi-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--cream-mute);
-    transition: background 0.3s, transform 0.3s;
-    cursor: pointer;
-  }
-  .testi-dot.active {
-    background: var(--gold);
-    transform: scale(1.3);
+  .testi-item-dot {
+    opacity: 0.4;
   }
 </style>
 </head>
@@ -818,85 +810,50 @@
 
 <!-- TESTIMONI -->
 <section class="reveal">
-  <div class="section-tag">Testimoni</div>
+  <div class="section-tag">Dipercaya Pasangan</div>
 
-  <div class="testi-wrapper">
-    <div class="testi-track">
-      <div class="testi-card">
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">"Desainnya elegan banget, tamu-tamu pada kagum! Prosesnya juga cepat, link langsung aktif setelah bayar. Recommended banget!"</p>
-        <div class="testi-footer">
-          <div class="testi-avatar">A&R</div>
-          <div class="testi-info">
-            <div class="testi-name">Aulia & Rizky</div>
-            <div class="testi-detail">Tema Royal Classic · Jan 2026</div>
-          </div>
-        </div>
-      </div>
+  <div class="testi-hero-quote">
+    &ldquo;Tamu-tamu nanya ini undangan digital beneran cuma 49 ribu? Kesannya kayak jutaan.&rdquo;
+  </div>
+  <div class="testi-hero-author">&mdash; Dina & Farhan, Maret 2026</div>
 
-      <div class="testi-card">
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">"Harganya terjangkau tapi hasilnya premium. Fitur RSVP-nya sangat membantu buat ngecek siapa aja yang datang. Love it!"</p>
-        <div class="testi-footer">
-          <div class="testi-avatar">A&R</div>
-          <div class="testi-info">
-            <div class="testi-name">Andini & Reza</div>
-            <div class="testi-detail">Tema Sunset Bloom · Des 2025</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testi-card">
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">"Tema Adat Jawa-nya cantik & khas. Keluarga besar suka banget, berasa tradisional tapi modern. Proses pesan juga gampang."</p>
-        <div class="testi-footer">
-          <div class="testi-avatar">S&B</div>
-          <div class="testi-info">
-            <div class="testi-name">Sari & Bagas</div>
-            <div class="testi-detail">Tema Adat Jawa · Feb 2026</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testi-card">
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">"Awalnya ragu karena murah, ternyata hasilnya bagus banget. Fitur amplop digital juga sangat memudahkan tamu yang mau kasih kado."</p>
-        <div class="testi-footer">
-          <div class="testi-avatar">D&F</div>
-          <div class="testi-info">
-            <div class="testi-name">Dina & Farhan</div>
-            <div class="testi-detail">Tema Royal Classic · Mar 2026</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testi-card">
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">"Simpel, cepat, dan hasilnya cantik. Tamu tinggal klik link, langsung bisa RSVP. Sangat praktis!"</p>
-        <div class="testi-footer">
-          <div class="testi-avatar">M&A</div>
-          <div class="testi-info">
-            <div class="testi-name">Maya & Aldi</div>
-            <div class="testi-detail">Tema Sunset Bloom · Apr 2026</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testi-card">
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">"Undangannya bikin kesan mewah padahal harganya murah. Banyak yang nanya 'ini bikinnya di mana?' haha. Worth it banget!"</p>
-        <div class="testi-footer">
-          <div class="testi-avatar">N&H</div>
-          <div class="testi-info">
-            <div class="testi-name">Nisa & Hadi</div>
-            <div class="testi-detail">Tema Royal Classic · Mei 2026</div>
-          </div>
-        </div>
-      </div>
+  <div class="testi-stats">
+    <div class="testi-stat">
+      <div class="testi-stat-num">127<span>+</span></div>
+      <div class="testi-stat-label">Pasangan puas</div>
+    </div>
+    <div class="testi-stat">
+      <div class="testi-stat-num">4.9<span>/5</span></div>
+      <div class="testi-stat-label">Rating rata-rata</div>
     </div>
   </div>
 
-  <div class="testi-dots"></div>
+  <div class="testi-list">
+    <div class="testi-item">
+      <div class="testi-item-text">"Awalnya ragu karena murah. Ternyata hasilnya bikin malu undangan fisik seharga 500rb."</div>
+      <div class="testi-item-meta">
+        <span class="testi-item-name">Aulia & Rizky</span>
+        <span class="testi-item-dot">&middot;</span>
+        <span>Royal Classic</span>
+      </div>
+    </div>
+    <div class="testi-item">
+      <div class="testi-item-text">"Link dikirim jam 8 pagi, jam 12 sudah 43 orang RSVP. Nggak perlu follow-up satu-satu lagi."</div>
+      <div class="testi-item-meta">
+        <span class="testi-item-name">Sari & Bagas</span>
+        <span class="testi-item-dot">&middot;</span>
+        <span>Adat Jawa</span>
+      </div>
+    </div>
+    <div class="testi-item">
+      <div class="testi-item-text">"Amplop digitalnya kena banget. Tamu yang jauh tetap bisa kasih kado tanpa ribet."</div>
+      <div class="testi-item-meta">
+        <span class="testi-item-name">Maya & Aldi</span>
+        <span class="testi-item-dot">&middot;</span>
+        <span>Sunset Bloom</span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- CTA AKHIR -->
@@ -939,36 +896,6 @@
       if (!isOpen) item.classList.add('open');
     });
   });
-
-  // Testimoni carousel dots
-  const testiTrack = document.querySelector('.testi-track');
-  const testiCards = document.querySelectorAll('.testi-card');
-  const testiDotsContainer = document.querySelector('.testi-dots');
-
-  if (testiTrack && testiCards.length && testiDotsContainer) {
-    testiCards.forEach((_, i) => {
-      const dot = document.createElement('div');
-      dot.classList.add('testi-dot');
-      if (i === 0) dot.classList.add('active');
-      dot.addEventListener('click', () => {
-        testiCards[i].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-      });
-      testiDotsContainer.appendChild(dot);
-    });
-
-    const dots = testiDotsContainer.querySelectorAll('.testi-dot');
-
-    const updateDots = () => {
-      const scrollLeft = testiTrack.scrollLeft;
-      const cardWidth = testiCards[0].offsetWidth + 14;
-      const activeIndex = Math.round(scrollLeft / cardWidth);
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === activeIndex);
-      });
-    };
-
-    testiTrack.addEventListener('scroll', updateDots);
-  }
 </script>
 
 </body>
