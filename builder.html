@@ -23,6 +23,7 @@
     --line: rgba(212, 175, 108, 0.18);
     --success: #6ec789;
     --danger: #e87a7a;
+    --radius: 10px;
   }
   
   html, body {
@@ -30,6 +31,7 @@
     color: var(--text);
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
+    line-height: 1.5;
   }
   
   .app {
@@ -40,20 +42,7 @@
     padding-bottom: 100px;
   }
   
-  /* ============ TOPBAR ============ */
-  .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(15, 13, 10, 0.92);
-    backdrop-filter: blur(16px);
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
+  /* ============ TOPBAR — see enhanced version below ============ */
   .logo {
     font-family: 'DM Serif Display', serif;
     font-style: italic;
@@ -82,13 +71,6 @@
   }
   
   /* ============ STEP CONTAINERS ============ */
-  .step {
-    display: none;
-    padding: 24px 20px;
-    animation: slideIn 0.4s ease;
-  }
-  .step.active { display: block; }
-  
   @keyframes slideIn {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
@@ -730,6 +712,106 @@
   }
   .toast.success { border-color: var(--success); color: var(--success); }
   .toast.error { border-color: var(--danger); color: var(--danger); }
+
+  /* ============ VALIDATION ============ */
+  .field-wrap { position: relative; }
+  .field-wrap.error input,
+  .field-wrap.error textarea,
+  .field-wrap.error select {
+    border-color: var(--danger);
+    background: rgba(232, 122, 122, 0.05);
+  }
+  .field-error {
+    display: none;
+    font-size: 11px;
+    color: var(--danger);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .field-wrap.error .field-error { display: block; }
+  
+  input:valid:not(:placeholder-shown) {
+    border-color: rgba(110, 199, 137, 0.3);
+  }
+
+  /* ============ PROGRESS BAR ============ */
+  .progress-bar {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+    transition: width 0.4s ease;
+  }
+
+  /* ============ INLINE PREVIEW (Step 4) ============ */
+  .preview-inline {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-card);
+    margin-bottom: 16px;
+  }
+  .preview-inline iframe {
+    width: 100%;
+    height: 480px;
+    border: none;
+    display: block;
+  }
+  .preview-inline-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .preview-inline-header .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: pulse 1.5s infinite;
+    margin-right: 8px;
+    display: inline-block;
+  }
+
+  /* ============ FIELD HELPER ============ */
+  .field-hint {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* ============ SECTION DIVIDER (replaces inline hr) ============ */
+  .form-divider {
+    border: none;
+    border-top: 1px dashed var(--line);
+    margin: 8px 0;
+  }
+
+  /* ============ STEP TRANSITION ============ */
+  .step {
+    display: none;
+    padding: 24px 20px;
+    animation: slideIn 0.35s ease;
+  }
+  .step.active { display: block; }
+
+  /* ============ ENHANCED TOPBAR ============ */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 13, 10, 0.92);
+    backdrop-filter: blur(16px);
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
 </style>
 </head>
 <body>
@@ -744,6 +826,7 @@
       <div class="pill" id="pill-4"></div>
       <div class="pill" id="pill-5"></div>
     </div>
+    <div class="progress-bar" id="progressBar" style="width:20%"></div>
   </div>
   
   <!-- ===== STEP 1: TEMA ===== -->
@@ -821,9 +904,9 @@
       </div>
       
       <div class="form-grid">
-        <div>
-          <label>Nama Lengkap Mempelai Wanita</label>
-          <input type="text" id="brideName" placeholder="Andini Putri Maharani" oninput="updatePreview()">
+        <div class="field-wrap">
+          <label>Nama Lengkap Mempelai Wanita *</label>
+          <input type="text" id="brideName" placeholder="Andini Putri Maharani" oninput="updatePreview()" required>
         </div>
         <div>
           <label>Panggilan</label>
@@ -846,11 +929,11 @@
           <input type="text" id="brideIG" placeholder="@andiniputri" oninput="updatePreview()">
         </div>
         
-        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
+        <hr class="form-divider">
         
-        <div>
-          <label>Nama Lengkap Mempelai Pria</label>
-          <input type="text" id="groomName" placeholder="Reza Pratama Adiputra" oninput="updatePreview()">
+        <div class="field-wrap">
+          <label>Nama Lengkap Mempelai Pria *</label>
+          <input type="text" id="groomName" placeholder="Reza Pratama Adiputra" oninput="updatePreview()" required>
         </div>
         <div>
           <label>Panggilan</label>
@@ -883,25 +966,25 @@
       </div>
       
       <div class="form-grid">
-        <div>
-          <label>Tanggal Pernikahan</label>
-          <input type="date" id="weddingDate" oninput="updatePreview()">
+        <div class="field-wrap">
+          <label>Tanggal Pernikahan *</label>
+          <input type="date" id="weddingDate" oninput="updatePreview()" required>
         </div>
         
         <div class="form-grid cols-2">
           <div>
             <label>Akad Mulai</label>
-            <input type="text" id="akadStart" value="08:00" placeholder="08:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
+            <input type="text" id="akadStart" value="08:00" placeholder="08:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)">
           </div>
           <div>
             <label>Akad Selesai</label>
-            <input type="text" id="akadEnd" value="10:00" placeholder="10:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
+            <input type="text" id="akadEnd" value="10:00" placeholder="10:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)">
           </div>
         </div>
         
-        <div>
-          <label>Tempat Akad</label>
-          <input type="text" id="akadVenue" placeholder="Masjid Istiqlal" oninput="updatePreview()">
+        <div class="field-wrap">
+          <label>Tempat Akad *</label>
+          <input type="text" id="akadVenue" placeholder="Masjid Istiqlal" oninput="updatePreview()" required>
         </div>
         <div>
           <label>Alamat Akad</label>
@@ -912,16 +995,16 @@
           <input type="text" id="akadMaps" placeholder="https://maps.google.com/..." oninput="updatePreview()">
         </div>
         
-        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
+        <hr class="form-divider">
         
         <div class="form-grid cols-2">
           <div>
             <label>Resepsi Mulai</label>
-            <input type="text" id="resepsiStart" value="11:00" placeholder="11:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
+            <input type="text" id="resepsiStart" value="11:00" placeholder="11:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)">
           </div>
           <div>
             <label>Resepsi Selesai</label>
-            <input type="text" id="resepsiEnd" value="15:00" placeholder="15:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
+            <input type="text" id="resepsiEnd" value="15:00" placeholder="15:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)">
           </div>
         </div>
         
@@ -986,7 +1069,7 @@
           <input type="text" id="bank1Holder" placeholder="Andini Putri" oninput="updatePreview()">
         </div>
         
-        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
+        <hr class="form-divider">
         
         <div class="form-grid cols-2">
           <div>
@@ -1013,18 +1096,17 @@
       </div>
       
       <div class="form-grid">
-        <div>
-          <label>Nomor WhatsApp</label>
-          <input type="tel" id="buyerContact" placeholder="08xxxxxxxxxx" inputmode="numeric"
-            style="letter-spacing:0.5px;">
-          <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
-            ⚡ Link undangan aktif akan dikirimkan via WhatsApp setelah konfirmasi pembayaran.
+        <div class="field-wrap">
+          <label>Nomor WhatsApp *</label>
+          <input type="tel" id="buyerContact" placeholder="08xxxxxxxxxx" inputmode="numeric" required>
+          <div class="field-hint">
+            Link undangan aktif akan dikirimkan via WhatsApp setelah konfirmasi pembayaran.
           </div>
         </div>
         <div>
           <label>Instagram (opsional)</label>
           <input type="text" id="buyerInstagram" placeholder="@namakamu" oninput="updatePreview()">
-          <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
+          <div class="field-hint">
             Untuk dihubungi jika ada pertanyaan.
           </div>
         </div>
@@ -1259,7 +1341,7 @@
       <div class="step-subtitle">Pastikan semua data sudah benar sebelum memesan</div>
     </div>
 
-    <div class="summary-card" id="previewSummary" style="margin-bottom:16px;">
+    <div class="summary-card" id="previewSummary">
       <div class="summary-row">
         <span class="label">Tema</span>
         <span class="value" id="prevTheme">—</span>
@@ -1286,18 +1368,25 @@
       </div>
     </div>
 
+    <!-- Inline Preview -->
+    <div class="preview-inline" id="previewInlineWrap">
+      <div class="preview-inline-header">
+        <span><span class="dot"></span>Live Preview</span>
+        <span style="color:var(--accent); cursor:pointer;" onclick="openPreviewTab()">Buka fullscreen ↗</span>
+      </div>
+      <iframe id="previewIframe" title="Preview undangan"></iframe>
+    </div>
+
     <button onclick="openPreviewTab()" style="
       width:100%; padding:14px;
       background: rgba(200,169,110,0.1);
       border: 1px solid rgba(200,169,110,0.4);
+      border-radius: var(--radius);
       color: #c8a96e;
       font-family: 'Cinzel', serif;
       font-size: 11px; letter-spacing: 3px;
-      cursor: pointer; margin-bottom: 8px;
-    ">👁️ BUKA PREVIEW DI TAB BARU</button>
-    <p style="text-align:center; font-size:11px; color:rgba(240,230,210,0.4); font-style:italic;">
-      Preview akan terbuka di tab baru. Kembali ke sini untuk lanjut memesan.
-    </p>
+      cursor: pointer;
+    ">BUKA PREVIEW DI TAB BARU</button>
   </div>
   
   <!-- ===== STEP 5: BAYAR ===== -->
@@ -1545,8 +1634,17 @@
       nextBtn.disabled = false;
     }
 
+    // Update progress bar
+    const order = getStepOrder();
+    const idx = order.indexOf(n);
+    const pct = Math.round(((idx + 1) / order.length) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+
     // Update preview saat masuk step 4
-    if (n === 4) updatePreview();
+    if (n === 4) {
+      updatePreview();
+      loadInlinePreview();
+    }
     // Update summary saat masuk step 5
     if (n === 5) updateSummary();
 
@@ -1554,6 +1652,9 @@
   }
   
   function nextStep() {
+    // Validate current step before advancing
+    if (currentStep === 2 && !validateStep2()) return;
+    
     const order = getStepOrder();
     const idx = order.indexOf(currentStep);
     if (idx < order.length - 1) changeStep(order[idx + 1]);
@@ -1563,6 +1664,72 @@
     const order = getStepOrder();
     const idx = order.indexOf(currentStep);
     if (idx > 0) changeStep(order[idx - 1]);
+  }
+
+  // ============ VALIDATION ============
+  function validateStep2() {
+    let valid = true;
+    const required = [
+      { id: 'brideName', msg: 'Nama mempelai wanita wajib diisi' },
+      { id: 'groomName', msg: 'Nama mempelai pria wajib diisi' },
+      { id: 'weddingDate', msg: 'Tanggal pernikahan wajib diisi' },
+      { id: 'akadVenue', msg: 'Tempat akad wajib diisi' },
+      { id: 'buyerContact', msg: 'Nomor WhatsApp wajib diisi' },
+    ];
+
+    // Clear previous errors
+    document.querySelectorAll('.field-wrap.error').forEach(el => el.classList.remove('error'));
+
+    for (const field of required) {
+      const input = document.getElementById(field.id);
+      if (!input || !input.value.trim()) {
+        // Wrap input in error state
+        const wrap = input?.closest('.field-wrap') || input?.parentElement;
+        if (wrap) {
+          wrap.classList.add('error');
+          // Add error message if not exists
+          if (!wrap.querySelector('.field-error')) {
+            const errEl = document.createElement('div');
+            errEl.className = 'field-error';
+            errEl.textContent = field.msg;
+            wrap.appendChild(errEl);
+          } else {
+            wrap.querySelector('.field-error').textContent = field.msg;
+          }
+        }
+        if (valid) {
+          input?.focus();
+          input?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        valid = false;
+      }
+    }
+
+    if (!valid) showToast('Lengkapi data yang wajib diisi', 'error');
+    return valid;
+  }
+
+  // Clear error on input
+  document.addEventListener('input', (e) => {
+    const wrap = e.target.closest('.field-wrap') || e.target.parentElement;
+    if (wrap && wrap.classList.contains('error') && e.target.value.trim()) {
+      wrap.classList.remove('error');
+    }
+  });
+
+  // ============ INLINE PREVIEW ============
+  function loadInlinePreview() {
+    const iframe = document.getElementById('previewIframe');
+    if (!iframe) return;
+    const data = collectFormData();
+    const payload = encodeURIComponent(JSON.stringify({
+      theme: selectedTheme,
+      isPreview: true,
+      watermark: true,
+      data: data,
+    }));
+    const themeFile = getThemeFile(selectedTheme);
+    iframe.src = `${themeFile}#${payload}`;
   }
   
   // ============ THEME & PAKET ============
