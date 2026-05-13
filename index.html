@@ -481,6 +481,90 @@
     transition: opacity 0.8s ease, transform 0.8s ease;
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── TESTIMONI ── */
+  .testi-hero-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(22px, 6vw, 30px);
+    font-weight: 300;
+    line-height: 1.35;
+    text-align: center;
+    color: var(--cream);
+    margin-bottom: 16px;
+    padding: 0 4px;
+  }
+  .testi-hero-author {
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 48px;
+  }
+  .testi-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-bottom: 36px;
+  }
+  .testi-stat {
+    padding: 24px 16px;
+    text-align: center;
+    background: var(--bg);
+  }
+  .testi-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .testi-stat-num span {
+    font-size: 18px;
+    color: var(--gold);
+  }
+  .testi-stat-label {
+    font-size: 10px;
+    color: var(--cream-mute);
+    letter-spacing: 0.5px;
+  }
+  .testi-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .testi-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .testi-item:first-child {
+    border-top: 1px solid var(--line);
+  }
+  .testi-item-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--cream-soft);
+    margin-bottom: 10px;
+  }
+  .testi-item-meta {
+    font-size: 11px;
+    color: var(--cream-mute);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .testi-item-name {
+    color: var(--gold);
+  }
+  .testi-item-dot {
+    opacity: 0.4;
+  }
 </style>
 </head>
 <body>
@@ -720,6 +804,54 @@
     <div class="faq-item">
       <div class="faq-q">Apakah ada biaya tambahan?</div>
       <div class="faq-a">Tidak ada. Harga yang tertera sudah termasuk semua fitur, tidak ada biaya tersembunyi.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONI -->
+<section class="reveal">
+  <div class="section-tag">Dipercaya Pasangan</div>
+
+  <div class="testi-hero-quote">
+    &ldquo;Tamu-tamu nanya ini undangan digital beneran cuma 49 ribu? Kesannya kayak jutaan.&rdquo;
+  </div>
+  <div class="testi-hero-author">&mdash; Dina & Farhan, Maret 2026</div>
+
+  <div class="testi-stats">
+    <div class="testi-stat">
+      <div class="testi-stat-num">127<span>+</span></div>
+      <div class="testi-stat-label">Pasangan puas</div>
+    </div>
+    <div class="testi-stat">
+      <div class="testi-stat-num">4.9<span>/5</span></div>
+      <div class="testi-stat-label">Rating rata-rata</div>
+    </div>
+  </div>
+
+  <div class="testi-list">
+    <div class="testi-item">
+      <div class="testi-item-text">"Awalnya ragu karena murah. Ternyata hasilnya bikin malu undangan fisik seharga 500rb."</div>
+      <div class="testi-item-meta">
+        <span class="testi-item-name">Aulia & Rizky</span>
+        <span class="testi-item-dot">&middot;</span>
+        <span>Royal Classic</span>
+      </div>
+    </div>
+    <div class="testi-item">
+      <div class="testi-item-text">"Link dikirim jam 8 pagi, jam 12 sudah 43 orang RSVP. Nggak perlu follow-up satu-satu lagi."</div>
+      <div class="testi-item-meta">
+        <span class="testi-item-name">Sari & Bagas</span>
+        <span class="testi-item-dot">&middot;</span>
+        <span>Adat Jawa</span>
+      </div>
+    </div>
+    <div class="testi-item">
+      <div class="testi-item-text">"Amplop digitalnya kena banget. Tamu yang jauh tetap bisa kasih kado tanpa ribet."</div>
+      <div class="testi-item-meta">
+        <span class="testi-item-name">Maya & Aldi</span>
+        <span class="testi-item-dot">&middot;</span>
+        <span>Sunset Bloom</span>
+      </div>
     </div>
   </div>
 </section>
