@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Builder Undangan — UndanganKu</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
@@ -265,6 +266,7 @@
     margin: 5px 0;
     letter-spacing: 4px;
   }
+  .theme-meta {
     padding: 16px 18px;
     display: flex;
     justify-content: space-between;
@@ -1828,7 +1830,13 @@
   }
   
   // ============ CHECK EXISTING ORDER (URL param atau localStorage) ============
+  // ============ AUTO-SELECT PAKET FROM URL ============
   const urlParams = new URLSearchParams(window.location.search);
+  const paramPaket = urlParams.get('paket');
+  if (paramPaket && PRICES[paramPaket]) {
+    selectPaket(paramPaket);
+  }
+
   const existingOrder = urlParams.get('order') || localStorage.getItem('undanganku_order');
   if (existingOrder) {
     currentOrderId = existingOrder;
