@@ -778,7 +778,7 @@ body.preview-mode [data-preview-only] { display: block; }
   display: none;
 }
 
-/* Individual couple photos in cards */
+/* Individual couple avatar in cards */
 .couple-photo-wrap {
   width: 88px;
   height: 88px;
@@ -788,15 +788,14 @@ body.preview-mode [data-preview-only] { display: block; }
   box-shadow: 0 0 0 4px rgba(212,175,108,0.12);
   margin: 0 auto 14px;
   background: rgba(212,175,108,0.06);
-  display: none;
 }
+.couple-photo-wrap svg,
 .couple-photo-wrap img {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
-  object-position: center top;
 }
-.couple-photo-wrap.show { display: block; }
 
 </style>
 </head>
@@ -853,8 +852,20 @@ body.preview-mode [data-preview-only] { display: block; }
     <div class="couple-block">
       <div class="couple-card reveal">
         <div class="couple-label">The Bride</div>
-        <div class="couple-photo-wrap" id="bridePhotoWrap">
-          <img src="" alt="Foto Pengantin Wanita" id="bridePhotoImg">
+        <div class="couple-photo-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="50" fill="rgba(212,175,108,0.1)"/>
+            <path d="M50,65 C38,66 24,76 18,100 L82,100 C76,76 62,66 50,65Z" fill="#d4af6c" opacity="0.38"/>
+            <path d="M38,60 C36,64 37,70 40,73 Q50,78 60,73 C63,70 64,64 62,60Z" fill="#f0e0c0" opacity="0.7"/>
+            <ellipse cx="50" cy="42" rx="15" ry="16" fill="#f0e0c0"/>
+            <ellipse cx="50" cy="32" rx="18" ry="12.5" fill="#9a7845" opacity="0.85"/>
+            <path d="M32,40 C29,52 31,68 38,74 Q50,80 62,74 C69,68 71,52 68,40" fill="#9a7845" opacity="0.72"/>
+            <ellipse cx="44" cy="43" rx="2" ry="1.6" fill="#5c3820" opacity="0.6"/>
+            <ellipse cx="56" cy="43" rx="2" ry="1.6" fill="#5c3820" opacity="0.6"/>
+            <path d="M45,50.5 Q50,53.5 55,50.5" stroke="#c07850" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.55"/>
+            <circle cx="50" cy="22" r="3" fill="#d4af6c" opacity="0.9"/>
+            <line x1="46" y1="25" x2="54" y2="25" stroke="#d4af6c" stroke-width="1.2" opacity="0.6"/>
+          </svg>
         </div>
         <div class="couple-name">{{brideName}}</div>
         <div class="couple-parents">{{brideParents}}</div>
@@ -864,8 +875,23 @@ body.preview-mode [data-preview-only] { display: block; }
 
       <div class="couple-card reveal">
         <div class="couple-label">The Groom</div>
-        <div class="couple-photo-wrap" id="groomPhotoWrap">
-          <img src="" alt="Foto Pengantin Pria" id="groomPhotoImg">
+        <div class="couple-photo-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="50" fill="rgba(212,175,108,0.08)"/>
+            <path d="M50,62 C38,62 24,72 18,100 L82,100 C76,72 62,62 50,62Z" fill="#252010" opacity="0.55"/>
+            <path d="M44,66 L50,70 L56,66 L54,88 Q50,90 46,88Z" fill="#f5ead8" opacity="0.88"/>
+            <path d="M38,63 L44,66 L41,86 Q28,82 24,70Z" fill="#181208" opacity="0.65"/>
+            <path d="M62,63 L56,66 L59,86 Q72,82 76,70Z" fill="#181208" opacity="0.65"/>
+            <path d="M47,67.5 L50,70 L53,67.5 L50,72Z" fill="#d4af6c" opacity="0.95"/>
+            <rect x="47" y="56" width="6" height="8" rx="2" fill="#f0e0c0" opacity="0.85"/>
+            <ellipse cx="50" cy="40" rx="15" ry="16" fill="#f0e0c0"/>
+            <path d="M35,38 C36,23 50,21 65,38 C61,28 50,27 39,28 C37,30 35,34 35,38Z" fill="#3c2514" opacity="0.88"/>
+            <rect x="35" y="37" width="3.5" height="10" rx="1.5" fill="#3c2514" opacity="0.7"/>
+            <rect x="61.5" y="37" width="3.5" height="10" rx="1.5" fill="#3c2514" opacity="0.7"/>
+            <ellipse cx="44" cy="41" rx="2" ry="1.6" fill="#3a2010" opacity="0.55"/>
+            <ellipse cx="56" cy="41" rx="2" ry="1.6" fill="#3a2010" opacity="0.55"/>
+            <path d="M45,49 Q50,52 55,49" stroke="#9a6840" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.5"/>
+          </svg>
         </div>
         <div class="couple-name">{{groomName}}</div>
         <div class="couple-parents">{{groomParents}}</div>
@@ -1182,20 +1208,6 @@ body.preview-mode [data-preview-only] { display: block; }
       } else {
         coverOval.classList.add('no-photo');
       }
-    }
-
-    // Individual couple photos
-    var bridePhotoWrap = document.getElementById('bridePhotoWrap');
-    var bridePhotoImg = document.getElementById('bridePhotoImg');
-    if (bridePhotoWrap && bridePhotoImg && d.bridePhotoUrl) {
-      bridePhotoImg.src = d.bridePhotoUrl;
-      bridePhotoWrap.classList.add('show');
-    }
-    var groomPhotoWrap = document.getElementById('groomPhotoWrap');
-    var groomPhotoImg = document.getElementById('groomPhotoImg');
-    if (groomPhotoWrap && groomPhotoImg && d.groomPhotoUrl) {
-      groomPhotoImg.src = d.groomPhotoUrl;
-      groomPhotoWrap.classList.add('show');
     }
 
     // Story
