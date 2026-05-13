@@ -778,6 +778,26 @@ body.preview-mode [data-preview-only] { display: block; }
   display: none;
 }
 
+/* Individual couple photos in cards */
+.couple-photo-wrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 0 4px rgba(212,175,108,0.12);
+  margin: 0 auto 14px;
+  background: rgba(212,175,108,0.06);
+  display: none;
+}
+.couple-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.couple-photo-wrap.show { display: block; }
+
 </style>
 </head>
 <body>
@@ -833,6 +853,9 @@ body.preview-mode [data-preview-only] { display: block; }
     <div class="couple-block">
       <div class="couple-card reveal">
         <div class="couple-label">The Bride</div>
+        <div class="couple-photo-wrap" id="bridePhotoWrap">
+          <img src="" alt="Foto Pengantin Wanita" id="bridePhotoImg">
+        </div>
         <div class="couple-name">{{brideName}}</div>
         <div class="couple-parents">{{brideParents}}</div>
       </div>
@@ -841,6 +864,9 @@ body.preview-mode [data-preview-only] { display: block; }
 
       <div class="couple-card reveal">
         <div class="couple-label">The Groom</div>
+        <div class="couple-photo-wrap" id="groomPhotoWrap">
+          <img src="" alt="Foto Pengantin Pria" id="groomPhotoImg">
+        </div>
         <div class="couple-name">{{groomName}}</div>
         <div class="couple-parents">{{groomParents}}</div>
       </div>
@@ -1131,8 +1157,8 @@ body.preview-mode [data-preview-only] { display: block; }
 
     // Title fallback — bersihkan jika masih ada {{placeholder}}
     if (document.title.indexOf('{{') !== -1) {
-      var bs = replacements.brideShort || d.brideNick || (d.brideName || '').split(' ')[0] || '';
-      var gs = replacements.groomShort || d.groomNick || (d.groomName || '').split(' ')[0] || '';
+      var bs = getShortName(d.brideName, d.brideNick);
+      var gs = getShortName(d.groomName, d.groomNick);
       document.title = (bs && gs) ? bs + ' & ' + gs + ' | Wedding Invitation' : 'Wedding Invitation';
     }
 
@@ -1156,6 +1182,20 @@ body.preview-mode [data-preview-only] { display: block; }
       } else {
         coverOval.classList.add('no-photo');
       }
+    }
+
+    // Individual couple photos
+    var bridePhotoWrap = document.getElementById('bridePhotoWrap');
+    var bridePhotoImg = document.getElementById('bridePhotoImg');
+    if (bridePhotoWrap && bridePhotoImg && d.bridePhotoUrl) {
+      bridePhotoImg.src = d.bridePhotoUrl;
+      bridePhotoWrap.classList.add('show');
+    }
+    var groomPhotoWrap = document.getElementById('groomPhotoWrap');
+    var groomPhotoImg = document.getElementById('groomPhotoImg');
+    if (groomPhotoWrap && groomPhotoImg && d.groomPhotoUrl) {
+      groomPhotoImg.src = d.groomPhotoUrl;
+      groomPhotoWrap.classList.add('show');
     }
 
     // Story
@@ -1281,19 +1321,41 @@ body.preview-mode [data-preview-only] { display: block; }
     });
 
     // RSVP setup
-    setupRsvp(d.id || ORDER_ID, isPreview);
+    setupRsvp(d.id || ORDER_ID, isPreview, d.demoRsvp);
   }
 
   // ===== RSVP =====
   var attending = null;
-  function setupRsvp(orderId, isPreview) {
+
+  function renderRsvpList(list) {
+    var el = document.getElementById('rsvpList');
+    if (!list || list.length === 0) {
+      el.innerHTML = '<div style="opacity:0.5;font-style:italic;text-align:center;padding:20px;font-size:13px;">Belum ada ucapan. Jadilah yang pertama!</div>';
+      return;
+    }
+    var html = '';
+    for (var i = list.length - 1; i >= 0; i--) {
+      var item = list[i];
+      var badge = item.attending
+        ? '<span class="badge hadir">✓ Hadir</span>'
+        : '<span class="badge tidak">✕ Tidak Hadir</span>';
+      html += '<div class="rsvp-item"><div class="rsvp-item-name">' + esc(item.name) + badge + '</div>';
+      if (item.message) html += '<div class="rsvp-item-msg">"' + esc(item.message) + '"</div>';
+      html += '</div>';
+    }
+    el.innerHTML = html;
+  }
+
+  function setupRsvp(orderId, isPreview, demoRsvp) {
     if (!orderId || orderId.indexOf('{{') === 0) {
-      // No real ID, hide RSVP section in preview-only mode
       var rsvp = document.getElementById('rsvpSection');
       if (isPreview) {
-        // tetap show tapi disable
         document.getElementById('rsvpSubmit').disabled = true;
         document.getElementById('rsvpStatus').textContent = 'RSVP nonaktif di mode preview';
+      } else if (Array.isArray(demoRsvp) && demoRsvp.length > 0) {
+        // Demo mode: render contoh ucapan & izinkan form lokal
+        renderRsvpList(demoRsvp);
+        setupDemoForm(demoRsvp);
       } else {
         rsvp.style.display = 'none';
       }
@@ -1347,6 +1409,32 @@ body.preview-mode [data-preview-only] { display: block; }
 
     loadRsvpList(orderId);
   }
+
+  function setupDemoForm(demoList) {
+    var attendBtns = document.querySelectorAll('.rsvp-attend button');
+    attendBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        attending = btn.getAttribute('data-attend') === '1';
+        attendBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+      });
+    });
+    var form = document.getElementById('rsvpForm');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var name = document.getElementById('rsvpName').value.trim();
+      var msg = document.getElementById('rsvpMsg').value.trim();
+      if (!name) { showRsvpStatus('Mohon isi nama', true); return; }
+      if (attending === null) { showRsvpStatus('Pilih Hadir / Tidak Hadir', true); return; }
+      demoList.push({ name: name, attending: attending, message: msg });
+      renderRsvpList(demoList);
+      showRsvpStatus('🌹 Terima kasih, ucapanmu telah tersampaikan');
+      form.reset();
+      attendBtns.forEach(function(b) { b.classList.remove('active'); });
+      attending = null;
+    });
+  }
+
   function showRsvpStatus(msg, isError) {
     var el = document.getElementById('rsvpStatus');
     el.textContent = msg;
@@ -1356,23 +1444,7 @@ body.preview-mode [data-preview-only] { display: block; }
     fetch(BOT_API_URL + '/orders/rsvp/' + encodeURIComponent(orderId))
       .then(function(r) { return r.json(); })
       .then(function(res) {
-        var list = (res && res.list) || [];
-        var el = document.getElementById('rsvpList');
-        if (list.length === 0) {
-          el.innerHTML = '<div style="opacity:0.5;font-style:italic;text-align:center;padding:20px;font-size:13px;">Belum ada ucapan. Jadilah yang pertama!</div>';
-          return;
-        }
-        var html = '';
-        for (var i = list.length - 1; i >= 0; i--) {
-          var item = list[i];
-          var badge = item.attending
-            ? '<span class="badge hadir">✓ Hadir</span>'
-            : '<span class="badge tidak">✕ Tidak Hadir</span>';
-          html += '<div class="rsvp-item"><div class="rsvp-item-name">' + esc(item.name) + badge + '</div>';
-          if (item.message) html += '<div class="rsvp-item-msg">"' + esc(item.message) + '"</div>';
-          html += '</div>';
-        }
-        el.innerHTML = html;
+        renderRsvpList((res && res.list) || []);
       })
       .catch(function() {
         document.getElementById('rsvpList').innerHTML = '<div style="opacity:0.5;font-style:italic;text-align:center;padding:20px;font-size:13px;">Tidak dapat memuat ucapan</div>';
