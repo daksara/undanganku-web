@@ -850,6 +850,7 @@
           <input type="url" id="bridePhoto" placeholder="Paste link foto di sini..." oninput="previewPhoto(this, 'bride-photo-preview')">
           <div id="bride-photo-preview" style="margin-top:8px; display:none;">
             <img src="" alt="Preview" style="width:72px; height:72px; object-fit:cover; border-radius:50%; border:2px solid var(--accent); opacity:0.9;">
+            <div class="photo-hint" style="display:none; font-size:10px; margin-top:6px; line-height:1.4;"></div>
           </div>
           <details style="margin-top:8px; font-size:11px; color:var(--text-dim); line-height:1.6;">
             <summary style="cursor:pointer; color:var(--accent); font-size:10px; letter-spacing:0.5px;">💡 Cara dapat link foto</summary>
@@ -891,6 +892,7 @@
           <input type="url" id="groomPhoto" placeholder="Paste link foto di sini..." oninput="previewPhoto(this, 'groom-photo-preview')">
           <div id="groom-photo-preview" style="margin-top:8px; display:none;">
             <img src="" alt="Preview" style="width:72px; height:72px; object-fit:cover; border-radius:50%; border:2px solid var(--accent); opacity:0.9;">
+            <div class="photo-hint" style="display:none; font-size:10px; margin-top:6px; line-height:1.4;"></div>
           </div>
           <details style="margin-top:8px; font-size:11px; color:var(--text-dim); line-height:1.6;">
             <summary style="cursor:pointer; color:var(--accent); font-size:10px; letter-spacing:0.5px;">💡 Cara dapat link foto</summary>
@@ -1604,6 +1606,7 @@
   function previewPhoto(input, previewId) {
     const container = document.getElementById(previewId);
     const img = container.querySelector('img');
+    const hint = container.querySelector('.photo-hint');
     const url = input.value.trim();
 
     if (!url) {
@@ -1619,8 +1622,40 @@
     }
 
     img.src = directUrl;
-    img.onload = () => { container.style.display = 'block'; };
-    img.onerror = () => { container.style.display = 'none'; };
+    img.onload = () => {
+      container.style.display = 'block';
+      // Validasi ukuran & orientasi
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
+      let msg = '';
+      let color = 'var(--success)';
+
+      if (w < 300 || h < 300) {
+        msg = '⚠️ Resolusi terlalu kecil (min 300x300px). Foto bisa pecah.';
+        color = 'var(--danger)';
+      } else if (w > h * 1.3) {
+        msg = '💡 Foto landscape — crop ke portrait (tegak) untuk hasil terbaik.';
+        color = 'var(--accent)';
+      } else {
+        msg = '✓ Foto oke — ' + w + '×' + h + 'px';
+        color = 'var(--success)';
+      }
+
+      if (hint) {
+        hint.textContent = msg;
+        hint.style.color = color;
+        hint.style.display = 'block';
+      }
+    };
+    img.onerror = () => {
+      container.style.display = 'block';
+      img.style.display = 'none';
+      if (hint) {
+        hint.textContent = '❌ Link tidak bisa dimuat. Pastikan link berupa gambar langsung (direct link).';
+        hint.style.color = 'var(--danger)';
+        hint.style.display = 'block';
+      }
+    };
 
     updatePreview();
   }
