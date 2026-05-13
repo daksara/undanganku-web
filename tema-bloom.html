@@ -1276,11 +1276,15 @@ body.preview-mode [data-preview-only] { display: block; }
     if (images.length === 0) {
       gallerySection.style.display = 'none';
     } else {
+      var galleryEl = document.getElementById('gallery');
       var gHtml = '';
+      var isOdd = images.length % 2 === 1;
       for (var j = 0; j < images.length; j++) {
-        gHtml += '<img src="' + esc(images[j]) + '" alt="Moment ' + (j + 1) + '" loading="lazy">';
+        var spanLast = isOdd && j === images.length - 1;
+        var imgStyle = spanLast ? ' style="grid-column:span 2; max-width:65%; margin:0 auto; width:100%;"' : '';
+        gHtml += '<img src="' + esc(images[j]) + '" alt="Moment ' + (j + 1) + '" loading="lazy"' + imgStyle + '>';
       }
-      document.getElementById('gallery').innerHTML = gHtml;
+      galleryEl.innerHTML = gHtml;
     }
 
     // Bank
