@@ -8,6 +8,7 @@
 <meta property="og:title" content="The Wedding of {{brideShort}} & {{groomShort}}">
 <meta property="og:description" content="{{weddingDateLong}} — Hadirilah pernikahan kami">
 <meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1125,6 +1126,13 @@ body.preview-mode [data-preview-only] { display: block; }
 
     // Fill semua {{placeholder}} di HTML (untuk mode preview/fetch dimana generator tidak jalan)
     fillDOM(d);
+
+    // Title fallback — bersihkan jika masih ada {{placeholder}}
+    if (document.title.indexOf('{{') !== -1) {
+      var bs = replacements.brideShort || d.brideNick || (d.brideName || '').split(' ')[0] || '';
+      var gs = replacements.groomShort || d.groomNick || (d.groomName || '').split(' ')[0] || '';
+      document.title = (bs && gs) ? bs + ' & ' + gs + ' | Wedding Invitation' : 'Wedding Invitation';
+    }
 
     // Recipient name from URL ?to=
     var recipient = new URLSearchParams(window.location.search).get('to');
