@@ -845,6 +845,20 @@
           <label>Instagram Mempelai Wanita (opsional)</label>
           <input type="text" id="brideIG" placeholder="@andiniputri" oninput="updatePreview()">
         </div>
+        <div>
+          <label>Foto Mempelai Wanita (URL)</label>
+          <input type="url" id="bridePhoto" placeholder="Paste link foto di sini..." oninput="previewPhoto(this, 'bride-photo-preview')">
+          <div id="bride-photo-preview" style="margin-top:8px; display:none;">
+            <img src="" alt="Preview" style="width:72px; height:72px; object-fit:cover; border-radius:50%; border:2px solid var(--accent); opacity:0.9;">
+          </div>
+          <details style="margin-top:8px; font-size:11px; color:var(--text-dim); line-height:1.6;">
+            <summary style="cursor:pointer; color:var(--accent); font-size:10px; letter-spacing:0.5px;">💡 Cara dapat link foto</summary>
+            <div style="margin-top:6px; padding-left:4px;">
+              <strong style="color:var(--text);">Paling mudah:</strong> Upload foto ke <strong style="color:var(--accent-bright);">imgbb.com</strong> (gratis, tanpa daftar) → klik "Upload" → salin "Direct link" → paste di sini.<br><br>
+              Atau gunakan Google Drive: upload → klik kanan → "Dapatkan link" → set "Siapa saja" → salin.
+            </div>
+          </details>
+        </div>
         
         <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
         
@@ -871,6 +885,20 @@
         <div>
           <label>Instagram Mempelai Pria (opsional)</label>
           <input type="text" id="groomIG" placeholder="@rezapratama" oninput="updatePreview()">
+        </div>
+        <div>
+          <label>Foto Mempelai Pria (URL)</label>
+          <input type="url" id="groomPhoto" placeholder="Paste link foto di sini..." oninput="previewPhoto(this, 'groom-photo-preview')">
+          <div id="groom-photo-preview" style="margin-top:8px; display:none;">
+            <img src="" alt="Preview" style="width:72px; height:72px; object-fit:cover; border-radius:50%; border:2px solid var(--accent); opacity:0.9;">
+          </div>
+          <details style="margin-top:8px; font-size:11px; color:var(--text-dim); line-height:1.6;">
+            <summary style="cursor:pointer; color:var(--accent); font-size:10px; letter-spacing:0.5px;">💡 Cara dapat link foto</summary>
+            <div style="margin-top:6px; padding-left:4px;">
+              <strong style="color:var(--text);">Paling mudah:</strong> Upload foto ke <strong style="color:var(--accent-bright);">imgbb.com</strong> (gratis, tanpa daftar) → klik "Upload" → salin "Direct link" → paste di sini.<br><br>
+              Atau gunakan Google Drive: upload → klik kanan → "Dapatkan link" → set "Siapa saja" → salin.
+            </div>
+          </details>
         </div>
       </div>
     </div>
@@ -1570,6 +1598,31 @@
     selectedTheme = theme;
     document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
     document.querySelector(`[data-theme="${theme}"]`).classList.add('selected');
+  }
+
+  // ============ FOTO PREVIEW ============
+  function previewPhoto(input, previewId) {
+    const container = document.getElementById(previewId);
+    const img = container.querySelector('img');
+    const url = input.value.trim();
+
+    if (!url) {
+      container.style.display = 'none';
+      return;
+    }
+
+    // Convert Google Drive link to direct image
+    let directUrl = url;
+    const driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (driveMatch) {
+      directUrl = 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+    }
+
+    img.src = directUrl;
+    img.onload = () => { container.style.display = 'block'; };
+    img.onerror = () => { container.style.display = 'none'; };
+
+    updatePreview();
   }
   
   function selectPaket(paket) {
