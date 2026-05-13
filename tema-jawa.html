@@ -1409,6 +1409,7 @@ body.preview-mode [data-preview-only] { display: block; }
   function applyData(payload) {
     if (!payload || !payload.data) return;
     var d = payload.data;
+    var isStandard = payload.paket === 'standard';
     var isPreview = !!(payload.isPreview || payload.watermark || payload.status === 'pending');
     if (isPreview) {
       document.body.classList.add('preview-mode');
@@ -1433,17 +1434,16 @@ body.preview-mode [data-preview-only] { display: block; }
     }
 
 
-    // Cover photo
-    var couplePhotoUrl = d.couplePhotoUrl || '';
-    var coverOval = document.getElementById('coverPhotoOval');
-    var coverImg = document.getElementById('coverPhotoImg');
-    if (coverOval && coverImg) {
-      if (couplePhotoUrl) {
-        coverImg.src = couplePhotoUrl;
-        coverOval.classList.remove('no-photo');
-        coverOval.classList.add('has-photo');
-      } else {
-        coverImg.src = _demoSvgUri(_jawaCoverSvg());
+    // Cover photo (premium only)
+    var coverWrap = document.getElementById('coverPhotoWrap');
+    if (isStandard) {
+      if (coverWrap) coverWrap.style.display = 'none';
+    } else {
+      var couplePhotoUrl = d.couplePhotoUrl || '';
+      var coverOval = document.getElementById('coverPhotoOval');
+      var coverImg = document.getElementById('coverPhotoImg');
+      if (coverOval && coverImg) {
+        coverImg.src = couplePhotoUrl ? couplePhotoUrl : _demoSvgUri(_jawaCoverSvg());
         coverOval.classList.remove('no-photo');
         coverOval.classList.add('has-photo');
       }
@@ -1467,24 +1467,28 @@ body.preview-mode [data-preview-only] { display: block; }
       document.getElementById('storyList').innerHTML = html;
     }
 
-    // Gallery
-    var images = Array.isArray(d.galleryPhotos) ? d.galleryPhotos : [];
+    // Gallery (premium only)
     var gallerySection = document.getElementById('gallerySection');
-    var galleryEl = document.getElementById('gallery');
-    if (images.length === 0) {
-      var demoSvgs = _jawaGallerySvgs();
-      galleryEl.innerHTML = demoSvgs.map(function(s) {
-        return '<img src="' + _demoSvgUri(s) + '" alt="Ilustrasi">';
-      }).join('');
+    if (isStandard) {
+      if (gallerySection) gallerySection.style.display = 'none';
     } else {
-      var gHtml = '';
-      var isOdd = images.length % 2 === 1;
-      for (var j = 0; j < images.length; j++) {
-        var spanLast = isOdd && j === images.length - 1;
-        var imgStyle = spanLast ? ' style="grid-column:span 2; max-width:65%; margin:0 auto; width:100%;"' : '';
-        gHtml += '<img src="' + esc(images[j]) + '" alt="Moment ' + (j + 1) + '" loading="lazy"' + imgStyle + '>';
+      var images = Array.isArray(d.galleryPhotos) ? d.galleryPhotos : [];
+      var galleryEl = document.getElementById('gallery');
+      if (images.length === 0) {
+        var demoSvgs = _jawaGallerySvgs();
+        galleryEl.innerHTML = demoSvgs.map(function(s) {
+          return '<img src="' + _demoSvgUri(s) + '" alt="Ilustrasi">';
+        }).join('');
+      } else {
+        var gHtml = '';
+        var isOdd = images.length % 2 === 1;
+        for (var j = 0; j < images.length; j++) {
+          var spanLast = isOdd && j === images.length - 1;
+          var imgStyle = spanLast ? ' style="grid-column:span 2; max-width:65%; margin:0 auto; width:100%;"' : '';
+          gHtml += '<img src="' + esc(images[j]) + '" alt="Moment ' + (j + 1) + '" loading="lazy"' + imgStyle + '>';
+        }
+        galleryEl.innerHTML = gHtml;
       }
-      galleryEl.innerHTML = gHtml;
     }
 
     // Bank

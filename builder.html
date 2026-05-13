@@ -1101,7 +1101,7 @@
         <div class="paket-price-sub">Aktif 3 bulan</div>
         <div class="paket-features">
           <div class="paket-feature-item"><span class="check">✓</span><span>3 pilihan tema undangan</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Cover + Buka Undangan</span></div>
+          <div class="paket-feature-item"><span class="check">✓</span><span>Cover nama mempelai + Buka Undangan</span></div>
           <div class="paket-feature-item"><span class="check">✓</span><span>RSVP & ucapan tamu</span></div>
           <div class="paket-feature-item"><span class="check">✓</span><span>Countdown hari H</span></div>
           <div class="paket-feature-item"><span class="check">✓</span><span>Amplop digital (2 rekening)</span></div>
@@ -1125,6 +1125,7 @@
         <div class="paket-features">
           <div class="paket-feature-item"><span class="check">✓</span><span>Semua fitur Standard</span></div>
           <div class="paket-divider"></div>
+          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Foto couple di cover</span></div>
           <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Galeri foto (4 foto)</span></div>
           <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Love Story timeline</span></div>
           <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Kutipan / quote custom</span></div>
@@ -1845,6 +1846,7 @@
     const data = collectFormData();
     const payload = encodeURIComponent(JSON.stringify({
       theme: selectedTheme,
+      paket: selectedPaket,
       isPreview: true,
       watermark: true,
       data: data,
