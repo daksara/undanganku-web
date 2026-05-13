@@ -1382,15 +1382,7 @@ body.preview-mode [data-preview-only] { display: block; }
     var musicBtn = document.getElementById('musicBtn');
     var audio = document.getElementById('bgMusic');
 
-    openBtn.addEventListener('click', function() {
-      cover.classList.add('fade-out');
-      document.body.classList.add('opened');
-      // Trigger reveal animations after cover gone
-      setTimeout(function() {
-        cover.style.display = 'none';
-        revealOnScroll();
-      }, 900);
-      // Auto-play music (allowed because triggered by user gesture)
+    function tryPlayMusic() {
       var musicSrc = audio ? audio.src : '';
       var srcIsPlaceholder = !musicSrc || 
         musicSrc.indexOf('{{') !== -1 || 
@@ -1417,6 +1409,17 @@ body.preview-mode [data-preview-only] { display: block; }
           }
         }, 800);
       }
+    }
+
+    openBtn.addEventListener('click', function() {
+      cover.classList.add('fade-out');
+      document.body.classList.add('opened');
+      setTimeout(function() {
+        cover.style.display = 'none';
+        revealOnScroll();
+      }, 900);
+      // Musik otomatis play saat buka undangan (user gesture)
+      tryPlayMusic();
     });
 
     musicBtn.addEventListener('click', function() {

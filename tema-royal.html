@@ -1386,17 +1386,8 @@ body.preview-mode [data-preview-only] { display: block; }
     var musicBtn = document.getElementById('musicBtn');
     var audio = document.getElementById('bgMusic');
 
-    openBtn.addEventListener('click', function() {
-      cover.classList.add('fade-out');
-      document.body.classList.add('opened');
-      // Trigger reveal animations after cover gone
-      setTimeout(function() {
-        cover.style.display = 'none';
-        revealOnScroll();
-      }, 900);
-      // Auto-play music (allowed because triggered by user gesture)
+    function tryPlayMusic() {
       var musicSrc = audio ? audio.src : '';
-      // Cek apakah src valid (bukan placeholder {{musicUrl}} yang jadi absolute URL)
       var srcIsPlaceholder = !musicSrc || 
         musicSrc.indexOf('{{') !== -1 || 
         musicSrc.indexOf('%7B%7B') !== -1 ||
@@ -1411,7 +1402,6 @@ body.preview-mode [data-preview-only] { display: block; }
           musicBtn.classList.add('show');
         });
       } else if (audio) {
-        // src belum di-set (placeholder), tunggu fillDOM selesai lalu coba play
         setTimeout(function() {
           if (audio.src && audio.src.indexOf('musicUrl') === -1 && audio.src.length > 10) {
             audio.volume = 0.6;
@@ -1423,6 +1413,17 @@ body.preview-mode [data-preview-only] { display: block; }
           }
         }, 800);
       }
+    }
+
+    openBtn.addEventListener('click', function() {
+      cover.classList.add('fade-out');
+      document.body.classList.add('opened');
+      setTimeout(function() {
+        cover.style.display = 'none';
+        revealOnScroll();
+      }, 900);
+      // Musik otomatis play saat buka undangan (user gesture)
+      tryPlayMusic();
     });
 
     musicBtn.addEventListener('click', function() {
