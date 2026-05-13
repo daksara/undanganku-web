@@ -1281,12 +1281,18 @@ body.preview-mode [data-preview-only] { display: block; }
     });
 
     // RSVP setup
-    setupRsvp(d.id || ORDER_ID, isPreview);
+    setupRsvp(d.id || ORDER_ID, isPreview, d);
   }
 
   // ===== RSVP =====
   var attending = null;
-  function setupRsvp(orderId, isPreview) {
+  function setupRsvp(orderId, isPreview, d) {
+    // Demo mode: tampilkan RSVP dengan data dummy, disable submit
+    if (d && d.isDemo) {
+      renderDemoRsvp(d);
+      return;
+    }
+
     if (!orderId || orderId.indexOf('{{') === 0) {
       // No real ID, hide RSVP section in preview-only mode
       var rsvp = document.getElementById('rsvpSection');
@@ -1377,6 +1383,58 @@ body.preview-mode [data-preview-only] { display: block; }
       .catch(function() {
         document.getElementById('rsvpList').innerHTML = '<div style="opacity:0.5;font-style:italic;text-align:center;padding:20px;font-size:13px;">Tidak dapat memuat ucapan</div>';
       });
+  }
+
+  // ===== Demo RSVP (static dummy data) =====
+  function renderDemoRsvp(d) {
+    var list = Array.isArray(d.demoRsvpList) ? d.demoRsvpList : [];
+    var confirmed = d.demoConfirmedCount || list.filter(function(x) { return x.attending; }).length;
+
+    // Inject counter banner di atas form
+    var form = document.getElementById('rsvpForm');
+    if (form && !document.getElementById('demoRsvpCounter')) {
+      var counter = document.createElement('div');
+      counter.id = 'demoRsvpCounter';
+      counter.style.cssText = 'text-align:center;padding:14px 16px;margin-bottom:18px;border:1px solid rgba(212,175,108,0.25);border-radius:12px;background:rgba(212,175,108,0.05);';
+      counter.innerHTML =
+        '<div style="font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:0.3em;color:var(--gold);margin-bottom:6px;">CONFIRMED GUESTS</div>' +
+        '<div style="font-size:28px;font-weight:600;color:var(--gold);letter-spacing:1px;">' + confirmed + ' <span style="font-size:13px;opacity:0.6;font-weight:400;">tamu sudah konfirmasi hadir</span></div>';
+      form.parentNode.insertBefore(counter, form);
+    }
+
+    // Disable form submit & attendance
+    var submit = document.getElementById('rsvpSubmit');
+    var nameInput = document.getElementById('rsvpName');
+    var msgInput = document.getElementById('rsvpMsg');
+    var attendBtns = document.querySelectorAll('.rsvp-attend button');
+    if (submit) submit.disabled = true;
+    if (nameInput) nameInput.disabled = true;
+    if (msgInput) msgInput.disabled = true;
+    attendBtns.forEach(function(b) { b.disabled = true; b.style.cursor = 'not-allowed'; });
+    var status = document.getElementById('rsvpStatus');
+    if (status) {
+      status.innerHTML = '<span style="opacity:0.7;">✨ Ini mode demo — fitur RSVP aktif setelah Anda memesan undangan</span>';
+      status.style.color = 'var(--gold)';
+    }
+
+    // Render dummy list
+    var el = document.getElementById('rsvpList');
+    if (!el) return;
+    if (list.length === 0) {
+      el.innerHTML = '<div style="opacity:0.5;font-style:italic;text-align:center;padding:20px;font-size:13px;">Belum ada ucapan</div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < list.length; i++) {
+      var item = list[i];
+      var badge = item.attending
+        ? '<span class="badge hadir">✓ Hadir</span>'
+        : '<span class="badge tidak">✕ Tidak Hadir</span>';
+      html += '<div class="rsvp-item"><div class="rsvp-item-name">' + esc(item.name) + badge + '</div>';
+      if (item.message) html += '<div class="rsvp-item-msg">"' + esc(item.message) + '"</div>';
+      html += '</div>';
+    }
+    el.innerHTML = html;
   }
 
   // ===== Cover open & music =====
