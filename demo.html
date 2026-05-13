@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Undangan — UndanganKu</title>
+<style>
+  body { margin: 0; background: #0d0a08; }
+  .loading { display:flex; align-items:center; justify-content:center; height:100vh; flex-direction:column; gap:12px; }
+  .sp { width:36px;height:36px;border:2px solid rgba(212,175,108,0.2);border-top-color:#d4af6c;border-radius:50%;animation:spin 0.8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  p { font-family:serif;font-style:italic;font-size:13px;letter-spacing:2px;color:rgba(245,233,211,0.4); }
+</style>
+</head>
+<body>
+<div class="loading"><div class="sp"></div><p>Memuat demo...</p></div>
+<script>
+(function() {
+  // Demo data untuk 3 tema
+  var demos = {
+    'royal-classic': {
+      brideName: 'Aulia Putri Ramadhani',
+      brideNick: 'Aulia',
+      brideOrder: 'pertama',
+      brideFather: 'Bapak H. Ahmad Hidayat',
+      brideMother: 'Ibu Hj. Siti Nurhaliza',
+      groomName: 'Rizky Pratama Wijaya',
+      groomNick: 'Rizky',
+      groomOrder: 'kedua',
+      groomFather: 'Bapak Ir. Bambang Wijaya',
+      groomMother: 'Ibu Dr. Ratna Dewi',
+      weddingDate: '2026-09-05',
+      akadStart: '08:00',
+      akadEnd: '10:00',
+      akadVenue: 'Masjid Istiqlal, Jakarta Pusat',
+      resepsiStart: '11:00',
+      resepsiEnd: '14:00',
+      resepsiVenue: 'Hotel Mulia Senayan Ballroom',
+      quoteArabic: 'وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا',
+      quote: 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu merasa tenteram kepadanya.',
+      quoteSource: 'QS. Ar-Rum: 21',
+      bank1Name: 'BCA',
+      bank1Num: '1234567890',
+      bank1Holder: 'Aulia Putri R',
+      bank2Name: 'Mandiri',
+      bank2Num: '9876543210',
+      bank2Holder: 'Rizky Pratama W',
+      musicUrl: 'https://undanganku-web.vercel.app/music/romantic.mp3',
+      loveStory: [
+        { year: '2021', title: 'Pertama Bertemu', story: 'Kami pertama kali bertemu di acara seminar kampus. Senyumnya yang hangat langsung menarik perhatianku.' },
+        { year: '2023', title: 'Mulai Serius', story: 'Setelah 2 tahun menjalin hubungan, kami memutuskan untuk memperkenalkan ke keluarga masing-masing.' },
+        { year: '2026', title: 'Menuju Halal', story: 'Alhamdulillah, dengan restu kedua orang tua, kami siap melangkah ke jenjang pernikahan.' }
+      ],
+      galleryPhotos: []
+    },
+    'sunset-bloom': {
+      brideName: 'Andini Maharani',
+      brideNick: 'Andini',
+      brideOrder: 'kedua',
+      brideFather: 'Bapak Surya Dharma',
+      brideMother: 'Ibu Kartika Sari',
+      groomName: 'Reza Aditya Putra',
+      groomNick: 'Reza',
+      groomOrder: 'pertama',
+      groomFather: 'Bapak Hendra Putra',
+      groomMother: 'Ibu Maya Anggraini',
+      weddingDate: '2026-08-15',
+      akadStart: '09:00',
+      akadEnd: '10:30',
+      akadVenue: 'Masjid Al-Akbar, Surabaya',
+      resepsiStart: '11:30',
+      resepsiEnd: '15:00',
+      resepsiVenue: 'Shangrila Garden Ballroom',
+      quoteArabic: 'بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْم',
+      quote: 'Maha Suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan.',
+      quoteSource: 'QS. Yasin: 36',
+      bank1Name: 'BNI',
+      bank1Num: '0812345678',
+      bank1Holder: 'Andini Maharani',
+      bank2Name: 'GoPay',
+      bank2Num: '081234567890',
+      bank2Holder: 'Reza Aditya',
+      musicUrl: 'https://undanganku-web.vercel.app/music/romantic.mp3',
+      loveStory: [
+        { year: '2020', title: 'Teman Sekantor', story: 'Awalnya hanya rekan kerja biasa, tapi chemistry kami tidak bisa dibohongi.' },
+        { year: '2024', title: 'Lamaran', story: 'Di bawah langit senja Bali, Reza berlutut dan mengucapkan kata-kata yang selama ini kunanti.' }
+      ],
+      galleryPhotos: []
+    },
+    'adat-jawa': {
+      brideName: 'Sari Wulandari',
+      brideNick: 'Sari',
+      brideOrder: 'pertama',
+      brideFather: 'Bapak R.M. Suryanto',
+      brideMother: 'Ibu R.A. Endang Lestari',
+      groomName: 'Bagas Prasetyo Aji',
+      groomNick: 'Bagas',
+      groomOrder: 'ketiga',
+      groomFather: 'Bapak Drs. Hartono',
+      groomMother: 'Ibu Sri Mulyani, S.Pd.',
+      weddingDate: '2026-10-12',
+      akadStart: '08:00',
+      akadEnd: '09:30',
+      akadVenue: 'Pendopo Agung Mangkunegaran, Solo',
+      resepsiStart: '10:00',
+      resepsiEnd: '14:00',
+      resepsiVenue: 'Gedung Graha Saba Buana',
+      quoteArabic: 'وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً',
+      quote: 'Dan Dia jadikan di antara kamu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu terdapat tanda-tanda bagi kaum yang berpikir.',
+      quoteSource: 'QS. Ar-Rum: 21',
+      bank1Name: 'BRI',
+      bank1Num: '5678901234',
+      bank1Holder: 'Sari Wulandari',
+      bank2Name: 'Dana',
+      bank2Num: '081987654321',
+      bank2Holder: 'Bagas Prasetyo',
+      musicUrl: 'https://undanganku-web.vercel.app/music/romantic.mp3',
+      loveStory: [
+        { year: '2019', title: 'Temu Pandang', story: 'Pertemuan pertama di acara keluarga. Tatapan matanya membuatku terpesona.' },
+        { year: '2022', title: 'Nembung', story: 'Keluarga besar dari Yogyakarta datang melamar dengan penuh adat Jawa yang khidmat.' },
+        { year: '2026', title: 'Ijab Qabul', story: 'Alhamdulillah, tibalah hari bahagia kami untuk bersatu dalam ikatan suci.' }
+      ],
+      galleryPhotos: []
+    }
+  };
+
+  // Cek URL param ?tema=
+  var params = new URLSearchParams(window.location.search);
+  var tema = params.get('tema') || 'royal-classic';
+
+  // Validasi tema
+  if (!demos[tema]) tema = 'royal-classic';
+
+  var THEME_PAGES = {
+    'royal-classic': './tema-royal.html',
+    'sunset-bloom': './tema-bloom.html',
+    'adat-jawa': './tema-jawa.html'
+  };
+
+  var page = THEME_PAGES[tema];
+  var data = demos[tema];
+
+  // Bangun hash payload (sama seperti builder preview)
+  var payload = encodeURIComponent(JSON.stringify({
+    theme: tema,
+    isPreview: false,
+    watermark: false,
+    data: data
+  }));
+
+  // Redirect ke tema file dengan hash
+  window.location.replace(page + '#' + payload);
+})();
+</script>
+</body>
+</html>
