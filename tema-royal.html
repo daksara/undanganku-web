@@ -1120,6 +1120,9 @@ body.preview-mode [data-preview-only] { display: block; }
   function applyData(payload) {
     if (!payload || !payload.data) return;
     var d = payload.data;
+
+    // Share widget hook — pass data to share widget
+    if (window._shareWidgetReady) window._shareWidgetReady(d);
     var isPreview = !!(payload.isPreview || payload.watermark || payload.status === 'pending');
     if (isPreview) {
       document.body.classList.add('preview-mode');
@@ -1474,6 +1477,161 @@ body.preview-mode [data-preview-only] { display: block; }
   } else {
     init();
   }
+})();
+</script>
+
+<!-- ===== WHATSAPP SHARE WIDGET ===== -->
+<button class="share-fab" id="shareFab" onclick="openSharePanel()" aria-label="Bagikan undangan" style="display:none;">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</button>
+
+<div class="share-overlay" id="shareOverlay" onclick="if(event.target===this)closeSharePanel()">
+  <div class="share-panel" onclick="event.stopPropagation()">
+    <div class="share-panel-header">
+      <div class="share-panel-title">Bagikan ke Tamu</div>
+      <button class="share-panel-close" onclick="closeSharePanel()">&times;</button>
+    </div>
+    <div class="share-input-group">
+      <label>Nama tamu (opsional)</label>
+      <input type="text" id="shareGuestName" placeholder="Contoh: Budi Santoso" oninput="updateSharePreview()">
+    </div>
+    <div class="share-msg-preview" id="shareMsgPreview"></div>
+    <button class="share-btn-wa" onclick="shareToWhatsApp()">
+      <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:#fff;flex-shrink:0;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Kirim via WhatsApp
+    </button>
+    <button class="share-btn-copy" onclick="copyShareMsg(this)">SALIN TEKS UNDANGAN</button>
+    <div class="share-tip">Isi nama tamu untuk personalisasi. Link otomatis tampilkan "Kepada Yth. [Nama]" di cover.</div>
+  </div>
+</div>
+
+<style>
+.share-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c3e);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(37,211,102,0.35);z-index:900;transition:transform .2s,box-shadow .2s;animation:fab-p 2s ease infinite}
+.share-fab:hover{transform:scale(1.08);box-shadow:0 8px 32px rgba(37,211,102,0.5)}
+.share-fab svg{width:26px;height:26px;fill:#fff}
+@keyframes fab-p{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,0.35)}50%{box-shadow:0 6px 32px rgba(37,211,102,0.55)}}
+.share-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:950;display:none;align-items:flex-end;justify-content:center}
+.share-overlay.open{display:flex}
+.share-panel{background:#1a1612;border-top:1px solid rgba(212,175,108,0.25);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;padding:24px 20px 32px;animation:sld-up .35s ease}
+@keyframes sld-up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.share-panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.share-panel-title{font-family:'Cinzel',serif;font-size:15px;letter-spacing:1px;color:var(--cream)}
+.share-panel-close{background:rgba(255,255,255,0.08);border:none;color:rgba(240,224,192,0.6);font-size:20px;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.share-input-group{margin-bottom:16px}
+.share-input-group label{display:block;font-size:11px;color:rgba(240,224,192,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-family:sans-serif}
+.share-input-group input{width:100%;padding:12px 14px;background:#221d18;border:1px solid rgba(212,175,108,0.2);border-radius:10px;color:var(--cream);font-size:14px;font-family:sans-serif}
+.share-input-group input:focus{outline:none;border-color:var(--gold)}
+.share-input-group input::placeholder{color:rgba(240,224,192,0.3)}
+.share-msg-preview{background:rgba(37,211,102,0.06);border:1px solid rgba(37,211,102,0.2);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:13px;line-height:1.7;color:rgba(240,224,192,0.8);white-space:pre-wrap;word-break:break-word;font-family:sans-serif}
+.share-msg-preview strong{color:#25d366}
+.share-btn-wa{width:100%;padding:14px;background:linear-gradient(135deg,#25d366,#128c3e);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .15s;margin-bottom:10px;font-family:sans-serif}
+.share-btn-wa:active{transform:scale(0.98)}
+.share-btn-copy{width:100%;padding:12px;background:rgba(255,255,255,0.05);color:rgba(240,224,192,0.7);border:1px solid rgba(212,175,108,0.2);border-radius:10px;font-size:12px;cursor:pointer;letter-spacing:.5px;transition:all .2s;font-family:sans-serif}
+.share-btn-copy:hover{border-color:var(--gold);color:var(--gold)}
+.share-tip{margin-top:16px;font-size:11px;color:rgba(240,224,192,0.4);text-align:center;line-height:1.5;font-family:sans-serif}
+</style>
+
+<script>
+(function(){
+  // Share widget — auto-config dari data undangan
+  var _shareData = {};
+
+  // Hook into existing applyData: listen for custom event
+  var origInit = window._shareWidgetReady;
+  window._shareWidgetReady = function(d) {
+    _shareData.brideNick = d.brideNick || (d.brideName || '').split(' ')[0] || '';
+    _shareData.groomNick = d.groomNick || (d.groomName || '').split(' ')[0] || '';
+    _shareData.weddingDate = d.weddingDate || '';
+    _shareData.baseUrl = window.location.href.split('?')[0].split('#')[0];
+    // Show FAB after data loaded
+    document.getElementById('shareFab').style.display = 'flex';
+    updateSharePreview();
+  };
+
+  // Monkey-patch: inject share widget init at end of applyData
+  var _origApply = window._applyDataHook;
+  // Wait for DOM, then patch
+  setTimeout(function() {
+    // Try to read from already-rendered DOM as fallback
+    var brideEl = document.querySelector('[data-field="brideNick"]') || document.querySelector('.bride-nick');
+    var groomEl = document.querySelector('[data-field="groomNick"]') || document.querySelector('.groom-nick');
+    if (!_shareData.brideNick && brideEl) {
+      _shareData.brideNick = brideEl.textContent.trim();
+    }
+    if (!_shareData.groomNick && groomEl) {
+      _shareData.groomNick = groomEl.textContent.trim();
+    }
+    // Fallback: show FAB anyway after 3s
+    setTimeout(function() {
+      if (document.getElementById('shareFab').style.display === 'none') {
+        document.getElementById('shareFab').style.display = 'flex';
+      }
+    }, 3000);
+  }, 1500);
+
+  window.openSharePanel = function() {
+    document.getElementById('shareOverlay').classList.add('open');
+    updateSharePreview();
+  };
+  window.closeSharePanel = function() {
+    document.getElementById('shareOverlay').classList.remove('open');
+  };
+
+  window.updateSharePreview = function() {
+    var guestName = (document.getElementById('shareGuestName') || {}).value || '';
+    guestName = guestName.trim();
+    var bride = _shareData.brideNick || 'Mempelai';
+    var groom = _shareData.groomNick || 'Mempelai';
+    var date = _shareData.weddingDate || '';
+    var baseUrl = _shareData.baseUrl || window.location.href.split('#')[0];
+
+    var link = baseUrl;
+    if (guestName) {
+      link += (link.indexOf('?') !== -1 ? '&' : '?') + 'to=' + encodeURIComponent(guestName);
+    }
+
+    var sapaan = guestName ? 'Kepada Yth.\n*' + guestName + '*\n\n' : '';
+
+    // Format date nicely
+    var dateStr = date;
+    if (date && date.indexOf('-') !== -1) {
+      try {
+        var dt = new Date(date + 'T00:00:00');
+        var days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+        var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        dateStr = days[dt.getDay()] + ', ' + dt.getDate() + ' ' + months[dt.getMonth()] + ' ' + dt.getFullYear();
+      } catch(e) {}
+    }
+
+    var msg = 'Assalamu\'alaikum Wr. Wb.\n\n' + sapaan +
+      'Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri pernikahan kami:\n\n' +
+      '*' + bride + ' & ' + groom + '*\n' +
+      dateStr + '\n\n' +
+      'Buka undangan:\n' + link + '\n\n' +
+      'Merupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir. Terima kasih.\n\n' +
+      'Wassalamu\'alaikum Wr. Wb.';
+
+    var preview = document.getElementById('shareMsgPreview');
+    if (preview) {
+      preview.innerHTML = msg.replace(/\*(.*?)\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    }
+    window._shareMsg = msg;
+  };
+
+  window.shareToWhatsApp = function() {
+    var msg = window._shareMsg || '';
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  };
+
+  window.copyShareMsg = function(btn) {
+    var msg = window._shareMsg || '';
+    if (navigator.clipboard) navigator.clipboard.writeText(msg);
+    var orig = btn.textContent;
+    btn.textContent = '✓ TERSALIN';
+    btn.style.color = '#25d366';
+    btn.style.borderColor = '#25d366';
+    setTimeout(function() { btn.textContent = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 1500);
+  };
 })();
 </script>
 
