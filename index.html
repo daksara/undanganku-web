@@ -257,6 +257,37 @@
     font-family: 'Cinzel', serif;
   }
 
+  /* ── DEMO PAKET TOGGLE ── */
+  .demo-toggle {
+    display: flex; gap: 0;
+    border: 1px solid var(--line);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .demo-toggle-btn {
+    flex: 1; padding: 11px 12px;
+    background: transparent; border: none; cursor: pointer;
+    color: var(--cream-mute); font-family: 'Cinzel', serif;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    transition: background 0.2s, color 0.2s;
+    border-right: 1px solid var(--line);
+  }
+  .demo-toggle-btn:last-child { border-right: none; }
+  .demo-toggle-btn.active {
+    background: rgba(200,169,110,0.1);
+    color: var(--gold);
+  }
+  .demo-toggle-price {
+    font-size: 9px; letter-spacing: 1px; opacity: 0.75;
+  }
+  .demo-toggle-note {
+    font-family: 'DM Sans', sans-serif; font-size: 11px;
+    color: var(--cream-mute); text-align: center;
+    margin-bottom: 20px; line-height: 1.5;
+  }
+  .demo-toggle-note strong { color: var(--gold); font-weight: 500; }
+
   /* ── FITUR ── */
   .fitur-grid {
     display: grid; grid-template-columns: 1fr 1fr;
@@ -605,8 +636,23 @@
   <h2 class="section-title">Tiga Desain<br>yang Bercerita</h2>
   <p class="section-sub">Klik salah satu tema untuk melihat demo lengkap. Tanpa daftar, tanpa bayar.</p>
 
+  <!-- Paket toggle -->
+  <div class="demo-toggle" role="group" aria-label="Pilih paket untuk demo">
+    <button class="demo-toggle-btn" data-paket="standard" onclick="setDemoPaket('standard')">
+      Standard
+      <span class="demo-toggle-price">Rp 29K</span>
+    </button>
+    <button class="demo-toggle-btn active" data-paket="premium" onclick="setDemoPaket('premium')">
+      Premium ✦
+      <span class="demo-toggle-price">Rp 49K</span>
+    </button>
+  </div>
+  <p class="demo-toggle-note" id="demoToggleNote">
+    <strong>Premium:</strong> Foto couple di cover · Galeri foto · Love Story
+  </p>
+
   <div class="tema-grid">
-    <a href="./demo.html?tema=royal-classic" class="tema-card" target="_blank">
+    <a href="./demo.html?tema=royal-classic&paket=premium" class="tema-card" data-tema="royal-classic" target="_blank">
       <div class="tema-thumb royal">
         <div class="tema-thumb-inner">
           <div style="font-family:'Cinzel',serif; font-size:7px; letter-spacing:3px; color:#d4af6c; margin-bottom:10px;">THE WEDDING OF</div>
@@ -625,7 +671,7 @@
       </div>
     </a>
 
-    <a href="./demo.html?tema=sunset-bloom" class="tema-card" target="_blank">
+    <a href="./demo.html?tema=sunset-bloom&paket=premium" class="tema-card" data-tema="sunset-bloom" target="_blank">
       <div class="tema-thumb bloom">
         <div class="tema-thumb-inner">
           <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:9px; color:#d97c6c; margin-bottom:10px;">The Wedding of</div>
@@ -644,7 +690,7 @@
       </div>
     </a>
 
-    <a href="./demo.html?tema=adat-jawa" class="tema-card" target="_blank">
+    <a href="./demo.html?tema=adat-jawa&paket=premium" class="tema-card" data-tema="adat-jawa" target="_blank">
       <div class="tema-thumb jawa">
         <div class="tema-thumb-inner">
           <div style="font-family:'Cinzel',serif; font-size:7px; letter-spacing:2px; color:#c4a464; margin-bottom:10px;">THE WEDDING OF</div>
@@ -897,6 +943,22 @@
       if (!isOpen) item.classList.add('open');
     });
   });
+
+  // Demo paket toggle
+  function setDemoPaket(paket) {
+    document.querySelectorAll('.demo-toggle-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.paket === paket);
+    });
+    document.querySelectorAll('.tema-card[data-tema]').forEach(a => {
+      a.href = './demo.html?tema=' + a.dataset.tema + '&paket=' + paket;
+    });
+    const note = document.getElementById('demoToggleNote');
+    if (paket === 'standard') {
+      note.innerHTML = '<strong>Standard:</strong> Hanya nama mempelai di cover &middot; Tanpa foto &amp; galeri';
+    } else {
+      note.innerHTML = '<strong>Premium:</strong> Foto couple di cover &middot; Galeri foto &middot; Love Story';
+    }
+  }
 </script>
 
 </body>

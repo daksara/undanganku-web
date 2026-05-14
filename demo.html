@@ -146,12 +146,14 @@
     }
   };
 
-  // Cek URL param ?tema=
+  // Cek URL param ?tema= dan ?paket=
   var params = new URLSearchParams(window.location.search);
   var tema = params.get('tema') || 'royal-classic';
+  var paket = params.get('paket') || 'premium';
 
-  // Validasi tema
+  // Validasi
   if (!demos[tema]) tema = 'royal-classic';
+  if (paket !== 'standard' && paket !== 'premium') paket = 'premium';
 
   var THEME_PAGES = {
     'royal-classic': './tema-royal.html',
@@ -165,6 +167,7 @@
   // Bangun hash payload (sama seperti builder preview)
   var payload = encodeURIComponent(JSON.stringify({
     theme: tema,
+    paket: paket,
     isPreview: false,
     watermark: false,
     data: data
