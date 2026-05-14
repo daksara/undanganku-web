@@ -1425,11 +1425,11 @@
         <div style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:1.5px;
           color:#25d366; margin-bottom:10px;">✓ SUDAH BAYAR DI SHOPEE/TOKOPEDIA</div>
         <div style="font-size:13px; color:var(--text-dim); line-height:1.7;">
-          Pembayaran sudah selesai di marketplace. Langsung klik <strong style="color:var(--accent);">Pesan Sekarang</strong> di bawah — owner akan segera mengaktifkan undanganmu.
+          Pembayaran sudah selesai di marketplace. Langsung klik <strong style="color:var(--accent);">⚡ Pesan. AI Bereskan.</strong> di bawah — undanganmu aktif dalam hitungan detik, dikonfirmasi otomatis oleh AI.
         </div>
       </div>
       <div class="preview-cta">
-        ℹ️ Pastikan status pembayaran di Shopee/Tokopedia sudah <strong>Berhasil</strong> sebelum klik Pesan Sekarang. Link undangan aktif setelah owner konfirmasi (±15 menit).
+        ℹ️ Pastikan status pembayaran di Shopee/Tokopedia sudah <strong>Berhasil</strong> sebelum klik tombol di bawah. Link undangan aktif dalam hitungan detik — tidak perlu tunggu konfirmasi manual.
       </div>
     </div>
     
@@ -1610,6 +1610,11 @@
       panelEcom.style.display = 'block';
       panelTransfer.style.display = 'none';
     }
+    // Update teks tombol sesuai sumber
+    const nextBtn = document.getElementById('nextBtn');
+    if (currentStep === 5) {
+      nextBtn.textContent = s === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
+    }
   }
 
   function changeStep(n) {
@@ -1645,7 +1650,7 @@
 
     const nextBtn = document.getElementById('nextBtn');
     if (currentStep === 5) {
-      nextBtn.textContent = 'Pesan Sekarang →';
+      nextBtn.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
       nextBtn.onclick = submitOrder;
     } else {
       nextBtn.textContent = 'Lanjut →';
@@ -1946,12 +1951,12 @@
       } else {
         showToast('Gagal: ' + (result.error || 'Unknown error'), 'error');
         btn.disabled = false;
-        btn.textContent = 'Pesan Sekarang →';
+        btn.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
       }
     } catch (err) {
       showToast('Tidak bisa terhubung ke server bot', 'error');
       btn.disabled = false;
-      btn.textContent = 'Pesan Sekarang →';
+      btn.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
       console.error(err);
     }
   }
