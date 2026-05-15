@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<!-- 
+<!--
   FIX #3: Isi content="..." di bawah dengan base URL Worker kamu saat deploy.
   Di Cloudflare Pages / Vercel, inject via server-side atau environment variable.
   Dengan proxy rewrite /api/* -> Worker, biarkan content="__API_BASE__" (default ke /api).
@@ -1333,6 +1333,14 @@
         <span class="label">Resepsi</span>
         <span class="value" id="prevResepsi">—</span>
       </div>
+      <div class="summary-row">
+        <span class="label">Paket</span>
+        <span class="value" id="prevPaket">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Musik</span>
+        <span class="value" id="prevMusik">—</span>
+      </div>
     </div>
 
     <button onclick="openPreviewTab()" style="
@@ -1467,7 +1475,7 @@
   <!-- ===== NAV BUTTONS ===== -->
   <div class="nav">
     <button class="btn btn-ghost" id="prevBtn" onclick="prevStep()" style="display:none;">← Kembali</button>
-    <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Lanjut →</button>
+    <button class="btn btn-primary" id="nextBtn">Lanjut →</button>
   </div>
 </div>
 
@@ -1574,6 +1582,7 @@
   let selectedPaket = 'standard';
   let currentOrderId = null;
   let pollingInterval = null;
+  let _activeNextHandler = null; // init setelah DOM ready
 
   // Urutan step dinamis: step 3b hanya muncul kalau premium
   function getStepOrder() {
@@ -1633,9 +1642,8 @@
       panelTransfer.style.display = 'none';
     }
     // Update teks tombol sesuai sumber
-    const nextBtn = document.getElementById('nextBtn');
     if (currentStep === 5) {
-      nextBtn.textContent = s === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
+      document.getElementById('nextBtn').textContent = s === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
     }
   }
 
@@ -1650,19 +1658,22 @@
     }
 
     // Sembunyikan step aktif
-    document.getElementById(`step-${currentStep}`).classList.remove('active');
-    const pill = document.getElementById(`pill-${currentStep}`);
+    document.getElementById('step-' + currentStep).classList.remove('active');
+    var _ppid = (currentStep === '3b') ? 'pill-3' : 'pill-' + currentStep;
+    var pill = document.getElementById(_ppid);
     if (pill) {
-      const order = getStepOrder();
-      const prevIdx = order.indexOf(currentStep);
-      const nextIdx = order.indexOf(n);
+      var order2 = getStepOrder();
+      var prevIdx = order2.indexOf(currentStep);
+      var nextIdx = order2.indexOf(n);
       if (nextIdx > prevIdx) pill.classList.add('done');
       else pill.classList.remove('done');
     }
 
     currentStep = n;
-    document.getElementById(`step-${currentStep}`).classList.add('active');
-    const newPill = document.getElementById(`pill-${currentStep}`);
+    document.getElementById('step-' + currentStep).classList.add('active');
+    // step-3b berbagi pill dengan step-3
+    var _npid = (currentStep === '3b') ? 'pill-3' : 'pill-' + currentStep;
+    var newPill = document.getElementById(_npid);
     if (newPill) {
       newPill.classList.add('active');
       newPill.classList.remove('done');
@@ -1670,16 +1681,24 @@
 
     document.getElementById('prevBtn').style.display = currentStep !== 1 ? 'block' : 'none';
 
-    const nextBtn = document.getElementById('nextBtn');
+    var nb = document.getElementById('nextBtn');
     if (currentStep === 5) {
-      nextBtn.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
-      nextBtn.onclick = submitOrder;
+      nb.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
+      _activeNextHandler = submitOrder;
     } else {
-      nextBtn.textContent = 'Lanjut →';
-      nextBtn.onclick = nextStep;
-      nextBtn.disabled = false;
+      nb.textContent = 'Lanjut →';
+      _activeNextHandler = nextStep;
+      nb.disabled = false;
     }
 
+    // Update step counter text dinamis
+    var sOrder = getStepOrder();
+    var sIdx = sOrder.indexOf(n);
+    var sEl = document.getElementById('step-' + n);
+    if (sEl) {
+      var sCtr = sEl.querySelector('.step-counter');
+      if (sCtr) sCtr.textContent = 'step ' + (sIdx + 1) + ' of ' + sOrder.length;
+    }
     // Update preview saat masuk step 4
     if (n === 4) updatePreview();
     // Update summary saat masuk step 5
@@ -1773,7 +1792,8 @@
   function selectPaket(paket) {
     selectedPaket = paket;
     document.querySelectorAll('.paket-card').forEach(c => c.classList.remove('selected'));
-    document.querySelector(`[data-paket="${paket}"]`).classList.add('selected');
+    document.querySelector('[data-paket="' + paket + '"]').classList.add('selected');
+    if (paket === 'standard' && currentStep === '3b') changeStep(3);
   }
   
   // ============ MUSIC OPTIONS ============
@@ -1830,15 +1850,14 @@
     }
   }
 
-  // Stop music preview when leaving step 2
-  const origChangeStep = changeStep;
-
   // ============ DATA COLLECTION ============
   function collectFormData() {
     const v = (id) => document.getElementById(id)?.value || '';
     
+    var mcEl = document.getElementById('musicChoice');
     return {
       musicUrl: getMusicUrl(),
+      musicChoice: mcEl ? mcEl.value : 'piano-elegant',
       brideName: v('brideName'),
       brideNick: v('brideNick'),
       brideOrder: v('brideOrder'),
@@ -1913,10 +1932,15 @@
     el('prevDate').textContent = data.weddingDate 
       ? new Date(data.weddingDate).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })
       : '—';
-    el('prevAkad').textContent = data.akadVenue 
-      ? `${data.akadStart}–${data.akadEnd} · ${data.akadVenue}` : '—';
-    el('prevResepsi').textContent = data.resepsiVenue 
-      ? `${data.resepsiStart}–${data.resepsiEnd} · ${data.resepsiVenue}` : '—';
+    el('prevAkad').textContent = data.akadVenue
+      ? data.akadStart + '–' + data.akadEnd + ' · ' + data.akadVenue : '—';
+    el('prevResepsi').textContent = data.resepsiVenue
+      ? data.resepsiStart + '–' + data.resepsiEnd + ' · ' + data.resepsiVenue : '—';
+    if (el('prevPaket')) el('prevPaket').textContent = PAKET_LABEL[selectedPaket] || selectedPaket;
+    if (el('prevMusik')) {
+      var mOpt = MUSIC_OPTIONS[data.musicChoice || 'piano-elegant'];
+      el('prevMusik').textContent = mOpt ? mOpt.label : '—';
+    }
   }
 
   // ============ PREVIEW SESSION KEY ============
@@ -2060,6 +2084,7 @@
   
   // ============ POLLING STATUS ============
   function startPolling(orderId) {
+    if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
     pollingInterval = setInterval(async () => {
       try {
         const response = await fetch(`${BOT_API_URL}/orders/status/${orderId}`, {
@@ -2106,7 +2131,7 @@
       showToast('🎉 Undangan aktif!', 'success');
     } else if (status === 'rejected') {
       pill.innerHTML = `<span style="font-size:14px;">❌</span> <span>Ditolak</span>`;
-      detail.innerHTML = 'Pembayaran ditolak. Silakan hubungi owner via Instagram di bawah untuk klarifikasi.';
+      detail.innerHTML = 'Pembayaran ditolak. Silakan hubungi owner via Instagram di bawah untuk klarifikasi.<br><br><button onclick="location.reload()" style="margin-top:8px;padding:10px 20px;background:rgba(212,175,108,0.1);border:1px solid rgba(212,175,108,0.4);color:var(--accent);border-radius:8px;cursor:pointer;font-size:13px;">Mulai Ulang</button>';
     }
   }
   
@@ -2150,6 +2175,12 @@
     setSumber('transfer');
   }
   // ===== END OPSI 4 =====
+
+  // ============ INIT NAV BUTTON ============
+  _activeNextHandler = nextStep;
+  document.getElementById('nextBtn').addEventListener('click', function() {
+    if (typeof _activeNextHandler === 'function') _activeNextHandler();
+  });
 
   // ============ HELPER: hash Order ID (untuk simpan di sessionStorage) ============
   async function _hashOrderId(orderId) {
