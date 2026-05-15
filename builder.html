@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   
@@ -91,12 +91,16 @@
   .step {
     display: none;
     padding: 24px 20px;
-    animation: slideIn 0.4s ease;
   }
-  .step.active { display: block; }
+  .step.active { display: block; animation: slideIn 0.35s ease; }
+  .step.active.going-back { animation: slideBack 0.35s ease; }
   
   @keyframes slideIn {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideBack {
+    from { opacity: 0; transform: translateY(-14px); }
     to { opacity: 1; transform: translateY(0); }
   }
   
@@ -1573,7 +1577,7 @@
   // Helper: bangun URL link aktif (absolute) — untuk dishare ke tamu
   // Helper: bangun URL live via static endpoint /u/:id (instant render, no loading)
   function buildLiveUrl(orderId, theme) {
-    return `${BOT_API_URL}/u/${encodeURIComponent(orderId)}`;
+    return BOT_API_URL + '/u/' + encodeURIComponent(orderId);
   }
   
   // ============ STATE ============
@@ -1583,6 +1587,7 @@
   let currentOrderId = null;
   let pollingInterval = null;
   let _activeNextHandler = null; // init setelah DOM ready
+  var _goingBack = false;
 
   // Urutan step dinamis: step 3b hanya muncul kalau premium
   function getStepOrder() {
@@ -1602,15 +1607,22 @@
   // ============ STEP NAVIGATION ============
   // Format jam HH:MM otomatis
   function formatJam(input) {
-    let v = input.value.replace(/\D/g, '');
-    if (v.length >= 3) v = v.slice(0, 2) + ':' + v.slice(2, 4);
+    var raw = input.value;
+    var digits = raw.replace(/\D/g, '');
+    if (!input._lastDigLen) input._lastDigLen = 0;
+    var isDel = digits.length < input._lastDigLen;
+    input._lastDigLen = digits.length;
+    if (isDel) { updatePreview(); return; }
+    var v = digits;
+    if (v.length >= 3) v = v.slice(0,2) + ':' + v.slice(2,4);
     if (v.length === 5) {
-      const h = parseInt(v.slice(0, 2));
-      const m = parseInt(v.slice(3, 5));
+      var h = parseInt(v.slice(0,2)), m = parseInt(v.slice(3,5));
       if (h > 23) v = '23' + v.slice(2);
-      if (m > 59) v = v.slice(0, 3) + '59';
+      if (m > 59) v = v.slice(0,3) + '59';
     }
+    var pos = input.selectionStart + (v.length - raw.length);
     input.value = v;
+    try { input.setSelectionRange(pos, pos); } catch(e) {}
     updatePreview();
   }
 
@@ -1670,7 +1682,9 @@
     }
 
     currentStep = n;
-    document.getElementById('step-' + currentStep).classList.add('active');
+    var _nse = document.getElementById('step-' + currentStep);
+    _nse.classList.add('active');
+    if (_goingBack) { _nse.classList.add('going-back'); setTimeout(function(){_nse.classList.remove('going-back');},400); }
     // step-3b berbagi pill dengan step-3
     var _npid = (currentStep === '3b') ? 'pill-3' : 'pill-' + currentStep;
     var newPill = document.getElementById(_npid);
@@ -1764,16 +1778,16 @@
   }
 
   function prevStep() {
-    const order = getStepOrder();
-    const idx = order.indexOf(currentStep);
-    if (idx > 0) changeStep(order[idx - 1]);
+    var order = getStepOrder();
+    var idx = order.indexOf(currentStep);
+    if (idx > 0) { _goingBack = true; changeStep(order[idx - 1]); _goingBack = false; }
   }
   
   // ============ THEME & PAKET ============
   function selectTheme(theme) {
     selectedTheme = theme;
     document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
-    document.querySelector(`[data-theme="${theme}"]`).classList.add('selected');
+    document.querySelector('[data-theme="' + theme + '"]').classList.add('selected');
     
     // Auto-suggest best music for this theme
     const themeMusicMap = {
@@ -1825,7 +1839,7 @@
       document.getElementById('musicPlayBtn').textContent = '▶';
     }
     // Update audio source
-    if (audio) audio.src = getMusicUrl();
+    if (audio) { audio.src = getMusicUrl(); audio.currentTime = 0; }
     updatePreview();
   }
 
@@ -1848,6 +1862,13 @@
         showToast('Tidak bisa memutar audio', 'error');
       });
     }
+  }
+
+  // ============ DEBOUNCE PREVIEW ============
+  var _previewTimer = null;
+  function updatePreview() {
+    clearTimeout(_previewTimer);
+    _previewTimer = setTimeout(function() { if (typeof _doUpdatePreview === 'function') _doUpdatePreview(); }, 180);
   }
 
   // ============ DATA COLLECTION ============
@@ -1921,7 +1942,7 @@
   }
   
   // ============ PREVIEW ============
-  function updatePreview() {
+  function _doUpdatePreview() {
     // Update ringkasan di step 4
     const data = collectFormData();
     const el = (id) => document.getElementById(id);
@@ -1929,8 +1950,8 @@
     el('prevTheme').textContent = TEMA_LABEL[selectedTheme] || selectedTheme;
     el('prevBride').textContent = data.brideName || '—';
     el('prevGroom').textContent = data.groomName || '—';
-    el('prevDate').textContent = data.weddingDate 
-      ? new Date(data.weddingDate).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })
+    el('prevDate').textContent = data.weddingDate
+      ? (function(d){var p=d.split('-');return p.length===3?new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):d;})(data.weddingDate)
       : '—';
     el('prevAkad').textContent = data.akadVenue
       ? data.akadStart + '–' + data.akadEnd + ' · ' + data.akadVenue : '—';
@@ -1985,26 +2006,33 @@
     const groom = data.groomNick || data.groomName.split(' ')[0] || '—';
     
     document.getElementById('sumTheme').textContent = TEMA_LABEL[selectedTheme];
-    document.getElementById('sumNames').textContent = `${bride} & ${groom}`;
-    document.getElementById('sumDate').textContent = data.weddingDate || '—';
+    document.getElementById('sumNames').textContent = bride + ' & ' + groom;
+    document.getElementById('sumDate').textContent = data.weddingDate
+      ? (function(d){var p=d.split('-');return p.length===3?new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):d;})(data.weddingDate)
+      : '—';
     document.getElementById('sumPaket').textContent = PAKET_LABEL[selectedPaket];
-    document.getElementById('sumTotal').textContent = `Rp ${PRICES[selectedPaket].toLocaleString('id-ID')}`;
+    document.getElementById('sumTotal').textContent = 'Rp ' + PRICES[selectedPaket].toLocaleString('id-ID');
   }
   
   // ============ COPY ============
+  function _fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+  }
   function copy(text, btn) {
-    navigator.clipboard?.writeText(text);
-    const orig = btn.textContent;
-    btn.textContent = '✓';
-    setTimeout(() => btn.textContent = orig, 1200);
-    showToast('Tersalin!', 'success');
+    var orig = btn.textContent;
+    function done() { btn.textContent = '✓'; setTimeout(function() { btn.textContent = orig; }, 1200); showToast('Tersalin!', 'success'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done).catch(function() { _fallbackCopy(text); done(); }); } else { _fallbackCopy(text); done(); }
   }
   
   // ============ TOAST ============
   function showToast(text, type = '') {
     const toast = document.getElementById('toast');
     toast.textContent = text;
-    toast.className = `toast show ${type}`;
+    toast.className = ('toast show ' + type).trim();
     setTimeout(() => toast.classList.remove('show'), 3000);
   }
   
@@ -2032,7 +2060,7 @@
     btn.textContent = '⏳ Mengirim...';
     
     try {
-      const response = await fetch(`${BOT_API_URL}/orders/new`, {
+      const response = await fetch(BOT_API_URL + '/orders/new', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -2087,7 +2115,7 @@
     if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
     pollingInterval = setInterval(async () => {
       try {
-        const response = await fetch(`${BOT_API_URL}/orders/status/${orderId}`, {
+        const response = await fetch(BOT_API_URL + '/orders/status/' + orderId, {
           headers: { 'X-Builder-Token': _CSRF_TOKEN },
         });
         const result = await response.json();
@@ -2115,34 +2143,31 @@
     if (status === 'pending') {
       text.textContent = 'Menunggu konfirmasi owner...';
     } else if (status === 'paid') {
-      pill.innerHTML = `<span style="font-size:14px;">✅</span> <span>Terkonfirmasi</span>`;
+      pill.innerHTML = '<span style="font-size:14px;">✅</span> <span>Terkonfirmasi</span>';
       
       // Link langsung ke tema file (no router redirect = lebih cepat untuk tamu)
       const liveUrl = buildLiveUrl(currentOrderId, selectedTheme);
       
-      detail.innerHTML = `
-        🎉 <strong style="color:var(--success);">Pembayaran terkonfirmasi!</strong><br><br>
-        Link undangan kamu sudah aktif tanpa watermark:<br>
-        <a href="${liveUrl}" target="_blank" style="color:var(--accent); word-break: break-all; display:inline-block; margin-top:8px;">${liveUrl}</a><br><br>
-        <button class="copy-mini" style="margin-top:8px;" onclick="copyLiveUrl(this)">SALIN LINK</button>
-      `;
+      detail.innerHTML =
+        '<strong style="color:var(--success);">🎉 Pembayaran terkonfirmasi!</strong><br><br>' +
+        'Link undangan kamu sudah aktif tanpa watermark:<br>' +
+        '<a href="' + liveUrl + '" target="_blank" style="color:var(--accent);word-break:break-all;display:inline-block;margin-top:8px;">' + liveUrl + '</a><br><br>' +
+        '<button class="copy-mini" style="margin-top:8px;" onclick="copyLiveUrl(this)">SALIN LINK</button>';
       // Simpan link untuk tombol copy (hindari escape issue di onclick string)
       window._liveUrlForCopy = liveUrl;
       showToast('🎉 Undangan aktif!', 'success');
     } else if (status === 'rejected') {
-      pill.innerHTML = `<span style="font-size:14px;">❌</span> <span>Ditolak</span>`;
+      pill.innerHTML = '<span style="font-size:14px;">❌</span> <span>Ditolak</span>';
       detail.innerHTML = 'Pembayaran ditolak. Silakan hubungi owner via Instagram di bawah untuk klarifikasi.<br><br><button onclick="location.reload()" style="margin-top:8px;padding:10px 20px;background:rgba(212,175,108,0.1);border:1px solid rgba(212,175,108,0.4);color:var(--accent);border-radius:8px;cursor:pointer;font-size:13px;">Mulai Ulang</button>';
     }
   }
   
   // Helper terpisah untuk copy live URL (lebih aman dari escape issue)
   function copyLiveUrl(btn) {
-    const url = window._liveUrlForCopy || '';
-    navigator.clipboard?.writeText(url);
-    const orig = btn.textContent;
-    btn.textContent = '✓ TERSALIN';
-    setTimeout(() => btn.textContent = orig, 1500);
-    showToast('Link tersalin!', 'success');
+    var url = window._liveUrlForCopy || '';
+    var orig = btn.textContent;
+    function done() { btn.textContent = '✓ TERSALIN'; setTimeout(function() { btn.textContent = orig; }, 1500); showToast('Link tersalin!', 'success'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(url).then(done).catch(function() { _fallbackCopy(url); done(); }); } else { _fallbackCopy(url); done(); }
   }
   
   // ============ CHECK EXISTING ORDER (URL param atau localStorage) ============
@@ -2175,6 +2200,8 @@
     setSumber('transfer');
   }
   // ===== END OPSI 4 =====
+
+  window.addEventListener('beforeunload', function() { if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; } });
 
   // ============ INIT NAV BUTTON ============
   _activeNextHandler = nextStep;
@@ -2216,7 +2243,7 @@
       selectedTheme = savedTheme;
     }
 
-    fetch(BOT_API_URL + '/orders/status/' + orderId)
+    fetch(BOT_API_URL + '/orders/status/' + orderId, { headers: { 'X-Builder-Token': _CSRF_TOKEN } })
       .then(r => r.json())
       .then(async (r) => {
         if (!r.ok) {
@@ -2226,7 +2253,7 @@
 
         if (!savedTheme || !THEME_FILE_MAP[savedTheme]) {
           try {
-            const dataRes = await fetch(BOT_API_URL + '/orders/data/' + orderId);
+            const dataRes = await fetch(BOT_API_URL + '/orders/data/' + orderId, { headers: { 'X-Builder-Token': _CSRF_TOKEN } });
             const dataJson = await dataRes.json();
             if (dataJson.ok && dataJson.data && dataJson.data.theme) {
               selectedTheme = dataJson.data.theme;
