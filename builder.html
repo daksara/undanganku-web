@@ -1379,8 +1379,8 @@
       <span class="section-head-text">Sumber Pembelian</span>
     </div>
 
-    <!-- Toggle sumber -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
+    <!-- Toggle sumber — tampil sesuai ?src= di URL -->
+    <div id="sumberToggleWrap" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
       <button type="button" id="srcTransfer" onclick="setSumber('transfer')"
         style="padding:12px 8px; border:2px solid var(--accent); background:rgba(212,175,108,0.12);
         color:var(--accent); font-family:'Cinzel',serif; font-size:10px; letter-spacing:1.5px;
@@ -2032,6 +2032,26 @@
   if (paramPaket && PRICES[paramPaket]) {
     selectPaket(paramPaket);
   }
+
+  // ===== OPSI 4: Kontrol sumber via ?src= =====
+  const paramSrc = urlParams.get('src');
+  const isMarketplace = paramSrc === 'shopee' || paramSrc === 'tokped';
+  const btnTransferEl = document.getElementById('srcTransfer');
+  const btnEcomEl = document.getElementById('srcEcommerce');
+  const toggleWrap = document.getElementById('sumberToggleWrap');
+
+  if (isMarketplace) {
+    // Dari Shopee/Tokped — sembunyikan Transfer, auto-select E-Commerce
+    btnTransferEl.style.display = 'none';
+    toggleWrap.style.gridTemplateColumns = '1fr';
+    setSumber('ecommerce');
+  } else {
+    // URL biasa (IG, WA, dll) — sembunyikan E-Commerce, hanya Transfer
+    btnEcomEl.style.display = 'none';
+    toggleWrap.style.gridTemplateColumns = '1fr';
+    setSumber('transfer');
+  }
+  // ===== END OPSI 4 =====
 
   const existingOrder = urlParams.get('order') || localStorage.getItem('undanganku_order');
   if (existingOrder) {
