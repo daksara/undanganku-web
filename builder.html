@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!--
+  FIX #3: Isi content="..." di bawah dengan base URL Worker kamu saat deploy.
+  Di Cloudflare Pages / Vercel, inject via server-side atau environment variable.
+  Dengan proxy rewrite /api/* -> Worker, biarkan content="__API_BASE__" (default ke /api).
+-->
+<meta name="x-api-base" content="__API_BASE__">
 <title>Builder Undangan — UndanganKu</title>
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1469,8 +1475,24 @@
 
 <script>
   // ============ KONFIGURASI ============
-  // GANTI dengan URL Cloudflare Worker bot kamu
-  const BOT_API_URL = 'https://telegram-bot.daksara-dev.workers.dev';
+  // BOT_API_URL tidak di-hardcode di sini.
+  // Gunakan reverse proxy / rewrite di Cloudflare Pages / Vercel sehingga
+  // frontend hanya memanggil path relatif /api/* yang di-rewrite ke Worker.
+  // Jika belum di-setup proxy, isi BOT_API_URL lewat meta tag di server-side render
+  // agar tidak terekspos langsung di source publik.
+  const _cfg = document.querySelector('meta[name="x-api-base"]');
+  const BOT_API_URL = (_cfg && _cfg.content && _cfg.content !== '__API_BASE__')
+    ? _cfg.content.replace(/\/$/, '')
+    : '/api'; // fallback ke relative path (wajib dikonfigurasi proxy)
+
+  // ============ CSRF TOKEN (satu kali per sesi) ============
+  // Token acak 32-char yang dikirim di setiap request POST sebagai header X-Builder-Token
+  // Worker memvalidasi token ini agar endpoint tidak bisa di-hit langsung dari luar builder.
+  const _CSRF_TOKEN = (() => {
+    const arr = new Uint8Array(16);
+    crypto.getRandomValues(arr);
+    return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+  })();
   
   // ============ LOVE STORY DYNAMIC ============
   var LS_PLACEHOLDERS = [
@@ -1666,7 +1688,57 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   
+  // ============ VALIDASI PER STEP ============
+  function validateStep(step) {
+    const v = (id) => (document.getElementById(id)?.value || '').trim();
+    const err = (msg, focusId) => {
+      showToast(msg, 'error');
+      if (focusId) {
+        const el = document.getElementById(focusId);
+        if (el) { el.focus(); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      }
+      return false;
+    };
+
+    if (step === 1) {
+      // Step 1: tema harus dipilih (selalu valid karena default terpilih)
+      return true;
+    }
+
+    if (step === 2) {
+      if (!v('brideName')) return err('Nama lengkap mempelai wanita wajib diisi', 'brideName');
+      if (!v('groomName')) return err('Nama lengkap mempelai pria wajib diisi', 'groomName');
+      if (!v('weddingDate')) return err('Tanggal pernikahan wajib diisi', 'weddingDate');
+      if (!v('akadVenue')) return err('Tempat akad wajib diisi', 'akadVenue');
+      if (!v('resepsiVenue')) return err('Tempat resepsi wajib diisi', 'resepsiVenue');
+      // Validasi format nomor WA
+      const wa = v('buyerContact');
+      if (!wa) return err('Nomor WhatsApp pemesan wajib diisi', 'buyerContact');
+      if (!/^(\+62|62|0)[0-9]{8,13}$/.test(wa.replace(/\s/g,'')))
+        return err('Format nomor WhatsApp tidak valid', 'buyerContact');
+      return true;
+    }
+
+    if (step === 3) {
+      // Paket sudah selalu terpilih (default standard)
+      return true;
+    }
+
+    if (step === '3b') {
+      // Data premium semua opsional — tidak wajib diisi
+      return true;
+    }
+
+    if (step === 4) {
+      // Preview — tidak ada yang wajib
+      return true;
+    }
+
+    return true;
+  }
+
   function nextStep() {
+    if (!validateStep(currentStep)) return; // Blok jika tidak valid
     const order = getStepOrder();
     const idx = order.indexOf(currentStep);
     if (idx < order.length - 1) changeStep(order[idx + 1]);
@@ -1847,19 +1919,39 @@
       ? `${data.resepsiStart}–${data.resepsiEnd} · ${data.resepsiVenue}` : '—';
   }
 
+  // ============ PREVIEW SESSION KEY ============
+  // Payload preview TIDAK ditaruh di URL hash (bocor di browser history/referer).
+  // Gunakan sessionStorage dengan key acak — hanya terbaca di tab same-origin.
   function openPreviewTab() {
     const data = collectFormData();
-    const payload = encodeURIComponent(JSON.stringify({
+
+    // Key acak per klik — mencegah tab lain baca data orang lain
+    const arr = new Uint8Array(8);
+    crypto.getRandomValues(arr);
+    const previewKey = 'ukprev_' + Array.from(arr).map(b => b.toString(16).padStart(2,'0')).join('');
+
+    const payload = {
       theme: selectedTheme,
       paket: selectedPaket,
       isPreview: true,
       watermark: true,
       data: data,
-    }));
-    // Buka tema file LANGSUNG dengan hash (no router redirect = instan)
+    };
+
+    try {
+      sessionStorage.setItem(previewKey, JSON.stringify(payload));
+    } catch (e) {
+      showToast('Tidak bisa membuka preview, coba lagi', 'error');
+      return;
+    }
+
+    // Hanya key acak yang di URL — bukan data sensitif
     const themeFile = getThemeFile(selectedTheme);
-    const url = `${themeFile}#${payload}`;
+    const url = themeFile + '?previewKey=' + encodeURIComponent(previewKey);
     window.open(url, '_blank');
+
+    // Auto-cleanup setelah 5 menit
+    setTimeout(function() { try { sessionStorage.removeItem(previewKey); } catch(e){} }, 300000);
   }
   
   // ============ SUMMARY ============
@@ -1918,7 +2010,10 @@
     try {
       const response = await fetch(`${BOT_API_URL}/orders/new`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Builder-Token': _CSRF_TOKEN, // FIX #3: token sesi, divalidasi di Worker
+        },
         body: JSON.stringify({
           theme: selectedTheme,
           paket: selectedPaket,
@@ -1934,8 +2029,10 @@
       if (result.ok && result.orderId) {
         currentOrderId = result.orderId;
         // Simpan order ID + theme (theme dibutuhkan saat restore polling utk build link benar)
-        localStorage.setItem('undanganku_order', result.orderId);
-        localStorage.setItem('undanganku_theme', selectedTheme);
+        // FIX: Simpan hanya hash Order ID di sessionStorage (bukan localStorage)
+        // agar tidak persisten antar sesi & tidak mudah dibaca/dimanipulasi
+        const _oHash = await _hashOrderId(result.orderId);
+        sessionStorage.setItem('_uk_sess', JSON.stringify({ h: _oHash, t: selectedTheme, id: result.orderId }));
         showToast('Pesanan terkirim ke owner!', 'success');
         
         // Tampilkan order status card
@@ -1965,15 +2062,16 @@
   function startPolling(orderId) {
     pollingInterval = setInterval(async () => {
       try {
-        const response = await fetch(`${BOT_API_URL}/orders/status/${orderId}`);
+        const response = await fetch(`${BOT_API_URL}/orders/status/${orderId}`, {
+          headers: { 'X-Builder-Token': _CSRF_TOKEN },
+        });
         const result = await response.json();
         
         if (result.ok) {
           updateStatusUI(result.status);
           if (result.status === 'paid' || result.status === 'rejected') {
             clearInterval(pollingInterval);
-            localStorage.removeItem('undanganku_order');
-            localStorage.removeItem('undanganku_theme');
+            sessionStorage.removeItem('_uk_sess');
           }
         }
       } catch (err) {
@@ -2053,55 +2151,72 @@
   }
   // ===== END OPSI 4 =====
 
-  const existingOrder = urlParams.get('order') || localStorage.getItem('undanganku_order');
-  if (existingOrder) {
-    currentOrderId = existingOrder;
-    
-    // Restore theme dari localStorage (kalau ada) supaya buildLiveUrl benar
-    const savedTheme = localStorage.getItem('undanganku_theme');
+  // ============ HELPER: hash Order ID (untuk simpan di sessionStorage) ============
+  async function _hashOrderId(orderId) {
+    const enc = new TextEncoder().encode(orderId + '_ukv1');
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('').slice(0, 16);
+  }
+
+  // ============ RESTORE SESSION (hanya sessionStorage — tidak pakai localStorage) ============
+  // ?order= di URL hanya diterima jika hash-nya cocok dengan yang tersimpan di sesi ini
+  const _rawSess = sessionStorage.getItem('_uk_sess');
+  let _sess = null;
+  try { _sess = _rawSess ? JSON.parse(_rawSess) : null; } catch(e) {}
+
+  const paramOrder = urlParams.get('order');
+  // Verifikasi: jika ada ?order= di URL, pastikan cocok dengan sesi yang tersimpan
+  const existingOrder = (async () => {
+    if (_sess && _sess.id) {
+      // Validasi hash agar tidak bisa dimanipulasi dari URL
+      const expectedHash = await _hashOrderId(_sess.id);
+      if (_sess.h === expectedHash) return _sess.id;
+    }
+    // Tidak ada sesi valid — jangan restore dari URL langsung (bisa dimanipulasi)
+    return null;
+  })();
+
+  existingOrder.then(orderId => {
+    if (!orderId) return;
+    currentOrderId = orderId;
+
+    const savedTheme = _sess && _sess.t;
     if (savedTheme && THEME_FILE_MAP[savedTheme]) {
       selectedTheme = savedTheme;
     }
 
-    // Cek status dulu — kalau sudah paid/rejected, bersihkan localStorage
-    fetch(`${BOT_API_URL}/orders/status/${existingOrder}`)
+    fetch(BOT_API_URL + '/orders/status/' + orderId)
       .then(r => r.json())
       .then(async (r) => {
         if (!r.ok) {
-          // Order tidak ditemukan, bersihkan
-          localStorage.removeItem('undanganku_order');
-          localStorage.removeItem('undanganku_theme');
+          sessionStorage.removeItem('_uk_sess');
           return;
         }
-        
-        // Kalau theme belum ke-restore dari localStorage, fetch detail order untuk dapat theme
+
         if (!savedTheme || !THEME_FILE_MAP[savedTheme]) {
           try {
-            const dataRes = await fetch(`${BOT_API_URL}/orders/data/${existingOrder}`);
+            const dataRes = await fetch(BOT_API_URL + '/orders/data/' + orderId);
             const dataJson = await dataRes.json();
             if (dataJson.ok && dataJson.data && dataJson.data.theme) {
               selectedTheme = dataJson.data.theme;
             }
-          } catch (e) { /* abaikan, fallback default */ }
+          } catch (e) {}
         }
-        
-        // Langsung ke step 5 polling
+
         changeStep(5);
         document.getElementById('orderStatusCard').classList.add('show');
-        document.getElementById('orderIdDisplay').textContent = existingOrder;
+        document.getElementById('orderIdDisplay').textContent = orderId;
         document.getElementById('nextBtn').style.display = 'none';
         document.getElementById('prevBtn').style.display = 'none';
         updateStatusUI(r.status);
         if (r.status === 'pending') {
-          startPolling(existingOrder);
+          startPolling(orderId);
         } else {
-          // Sudah selesai, bersihkan localStorage
-          localStorage.removeItem('undanganku_order');
-          localStorage.removeItem('undanganku_theme');
+          sessionStorage.removeItem('_uk_sess');
         }
       })
       .catch(() => {});
-  }
+  });
 </script>
 
 </body>
