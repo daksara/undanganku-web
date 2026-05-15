@@ -145,83 +145,71 @@
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    display: flex;
-    align-items: stretch;
+    display: block;
+    position: relative;
+    height: 62px;
     transition: border-color 0.25s, transform 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
   .tema-card:active { transform: scale(0.98); }
-  .tema-card:hover { border-color: rgba(200,169,110,0.45); }
 
-  .tema-thumb {
-    width: 100px;
-    flex-shrink: 0;
+  /* Full-width background per theme */
+  .tema-card.royal  { background: linear-gradient(135deg, #1f1208, #3d2418); border-color: rgba(212,175,108,0.25); }
+  .tema-card.bloom  { background: linear-gradient(135deg, #fef5ed, #f4a574); border-color: rgba(217,124,108,0.35); }
+  .tema-card.jawa   { background: linear-gradient(160deg, #2c1f0e, #4a3520); border-color: rgba(196,164,100,0.25); }
+
+  /* Decorative border inset */
+  .tema-card.royal::before,
+  .tema-card.jawa::before {
+    content: '';
+    position: absolute; inset: 6px;
+    border: 1px solid rgba(212,175,108,0.2);
+    pointer-events: none; z-index: 1;
+  }
+  .tema-card.bloom::before {
+    content: '✿  ✿  ✿';
+    position: absolute; top: 6px; right: 10px;
+    font-size: 8px; color: rgba(217,124,108,0.5);
+    letter-spacing: 3px;
+    pointer-events: none; z-index: 1;
+  }
+
+  /* Center content */
+  .tema-center {
+    position: absolute;
+    inset: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .tema-thumb.royal {
-    background: linear-gradient(135deg, #1f1208, #3d2418);
-  }
-  .tema-thumb.royal::before {
-    content: '';
-    position: absolute; inset: 8px;
-    border: 1px solid rgba(212,175,108,0.3);
-  }
-  .tema-thumb.bloom {
-    background: linear-gradient(135deg, #fef5ed, #f4a574);
-  }
-  .tema-thumb.jawa {
-    background: linear-gradient(160deg, #2c1f0e, #4a3520);
-  }
-  .tema-thumb.jawa::before {
-    content: '';
-    position: absolute; inset: 8px;
-    border: 1px solid rgba(196,164,100,0.3);
+    z-index: 2;
+    gap: 1px;
   }
 
-  .tema-thumb-inner { text-align: center; z-index: 2; position: relative; }
-
-  .tema-meta {
-    flex: 1;
-    padding: 0 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  /* Royal — dark warm brown */
-  .tema-card.royal .tema-meta {
-    background: linear-gradient(90deg, #2a1a0e, #1a0f06);
-  }
-  .tema-card.royal .tema-name { color: #f0e6d2; }
-  .tema-card.royal .tema-demo-tag { color: #d4af6c; }
-
-  /* Bloom — soft peach */
-  .tema-card.bloom .tema-meta {
-    background: linear-gradient(90deg, #fef0e4, #fad9c0);
-  }
-  .tema-card.bloom .tema-name { color: #5d3a2e; }
-  .tema-card.bloom .tema-demo-tag { color: #d97c6c; }
-
-  /* Jawa — deep earth gold */
-  .tema-card.jawa .tema-meta {
-    background: linear-gradient(90deg, #3a2910, #261a08);
-  }
-  .tema-card.jawa .tema-name { color: #f0e0c0; }
-  .tema-card.jawa .tema-demo-tag { color: #c4a464; }
-
+  /* Bottom-left: theme name */
   .tema-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 15px;
+    position: absolute;
+    bottom: 8px; left: 12px;
+    font-family: 'Cinzel', serif;
+    font-size: 7.5px; letter-spacing: 2px;
+    z-index: 2;
+    text-transform: uppercase;
   }
+  .tema-card.royal .tema-name  { color: rgba(212,175,108,0.7); }
+  .tema-card.bloom .tema-name  { color: rgba(93,58,46,0.65); }
+  .tema-card.jawa .tema-name   { color: rgba(196,164,100,0.7); }
+
+  /* Bottom-right: demo tag */
   .tema-demo-tag {
+    position: absolute;
+    bottom: 8px; right: 12px;
     font-family: 'Cinzel', serif;
     font-size: 7px; letter-spacing: 1.5px;
-    opacity: 0.9;
+    z-index: 2;
   }
+  .tema-card.royal .tema-demo-tag { color: #d4af6c; }
+  .tema-card.bloom .tema-demo-tag { color: #d97c6c; }
+  .tema-card.jawa .tema-demo-tag  { color: #c4a464; }
 
   /* ── PRICE ROW (compact) ── */
   .price-row {
@@ -385,48 +373,30 @@
   <!-- TEMA DEMO -->
   <div class="tema-row">
     <a href="./demo.html?tema=royal-classic&paket=premium" class="tema-card royal" target="_blank">
-      <div class="tema-thumb royal">
-        <div class="tema-thumb-inner">
-          <div style="font-family:'Cinzel',serif;font-size:5px;letter-spacing:2px;color:#d4af6c;margin-bottom:6px;">THE WEDDING OF</div>
-          <div style="font-family:'Allura',cursive;font-size:16px;color:#f0e6d2;line-height:1;">Aulia</div>
-          <div style="color:#d4af6c;font-size:10px;font-family:'Allura',cursive;">&amp;</div>
-          <div style="font-family:'Allura',cursive;font-size:16px;color:#f0e6d2;line-height:1;">Rizky</div>
-        </div>
+      <div class="tema-center">
+        <div style="font-family:'Cinzel',serif;font-size:5px;letter-spacing:3px;color:#d4af6c;margin-bottom:4px;">THE WEDDING OF</div>
+        <div style="font-family:'Allura',cursive;font-size:22px;color:#f0e6d2;line-height:1;">Aulia <span style="font-size:14px;color:#d4af6c;">&amp;</span> Rizky</div>
       </div>
-      <div class="tema-meta">
-        <div class="tema-name">Royal</div>
-        <div class="tema-demo-tag">DEMO →</div>
-      </div>
+      <div class="tema-name">Royal Classic</div>
+      <div class="tema-demo-tag">DEMO →</div>
     </a>
 
     <a href="./demo.html?tema=sunset-bloom&paket=premium" class="tema-card bloom" target="_blank">
-      <div class="tema-thumb bloom">
-        <div class="tema-thumb-inner">
-          <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:7px;color:#d97c6c;margin-bottom:6px;">The Wedding of</div>
-          <div style="font-family:'Caveat',cursive;font-size:16px;color:#5d3a2e;line-height:1.1;">Andini</div>
-          <div style="color:#ec8772;font-size:12px;font-family:'Caveat',cursive;">&amp;</div>
-          <div style="font-family:'Caveat',cursive;font-size:16px;color:#5d3a2e;line-height:1.1;">Reza</div>
-        </div>
+      <div class="tema-center">
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:7px;color:#d97c6c;margin-bottom:4px;">The Wedding of</div>
+        <div style="font-family:'Caveat',cursive;font-size:22px;color:#5d3a2e;line-height:1;">Andini <span style="font-size:16px;color:#ec8772;">&amp;</span> Reza</div>
       </div>
-      <div class="tema-meta">
-        <div class="tema-name">Bloom</div>
-        <div class="tema-demo-tag">DEMO →</div>
-      </div>
+      <div class="tema-name">Sunset Bloom</div>
+      <div class="tema-demo-tag">DEMO →</div>
     </a>
 
     <a href="./demo.html?tema=adat-jawa&paket=premium" class="tema-card jawa" target="_blank">
-      <div class="tema-thumb jawa">
-        <div class="tema-thumb-inner">
-          <div style="font-family:'Cinzel',serif;font-size:5px;letter-spacing:2px;color:#c4a464;margin-bottom:6px;">THE WEDDING OF</div>
-          <div style="font-family:'Playfair Display',serif;font-size:14px;color:#f0e0c0;line-height:1.2;">Sari</div>
-          <div style="color:#c4a464;font-size:12px;">❧</div>
-          <div style="font-family:'Playfair Display',serif;font-size:14px;color:#f0e0c0;line-height:1.2;">Bagas</div>
-        </div>
+      <div class="tema-center">
+        <div style="font-family:'Cinzel',serif;font-size:5px;letter-spacing:3px;color:#c4a464;margin-bottom:4px;">THE WEDDING OF</div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;color:#f0e0c0;line-height:1;">Sari <span style="font-size:14px;color:#c4a464;">❧</span> Bagas</div>
       </div>
-      <div class="tema-meta">
-        <div class="tema-name">Jawa</div>
-        <div class="tema-demo-tag">DEMO →</div>
-      </div>
+      <div class="tema-name">Adat Jawa</div>
+      <div class="tema-demo-tag">DEMO →</div>
     </a>
   </div>
 
