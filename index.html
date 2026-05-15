@@ -65,14 +65,14 @@
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    padding: 0 24px;
+    padding: 0 20px;
   }
 
   .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 0 0;
+    padding: 14px 0 0;
     flex-shrink: 0;
   }
 
@@ -99,16 +99,17 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-bottom: 8px;
+    padding-bottom: 0;
+    min-height: 0;
   }
 
   .hero-eyebrow {
     font-family: 'Cinzel', serif;
-    font-size: 8.5px;
-    letter-spacing: 4px;
+    font-size: 8px;
+    letter-spacing: 3.5px;
     color: var(--gold);
     opacity: 0.9;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     animation: fadeUp 0.7s ease both;
   }
 
@@ -116,9 +117,9 @@
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300;
     font-style: italic;
-    font-size: clamp(40px, 12vw, 58px);
+    font-size: clamp(34px, 10vw, 52px);
     line-height: 1.05;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     animation: fadeUp 0.7s 0.1s ease both;
   }
   .hero-title em {
@@ -130,18 +131,18 @@
   }
 
   .deco-line {
-    width: 32px;
+    width: 28px;
     height: 1px;
     background: linear-gradient(to right, transparent, var(--gold), transparent);
-    margin: 0 0 16px;
+    margin: 0 0 10px;
     animation: fadeUp 0.7s 0.15s ease both;
   }
 
   .hero-sub {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--cream-dim);
     letter-spacing: 0.3px;
-    margin-bottom: 28px;
+    margin-bottom: 16px;
     animation: fadeUp 0.7s 0.2s ease both;
   }
 
@@ -155,7 +156,7 @@
 
   .price-card {
     border: 1px solid var(--line);
-    padding: 18px 14px 16px;
+    padding: 14px 12px 12px;
     text-align: center;
     text-decoration: none;
     color: inherit;
@@ -200,7 +201,7 @@
   .price-amount {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    font-size: 22px;
+    font-size: 19px;
     font-weight: 500;
     color: var(--gold-light);
     line-height: 1;
@@ -245,7 +246,7 @@
   /* ── MARQUEE ── */
   .marquee-wrap {
     overflow: hidden;
-    margin: 0 -24px;
+    margin: 0 -20px;
     padding: 0;
     flex-shrink: 0;
     mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
@@ -263,7 +264,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-right: 1px solid var(--line);
     white-space: nowrap;
     flex-shrink: 0;
@@ -278,7 +279,7 @@
   .marquee-text {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    font-size: 13px;
+    font-size: 12px;
     color: var(--cream-dim);
   }
 
@@ -298,16 +299,16 @@
   .cta-row {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     animation: fadeUp 0.7s 0.4s ease both;
     flex-shrink: 0;
-    padding: 14px 0 28px;
+    padding: 10px 0 16px;
   }
 
   .btn-primary {
     display: block;
     width: 100%;
-    padding: 16px;
+    padding: 14px;
     background: linear-gradient(135deg, var(--gold), #a8892e);
     color: var(--bg);
     font-family: 'Cinzel', serif;
