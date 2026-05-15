@@ -3,2106 +3,1667 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Builder Undangan — UndanganKu</title>
-<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<title>UndanganKu — Chat Order</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  :root {
-    --bg: #0f0d0a;
-    --bg-card: #1a1612;
-    --bg-input: #221d18;
-    --accent: #d4af6c;
-    --accent-bright: #e8c585;
-    --text: #f0e6d2;
-    --text-dim: rgba(240, 230, 210, 0.6);
-    --text-mute: rgba(240, 230, 210, 0.4);
-    --line: rgba(212, 175, 108, 0.18);
-    --success: #6ec789;
-    --danger: #e87a7a;
-  }
-  
-  html, body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-  }
-  
-  .app {
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: var(--bg);
-    padding-bottom: 100px;
-  }
-  
-  /* ============ TOPBAR ============ */
-  .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(15, 13, 10, 0.92);
-    backdrop-filter: blur(16px);
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 19px;
-    letter-spacing: 0.5px;
-  }
-  .logo span { color: var(--accent); }
-  
-  .step-pills {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-  }
-  .pill {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    transition: all 0.3s;
-  }
-  .pill.done { background: var(--accent); }
-  .pill.active {
-    background: var(--accent-bright);
-    width: 22px;
-    border-radius: 4px;
-  }
-  
-  /* ============ STEP CONTAINERS ============ */
-  .step {
-    display: none;
-    padding: 24px 20px;
-    animation: slideIn 0.4s ease;
-  }
-  .step.active { display: block; }
-  
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .step-head {
-    margin-bottom: 24px;
-  }
-  .step-counter {
-    font-family: 'Caveat', cursive;
-    font-size: 18px;
-    color: var(--accent);
-    margin-bottom: 4px;
-  }
-  .step-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    font-weight: 400;
-    line-height: 1.2;
-    margin-bottom: 6px;
-  }
-  .step-subtitle {
-    color: var(--text-dim);
-    font-size: 13px;
-  }
-  
-  /* ============ THEME PICKER ============ */
-  .themes {
-    display: grid;
-    gap: 16px;
-  }
-  
-  .theme-card {
-    background: var(--bg-card);
-    border: 2px solid transparent;
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-  .theme-card.selected {
-    border-color: var(--accent);
-    box-shadow: 0 8px 32px rgba(212, 175, 108, 0.2);
-  }
-  
-  .theme-thumb {
-    height: 180px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-  
-  /* Royal Classic thumb */
-  .theme-thumb.royal-classic {
-    background: linear-gradient(135deg, #1f1208, #3d2418);
-  }
-  .theme-thumb.royal-classic::before {
-    content: '';
-    position: absolute;
-    inset: 14px;
-    border: 1px solid rgba(212, 175, 108, 0.4);
-  }
-  .theme-thumb.royal-classic .thumb-content {
-    text-align: center;
-    color: #f0e6d2;
-  }
-  .theme-thumb.royal-classic .thumb-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 9px;
-    letter-spacing: 4px;
-    color: #d4af6c;
-    margin-bottom: 6px;
-  }
-  .theme-thumb.royal-classic .thumb-names {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 28px;
-    line-height: 1;
-  }
-  .theme-thumb.royal-classic .thumb-amp {
-    color: #d4af6c;
-    font-size: 16px;
-    margin: 4px 0;
-  }
-  
-  /* Sunset Bloom thumb */
-  .theme-thumb.sunset-bloom {
-    background: linear-gradient(135deg, #fef5ed 0%, #fad9c0 50%, #f4a574 100%);
-  }
-  .theme-thumb.sunset-bloom::before {
-    content: '';
-    position: absolute;
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.5), transparent);
-    top: -20px; left: -20px;
-  }
-  .theme-thumb.sunset-bloom::after {
-    content: '✿ ✿ ✿';
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    color: #d97c6c;
-    font-size: 12px;
-    letter-spacing: 4px;
-  }
-  .theme-thumb.sunset-bloom .thumb-content {
-    text-align: center;
-    color: #5d3a2e;
-    z-index: 2;
-  }
-  .theme-thumb.sunset-bloom .thumb-label {
-    font-family: 'Caveat', cursive;
-    font-size: 14px;
-    color: #d97c6c;
-    margin-bottom: 4px;
-  }
-  .theme-thumb.sunset-bloom .thumb-names {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 28px;
-    line-height: 1;
-  }
-  .theme-thumb.sunset-bloom .thumb-amp {
-    color: #ec8772;
-    font-size: 22px;
-    margin: 0;
-  }
-  
-  /* Adat Jawa thumb */
-  .theme-thumb.adat-jawa {
-    background: linear-gradient(160deg, #2c1f0e 0%, #4a3520 50%, #2c1f0e 100%);
-    position: relative;
-  }
-  .theme-thumb.adat-jawa::before {
-    content: '';
-    position: absolute;
-    inset: 12px;
-    border: 1px solid rgba(196, 164, 100, 0.35);
-  }
-  .theme-thumb.adat-jawa::after {
-    content: '✦ ✦ ✦';
-    position: absolute;
-    bottom: 18px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(196, 164, 100, 0.5);
-    font-size: 10px;
-    letter-spacing: 6px;
-  }
-  .theme-thumb.adat-jawa .thumb-content {
-    text-align: center;
-    color: #f0e0c0;
-    z-index: 2;
-  }
-  .theme-thumb.adat-jawa .thumb-label {
-    font-size: 8px;
-    letter-spacing: 3px;
-    color: #c4a464;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-  }
-  .theme-thumb.adat-jawa .thumb-names {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 26px;
-    line-height: 1;
-    color: #f0e0c0;
-  }
-  .theme-thumb.adat-jawa .thumb-amp {
-    color: #c4a464;
-    font-size: 14px;
-    margin: 5px 0;
-    letter-spacing: 4px;
-  }
-  .theme-meta {
-    padding: 16px 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .theme-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 17px;
-  }
-  .theme-tag {
-    font-size: 10px;
-    color: var(--text-mute);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-  }
-  .theme-card.selected .theme-meta::after {
-    content: '✓';
-    color: var(--accent);
-    font-size: 18px;
-    margin-left: 8px;
-    font-weight: bold;
-  }
-  
-  /* ============ FORM ============ */
-  .form-section {
-    margin-bottom: 28px;
-  }
-  
-  .section-head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--line);
-  }
-  .section-head-icon {
-    font-size: 14px;
-    color: var(--accent);
-  }
-  .section-head-text {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 16px;
-    color: var(--accent-bright);
-  }
-  
-  .form-grid {
-    display: grid;
-    gap: 12px;
-  }
-  .form-grid.cols-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-  
-  label {
-    display: block;
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-weight: 500;
-  }
-  
-  input, textarea, select {
-    width: 100%;
-    padding: 11px 13px;
-    background: var(--bg-input);
-    border: 1px solid var(--line);
-    border-radius: 9px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 13.5px;
-    transition: all 0.2s;
-  }
-  input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--accent);
-    background: rgba(212, 175, 108, 0.05);
-  }
-  /* Fix autofill warna putih */
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  textarea:-webkit-autofill,
-  select:-webkit-autofill {
-    -webkit-text-fill-color: var(--text) !important;
-    -webkit-box-shadow: 0 0 0px 1000px var(--bg-input) inset !important;
-    transition: background-color 5000s ease-in-out 0s;
-  }
-  textarea { resize: vertical; min-height: 60px; }
-  
-  /* ============ PAKET PICKER ============ */
-  .paket-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  
-  .paket-card {
-    background: var(--bg-card);
-    border: 2px solid var(--line);
-    border-radius: 16px;
-    padding: 20px 18px;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-  .paket-card.selected {
-    border-color: var(--accent);
-    background: rgba(212, 175, 108, 0.07);
-  }
-  .paket-card:active { transform: scale(0.99); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  /* Premium card — mencolok */
-  .paket-card.premium-card {
-    border-color: var(--accent);
-    background: linear-gradient(135deg, rgba(212,175,108,0.12) 0%, rgba(184,149,106,0.06) 100%);
-  }
-  .paket-card.premium-card.selected {
-    background: linear-gradient(135deg, rgba(212,175,108,0.18) 0%, rgba(184,149,106,0.1) 100%);
-    border-color: var(--accent-bright);
-    box-shadow: 0 0 0 1px var(--accent), 0 8px 28px rgba(212,175,108,0.2);
-  }
-  .paket-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: linear-gradient(135deg, var(--accent), #c8870a);
-    color: #0a0a0a;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    text-transform: uppercase;
-  }
-  .paket-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  .paket-icon {
-    font-size: 20px;
-    line-height: 1;
-  }
-  .paket-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-  }
-  .paket-price {
-    font-family: 'DM Serif Display', serif;
-    font-size: 26px;
-    color: var(--accent-bright);
-    margin-bottom: 2px;
-    line-height: 1;
-  }
-  .paket-price-sub {
-    font-size: 10px;
-    color: var(--text-mute);
-    letter-spacing: 0.5px;
-    margin-bottom: 12px;
-  }
-  .paket-features {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-top: 4px;
-    line-height: 1.3;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .paket-feature-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 7px;
-  }
-  .paket-feature-item .check {
-    color: var(--accent);
-    font-size: 12px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .paket-feature-item.premium-feat {
-    color: var(--accent-bright);
-    font-weight: 500;
-  }
-  .paket-feature-item.premium-feat .check {
-    color: var(--accent-bright);
-  }
-  .paket-divider {
-    height: 1px;
-    background: var(--line);
-    margin: 10px 0;
-  }
-  .paket-select-indicator {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 14px;
-    font-size: 11px;
-    color: var(--text-mute);
-    letter-spacing: 0.5px;
-  }
-  .paket-select-indicator .radio {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 2px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s;
-  }
-  .paket-card.selected .paket-select-indicator .radio {
-    border-color: var(--accent);
-    background: var(--accent);
-  }
-  .paket-card.selected .paket-select-indicator .radio::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #0a0a0a;
-  }
-  .paket-card.selected .paket-select-indicator {
-    color: var(--accent);
-  }
-  
-  /* ============ PREVIEW ============ */
-  .preview-frame {
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    background: var(--bg-card);
-    margin-bottom: 16px;
-    aspect-ratio: 9/16;
-    max-height: 70vh;
-  }
-  .preview-frame iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-  
-  .preview-cta {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 16px;
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: var(--text-dim);
-  }
-  .preview-cta strong { color: var(--accent-bright); }
-  
-  /* ============ SUMMARY ============ */
-  .summary-card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 16px;
-  }
-  
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    font-size: 13px;
-  }
-  .summary-row:last-child { border: none; }
-  .summary-row .label { color: var(--text-dim); }
-  .summary-row .value {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    color: var(--text);
-  }
-  
-  .total-row {
-    margin-top: 8px;
-    padding: 14px 0 6px;
-    border-top: 2px solid var(--line);
-    border-bottom: none !important;
-  }
-  .total-row .label {
-    font-size: 14px;
-    color: var(--text);
-    font-weight: 500;
-  }
-  .total-row .value {
-    font-size: 22px;
-    color: var(--accent-bright);
-  }
-  
-  /* ============ ORDER STATUS ============ */
-  .order-status-card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 20px;
-    margin-top: 16px;
-    display: none;
-  }
-  .order-status-card.show { display: block; }
-  
-  .order-id {
-    font-family: 'DM Serif Display', serif;
-    font-size: 16px;
-    color: var(--accent);
-    margin-bottom: 12px;
-  }
-  
-  .status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 500;
-    background: rgba(255, 200, 0, 0.1);
-    color: #fbbf24;
-    border: 1px solid rgba(255, 200, 0, 0.3);
-  }
-  .status-pill.paid {
-    background: rgba(110, 199, 137, 0.12);
-    color: var(--success);
-    border-color: rgba(110, 199, 137, 0.4);
-  }
-  .status-pill.rejected {
-    background: rgba(232, 122, 122, 0.12);
-    color: var(--danger);
-    border-color: rgba(232, 122, 122, 0.4);
-  }
-  
-  .pulse {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: currentColor;
-    animation: pulse 1.5s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.3); }
-  }
-  
-  /* ============ PAYMENT ============ */
-  .bank-card-mini {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .bank-card-mini-info {
-    flex: 1;
-  }
-  .bank-card-mini-name {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 2px;
-  }
-  .bank-card-mini-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 17px;
-    color: var(--accent-bright);
-    letter-spacing: 1px;
-  }
-  .copy-mini {
-    background: rgba(212, 175, 108, 0.1);
-    color: var(--accent);
-    border: 1px solid var(--line);
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 10px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  /* ============ NAV BUTTONS ============ */
-  .nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    padding: 14px 20px 18px;
-    background: linear-gradient(to top, var(--bg) 75%, transparent);
-    display: flex;
-    gap: 10px;
-    z-index: 50;
-  }
-  
-  .btn {
-    flex: 1;
-    padding: 14px;
-    border-radius: 10px;
-    border: none;
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
-    font-size: 13.5px;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.5px;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent), #b8951f);
-    color: var(--bg);
-  }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(212, 175, 108, 0.3);
-  }
-  .btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
-  .btn-ghost {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text);
-    border: 1px solid var(--line);
-  }
-  
-  /* ============ TOAST ============ */
-  .toast {
-    position: fixed;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-200%);
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    padding: 12px 20px;
-    border-radius: 100px;
-    font-size: 13px;
-    z-index: 200;
-    transition: transform 0.4s;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  }
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-  }
-  .toast.success { border-color: var(--success); color: var(--success); }
-  .toast.error { border-color: var(--danger); color: var(--danger); }
+:root {
+  --bg: #0f0d0a;
+  --bg-card: #1a1612;
+  --bg-input: #221d18;
+  --bg-bot: #1e1a15;
+  --bg-user: #2a3d2a;
+  --accent: #d4af6c;
+  --accent-bright: #e8c585;
+  --text: #f0e6d2;
+  --text-dim: rgba(240, 230, 210, 0.6);
+  --text-mute: rgba(240, 230, 210, 0.35);
+  --line: rgba(212, 175, 108, 0.15);
+  --success: #6ec789;
+  --danger: #e87a7a;
+  --user-text: #d4f0c8;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  height: 100%;
+  overflow: hidden;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  position: relative;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background: rgba(15,13,10,0.95);
+  backdrop-filter: blur(20px);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.header-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #8b6914);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  position: relative;
+}
+.header-avatar::after {
+  content: '';
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  background: var(--success);
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+}
+
+.header-info { flex: 1; }
+.header-name {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--accent-bright);
+  line-height: 1.2;
+}
+.header-status {
+  font-size: 11px;
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.header-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  display: inline-block;
+}
+
+.progress-bar {
+  height: 2px;
+  background: rgba(212,175,108,0.1);
+  flex-shrink: 0;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  transition: width 0.6s ease;
+  width: 0%;
+}
+
+/* ===== CHAT AREA ===== */
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scroll-behavior: smooth;
+}
+
+.chat-area::-webkit-scrollbar { width: 3px; }
+.chat-area::-webkit-scrollbar-track { background: transparent; }
+.chat-area::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
+/* Date chip */
+.date-chip {
+  text-align: center;
+  margin: 8px 0;
+}
+.date-chip span {
+  font-size: 10px;
+  color: var(--text-mute);
+  background: rgba(255,255,255,0.04);
+  padding: 3px 12px;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+}
+
+/* ===== BUBBLE ===== */
+.msg-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  animation: bubbleIn 0.3s ease forwards;
+  opacity: 0;
+  transform: translateY(8px);
+}
+@keyframes bubbleIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-row.bot { justify-content: flex-start; }
+.msg-row.user { justify-content: flex-end; }
+
+.bot-ava {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #8b6914);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
+
+.bubble {
+  max-width: 78%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  position: relative;
+  word-break: break-word;
+}
+
+.bubble.bot {
+  background: var(--bg-bot);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 4px;
+  color: var(--text);
+}
+
+.bubble.user {
+  background: var(--bg-user);
+  border: 1px solid rgba(110,199,137,0.2);
+  border-bottom-right-radius: 4px;
+  color: var(--user-text);
+}
+
+.bubble-time {
+  font-size: 10px;
+  color: var(--text-mute);
+  margin-top: 4px;
+  text-align: right;
+}
+.bubble.bot + .bubble-time { text-align: left; }
+
+/* Typing indicator */
+.typing-row { display: flex; align-items: flex-end; gap: 6px; }
+.typing-bubble {
+  background: var(--bg-bot);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  border-bottom-left-radius: 4px;
+  padding: 12px 16px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-mute);
+  animation: typingPulse 1.2s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingPulse {
+  0%, 60%, 100% { opacity: 0.3; transform: scale(1); }
+  30% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ===== QUICK REPLIES ===== */
+.quick-replies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px 4px;
+  flex-shrink: 0;
+}
+
+.qr-btn {
+  background: rgba(212,175,108,0.08);
+  border: 1px solid rgba(212,175,108,0.35);
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+.qr-btn:hover, .qr-btn:active {
+  background: rgba(212,175,108,0.18);
+  border-color: var(--accent);
+  transform: scale(0.97);
+}
+
+/* Theme cards in chat */
+.theme-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 12px 4px;
+  flex-shrink: 0;
+}
+
+.theme-opt {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.theme-opt:hover { border-color: var(--accent); }
+.theme-opt:active { transform: scale(0.99); }
+
+.theme-opt-thumb {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.theme-opt-thumb.royal { background: linear-gradient(135deg, #1f1208, #3d2418); }
+.theme-opt-thumb.bloom { background: linear-gradient(135deg, #fef5ed, #f4a574); }
+.theme-opt-thumb.jawa { background: linear-gradient(135deg, #2c1f0e, #4a3520); }
+
+.theme-opt-info {
+  flex: 1;
+  padding: 0 14px;
+}
+.theme-opt-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+.theme-opt-tag {
+  font-size: 11px;
+  color: var(--text-mute);
+}
+
+.theme-opt-arrow {
+  padding-right: 14px;
+  color: var(--text-mute);
+  font-size: 16px;
+}
+
+/* Paket cards in chat */
+.paket-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 12px 4px;
+  flex-shrink: 0;
+}
+
+.paket-opt {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.paket-opt:hover { border-color: var(--accent); }
+.paket-opt:active { transform: scale(0.99); }
+.paket-opt.premium { border-color: rgba(212,175,108,0.4); background: rgba(212,175,108,0.05); }
+
+.paket-opt-badge {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: linear-gradient(135deg, var(--accent), #c8870a);
+  color: #0a0a0a;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.paket-opt-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.paket-opt-name {
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+}
+.paket-opt-price {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: var(--accent-bright);
+  margin-bottom: 2px;
+}
+.paket-opt-sub {
+  font-size: 10px;
+  color: var(--text-mute);
+  margin-bottom: 8px;
+}
+.paket-opt-features {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.paket-opt-features .premium-feat { color: var(--accent); }
+
+/* ===== INPUT AREA ===== */
+.input-area {
+  padding: 10px 12px 16px;
+  background: rgba(15,13,10,0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.input-wrap {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  transition: border-color 0.2s;
+}
+.input-wrap:focus-within { border-color: var(--accent); }
+
+#chatInput {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  resize: none;
+  max-height: 100px;
+  line-height: 1.4;
+}
+#chatInput::placeholder { color: var(--text-mute); }
+
+.send-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #b8951f);
+  border: none;
+  color: #0a0a0a;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.send-btn:hover { transform: scale(1.05); }
+.send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ===== SUMMARY CARD in chat ===== */
+.summary-bubble {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 12.5px;
+  margin-top: 6px;
+}
+.summary-bubble .row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.summary-bubble .row:last-child { border: none; }
+.summary-bubble .row .lbl { color: var(--text-mute); }
+.summary-bubble .row .val { color: var(--text); font-weight: 500; text-align: right; max-width: 60%; }
+.summary-bubble .total-row .val {
+  color: var(--accent-bright);
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px;
+}
+
+/* ===== BANK CARD in chat ===== */
+.bank-bubble {
+  background: rgba(212,175,108,0.06);
+  border: 1px solid rgba(212,175,108,0.25);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.bank-info-name { font-size: 11px; color: var(--text-mute); margin-bottom: 2px; }
+.bank-info-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  color: var(--accent-bright);
+}
+.copy-btn {
+  background: rgba(212,175,108,0.1);
+  border: 1px solid var(--line);
+  color: var(--accent);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 10px;
+  cursor: pointer;
+  letter-spacing: 0.8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Status card */
+.status-bubble {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 6px;
+  text-align: center;
+}
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(255,200,0,0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(255,200,0,0.3);
+  margin-bottom: 10px;
+}
+.status-pill.paid {
+  background: rgba(110,199,137,0.12);
+  color: var(--success);
+  border-color: rgba(110,199,137,0.4);
+}
+.status-pill.rejected {
+  background: rgba(232,122,122,0.12);
+  color: var(--danger);
+  border-color: rgba(232,122,122,0.4);
+}
+.pulse {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.3); }
+}
+.order-id-display {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.status-detail {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* Link aktif */
+.link-aktif {
+  word-break: break-all;
+  color: var(--accent);
+  font-size: 12px;
+  margin-top: 6px;
+  display: inline-block;
+}
+.copy-link-btn {
+  margin-top: 10px;
+  background: linear-gradient(135deg, var(--accent), #b8951f);
+  color: #0a0a0a;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: 0.5px;
+  width: 100%;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-200%);
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  z-index: 200;
+  transition: transform 0.3s;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: var(--success); color: var(--success); }
+.toast.error { border-color: var(--danger); color: var(--danger); }
+
+/* Photo guide inside bubble */
+.photo-guide {
+  background: rgba(212,175,108,0.05);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.photo-guide .step-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+.photo-guide .step-num {
+  background: rgba(212,175,108,0.15);
+  color: var(--accent);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Scroll anchor */
+#chatBottom { height: 1px; }
 </style>
 </head>
 <body>
 
 <div class="app">
-  <div class="topbar">
-    <div class="logo">Undangan<span>Ku</span></div>
-    <div class="step-pills">
-      <div class="pill active" id="pill-1"></div>
-      <div class="pill" id="pill-2"></div>
-      <div class="pill" id="pill-3"></div>
-      <div class="pill" id="pill-4"></div>
-      <div class="pill" id="pill-5"></div>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-avatar">💌</div>
+    <div class="header-info">
+      <div class="header-name">UndanganKu</div>
+      <div class="header-status">Online — siap bantu</div>
     </div>
   </div>
-  
-  <!-- ===== STEP 1: TEMA ===== -->
-  <div class="step active" id="step-1">
-    <div class="step-head">
-      <div class="step-counter">step 1 of 5</div>
-      <div class="step-title">Pilih Tema</div>
-      <div class="step-subtitle">Pilih desain yang sesuai dengan karakter pernikahanmu</div>
-    </div>
-    
-    <div class="themes">
-      <div class="theme-card selected" data-theme="royal-classic" onclick="selectTheme('royal-classic')">
-        <div class="theme-thumb royal-classic">
-          <div class="thumb-content">
-            <div class="thumb-label">THE WEDDING OF</div>
-            <div class="thumb-names">Mempelai Wanita</div>
-            <div class="thumb-amp">&amp;</div>
-            <div class="thumb-names">Mempelai Pria</div>
-          </div>
-        </div>
-        <div class="theme-meta">
-          <div>
-            <div class="theme-name">Royal Classic</div>
-            <div class="theme-tag">Mewah · Elegan · Formal</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="theme-card" data-theme="sunset-bloom" onclick="selectTheme('sunset-bloom')">
-        <div class="theme-thumb sunset-bloom">
-          <div class="thumb-content">
-            <div class="thumb-label">happily ever after</div>
-            <div class="thumb-names">Mempelai Wanita</div>
-            <div class="thumb-amp">&amp;</div>
-            <div class="thumb-names">Mempelai Pria</div>
-          </div>
-        </div>
-        <div class="theme-meta">
-          <div>
-            <div class="theme-name">Sunset Bloom</div>
-            <div class="theme-tag">Hangat · Romantis · Soft</div>
-          </div>
-        </div>
-      </div>
-      <div class="theme-card" data-theme="adat-jawa" onclick="selectTheme('adat-jawa')">
-        <div class="theme-thumb adat-jawa">
-          <div class="thumb-content">
-            <div class="thumb-label">Ing Salira Kula</div>
-            <div class="thumb-names">Mempelai Wanita</div>
-            <div class="thumb-amp">❧</div>
-            <div class="thumb-names">Mempelai Pria</div>
-          </div>
-        </div>
-        <div class="theme-meta">
-          <div>
-            <div class="theme-name">Adat Jawa</div>
-            <div class="theme-tag">Klasik · Tradisional · Elegan</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="step" id="step-2">
-    <div class="step-head">
-      <div class="step-counter">step 2 of 5</div>
-      <div class="step-title">Data Undangan</div>
-      <div class="step-subtitle">Lengkapi semua data agar undangan jadi sempurna</div>
-    </div>
-    
-    <!-- Mempelai -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">👰🤵</span>
-        <span class="section-head-text">Mempelai</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>Nama Lengkap Mempelai Wanita</label>
-          <input type="text" id="brideName" placeholder="Andini Putri Maharani" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Panggilan</label>
-          <input type="text" id="brideNick" placeholder="Andini" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Putri ke-berapa</label>
-          <input type="text" id="brideOrder" placeholder="Putri pertama dari" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Nama Ayah Mempelai Wanita</label>
-          <input type="text" id="brideFather" placeholder="Bapak H. Bambang Wijaya" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Nama Ibu Mempelai Wanita</label>
-          <input type="text" id="brideMother" placeholder="Ibu Hj. Sri Wahyuni" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Instagram Mempelai Wanita (opsional)</label>
-          <input type="text" id="brideIG" placeholder="@andiniputri" oninput="updatePreview()">
-        </div>
-        
-        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
-        
-        <div>
-          <label>Nama Lengkap Mempelai Pria</label>
-          <input type="text" id="groomName" placeholder="Reza Pratama Adiputra" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Panggilan</label>
-          <input type="text" id="groomNick" placeholder="Reza" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Putra ke-berapa</label>
-          <input type="text" id="groomOrder" placeholder="Putra kedua dari" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Nama Ayah Mempelai Pria</label>
-          <input type="text" id="groomFather" placeholder="Bapak Drs. Hendra Adiputra" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Nama Ibu Mempelai Pria</label>
-          <input type="text" id="groomMother" placeholder="Ibu Dra. Siti Nurhayati" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Instagram Mempelai Pria (opsional)</label>
-          <input type="text" id="groomIG" placeholder="@rezapratama" oninput="updatePreview()">
-        </div>
-      </div>
-    </div>
-    
-    <!-- Acara -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">📅</span>
-        <span class="section-head-text">Akad &amp; Resepsi</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>Tanggal Pernikahan</label>
-          <input type="date" id="weddingDate" oninput="updatePreview()">
-        </div>
-        
-        <div class="form-grid cols-2">
-          <div>
-            <label>Akad Mulai</label>
-            <input type="text" id="akadStart" value="08:00" placeholder="08:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
-          </div>
-          <div>
-            <label>Akad Selesai</label>
-            <input type="text" id="akadEnd" value="10:00" placeholder="10:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
-          </div>
-        </div>
-        
-        <div>
-          <label>Tempat Akad</label>
-          <input type="text" id="akadVenue" placeholder="Masjid Istiqlal" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Alamat Akad</label>
-          <textarea id="akadAddress" placeholder="Jl. Taman Wijaya Kusuma, Jakarta Pusat" oninput="updatePreview()"></textarea>
-        </div>
-        <div>
-          <label>Link Maps Akad (opsional)</label>
-          <input type="text" id="akadMaps" placeholder="https://maps.google.com/..." oninput="updatePreview()">
-        </div>
-        
-        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
-        
-        <div class="form-grid cols-2">
-          <div>
-            <label>Resepsi Mulai</label>
-            <input type="text" id="resepsiStart" value="11:00" placeholder="11:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
-          </div>
-          <div>
-            <label>Resepsi Selesai</label>
-            <input type="text" id="resepsiEnd" value="15:00" placeholder="15:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
-          </div>
-        </div>
-        
-        <div>
-          <label>Tempat Resepsi</label>
-          <input type="text" id="resepsiVenue" placeholder="Hotel Mulia Ballroom" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Alamat Resepsi</label>
-          <textarea id="resepsiAddress" placeholder="Jl. Asia Afrika No.8, Senayan, Jakarta" oninput="updatePreview()"></textarea>
-        </div>
-        <div>
-          <label>Link Maps Resepsi (opsional)</label>
-          <input type="text" id="resepsiMaps" placeholder="https://maps.google.com/..." oninput="updatePreview()">
-        </div>
-      </div>
-    </div>
-    
-    <!-- Ayat & Quote -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">📖</span>
-        <span class="section-head-text">Ayat / Quote</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>Tulisan Arab (opsional)</label>
-          <textarea id="quoteArabic" placeholder="وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا" oninput="updatePreview()"></textarea>
-        </div>
-        <div>
-          <label>Terjemahan / Quote</label>
-          <textarea id="quoteText" placeholder="Dan di antara tanda-tanda kekuasaan-Nya..." oninput="updatePreview()"></textarea>
-        </div>
-        <div>
-          <label>Sumber</label>
-          <input type="text" id="quoteSource" placeholder="QS. Ar-Rum : 21" oninput="updatePreview()">
-        </div>
-      </div>
-    </div>
-    
-    <!-- Hadiah / Amplop -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">💝</span>
-        <span class="section-head-text">Hadiah Pernikahan</span>
-      </div>
-      
-      <div class="form-grid">
-        <div class="form-grid cols-2">
-          <div>
-            <label>Bank 1</label>
-            <input type="text" id="bank1Name" placeholder="BCA" oninput="updatePreview()">
-          </div>
-          <div>
-            <label>No. Rekening 1</label>
-            <input type="text" id="bank1Num" placeholder="1234567890" oninput="updatePreview()">
-          </div>
-        </div>
-        <div>
-          <label>Atas Nama 1</label>
-          <input type="text" id="bank1Holder" placeholder="Andini Putri" oninput="updatePreview()">
-        </div>
-        
-        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
-        
-        <div class="form-grid cols-2">
-          <div>
-            <label>Bank 2 (opsional)</label>
-            <input type="text" id="bank2Name" placeholder="Mandiri" oninput="updatePreview()">
-          </div>
-          <div>
-            <label>No. Rekening 2</label>
-            <input type="text" id="bank2Num" placeholder="9876543210" oninput="updatePreview()">
-          </div>
-        </div>
-        <div>
-          <label>Atas Nama 2</label>
-          <input type="text" id="bank2Holder" placeholder="Reza Pratama" oninput="updatePreview()">
-        </div>
-      </div>
-    </div>
-    
-    <!-- Musik -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">🎵</span>
-        <span class="section-head-text">Musik Latar</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>Pilih Musik</label>
-          <select id="musicChoice" onchange="updateMusicPreview()">
-            <option value="piano-elegant">🎼 Piano Elegant — Royal Classic</option>
-            <option value="acoustic-love">🎸 Acoustic Love — Sunset Bloom</option>
-            <option value="javanese-gamelan">🎶 Gamelan Jawa — Adat Jawa</option>
-          </select>
-          <div style="font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.5;">
-            🎧 Musik akan otomatis diputar saat tamu membuka undangan.
-          </div>
-        </div>
-        <!-- Mini player preview -->
-        <div id="musicPreviewBox" style="
-          background: var(--bg-card);
-          border: 1px solid var(--line);
-          border-radius: 10px;
-          padding: 12px 14px;
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        ">
-          <button type="button" id="musicPlayBtn" onclick="toggleMusicPreview()" style="
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            border: 1px solid var(--accent);
-            background: rgba(212,175,108,0.1);
-            color: var(--accent);
-            font-size: 14px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-          ">▶</button>
-          <div>
-            <div id="musicPreviewName" style="font-size:13px; color:var(--text); font-weight:500;">Piano Elegant</div>
-            <div style="font-size:10px; color:var(--text-mute);">Tap untuk dengarkan preview</div>
-          </div>
-        </div>
-        <audio id="musicPreviewAudio" preload="none"></audio>
-      </div>
-    </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 
-    <!-- Kontak Pembeli -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">📞</span>
-        <span class="section-head-text">Kontak Pemesan</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>Nomor WhatsApp</label>
-          <input type="tel" id="buyerContact" placeholder="08xxxxxxxxxx" inputmode="numeric"
-            style="letter-spacing:0.5px;">
-          <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
-            ⚡ Link undangan aktif akan dikirimkan via WhatsApp setelah konfirmasi pembayaran.
-          </div>
-        </div>
-        <div>
-          <label>Instagram (opsional)</label>
-          <input type="text" id="buyerInstagram" placeholder="@namakamu" oninput="updatePreview()">
-          <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
-            Untuk dihubungi jika ada pertanyaan.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- ===== STEP 3: PAKET ===== -->
-  <div class="step" id="step-3">
-    <div class="step-head">
-      <div class="step-counter">step 3 of 5</div>
-      <div class="step-title">Pilih Paket</div>
-      <div class="step-subtitle">Pilih paket yang paling sesuai kebutuhanmu</div>
-    </div>
-    
-    <div class="paket-grid">
-
-      <!-- STANDARD -->
-      <div class="paket-card selected" data-paket="standard" onclick="selectPaket('standard')">
-        <div class="paket-header">
-          <span class="paket-icon">🎀</span>
-          <span class="paket-name">Standard</span>
-        </div>
-        <div class="paket-price">Rp 29.000</div>
-        <div class="paket-price-sub">Aktif 3 bulan</div>
-        <div class="paket-features">
-          <div class="paket-feature-item"><span class="check">✓</span><span>3 pilihan tema undangan</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Cover nama mempelai + Buka Undangan</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>RSVP & ucapan tamu</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Countdown hari H</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Amplop digital (2 rekening)</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Musik auto-play</span></div>
-        </div>
-        <div class="paket-select-indicator">
-          <div class="radio"></div>
-          <span>Pilih Standard</span>
-        </div>
-      </div>
-
-      <!-- PREMIUM -->
-      <div class="paket-card premium-card" data-paket="premium" onclick="selectPaket('premium')">
-        <div class="paket-badge">✦ TERPOPULER</div>
-        <div class="paket-header">
-          <span class="paket-icon">👑</span>
-          <span class="paket-name">Premium</span>
-        </div>
-        <div class="paket-price">Rp 49.000</div>
-        <div class="paket-price-sub">Aktif 6 bulan — 2× lebih lama</div>
-        <div class="paket-features">
-          <div class="paket-feature-item"><span class="check">✓</span><span>Semua fitur Standard</span></div>
-          <div class="paket-divider"></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Foto couple di cover</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Galeri foto (4 foto)</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Love Story timeline</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Kutipan / quote custom</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Nama tamu personal di cover</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Revisi data 1× gratis</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Prioritas konfirmasi &lt; 1 jam</span></div>
-        </div>
-        <div class="paket-select-indicator">
-          <div class="radio"></div>
-          <span>Pilih Premium</span>
-        </div>
-      </div>
-
-    </div>
-    
-    <div class="preview-cta">
-      💡 <strong>Semua paket termasuk:</strong> Link undangan unik, tanpa watermark setelah konfirmasi, RSVP, countdown, dan amplop digital.
-    </div>
-  </div>
-  
-  <!-- ===== STEP 3b: DATA PREMIUM (hanya muncul jika pilih premium) ===== -->
-  <div class="step" id="step-3b">
-    <div class="step-head">
-      <div class="step-counter">step 3b of 5</div>
-      <div class="step-title">👑 Data Premium</div>
-      <div class="step-subtitle">Isi data tambahan untuk fitur Premium kamu</div>
-    </div>
-
-    <!-- FOTO COUPLE -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">💑</span>
-        <span class="section-head-text">Foto Cover (opsional)</span>
-      </div>
-      <div>
-        <label>Link Foto Couple</label>
-        <input type="url" id="couplePhotoUrl" placeholder="https://drive.google.com/file/d/...">
-        <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
-          📸 Foto kalian berdua akan tampil di frame cover undangan. Gunakan foto portrait (tegak) untuk hasil terbaik.
-        </div>
-      </div>
-      <!-- Panduan link -->
-      <details style="margin-top:12px; border:1px solid rgba(200,169,110,0.2); border-radius:8px; overflow:hidden;">
-        <summary style="padding:11px 14px; cursor:pointer; font-family:'Cinzel',serif; font-size:9px; letter-spacing:1.5px; color:var(--accent); list-style:none; display:flex; align-items:center; justify-content:space-between;">
-          <span>📋 CARA DAPAT LINK FOTO</span><span style="opacity:0.6;">▼</span>
-        </summary>
-        <div style="padding:14px; border-top:1px solid rgba(200,169,110,0.1); display:flex; flex-direction:column; gap:8px;">
-          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">1</span>
-            <span>Buka <strong style="color:var(--text);">drive.google.com</strong> → upload foto couple</span>
-          </div>
-          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">2</span>
-            <span>Klik kanan foto → <strong style="color:var(--text);">"Dapatkan link"</strong></span>
-          </div>
-          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">3</span>
-            <span>Ubah akses ke <strong style="color:var(--text);">"Siapa saja yang punya link"</strong> → Salin</span>
-          </div>
-          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">4</span>
-            <span>Tempel link di field di atas ✅</span>
-          </div>
-        </div>
-      </details>
-    </div>
-
-    <!-- GALERI FOTO -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">🖼️</span>
-        <span class="section-head-text">Galeri Foto <span style="font-weight:400; opacity:0.6;">(opsional, maks. 4)</span></span>
-      </div>
-
-      <!-- Panduan cara dapat link foto -->
-      <details style="margin-bottom:16px; border:1px solid rgba(200,169,110,0.25); border-radius:10px; overflow:hidden;">
-        <summary style="padding:13px 14px; cursor:pointer; font-family:'Cinzel',serif; font-size:10px; letter-spacing:1.5px; color:var(--accent); list-style:none; display:flex; align-items:center; justify-content:space-between;">
-          <span>📋 CARA DAPAT LINK FOTO</span><span style="opacity:0.6;">▼</span>
-        </summary>
-        <div style="padding:14px; border-top:1px solid rgba(200,169,110,0.15);">
-
-          <!-- Google Drive -->
-          <div style="margin-bottom:14px;">
-            <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--accent); margin-bottom:8px;">GOOGLE DRIVE</div>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">1</span>
-                <span>Buka <strong style="color:var(--text);">drive.google.com</strong> → upload foto kamu</span>
-              </div>
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">2</span>
-                <span>Klik kanan foto → <strong style="color:var(--text);">"Dapatkan link"</strong></span>
-              </div>
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">3</span>
-                <span>Ubah akses ke <strong style="color:var(--text);">"Siapa saja yang punya link"</strong> → Salin link</span>
-              </div>
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">4</span>
-                <span>Tempel link di field foto di bawah ✅</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Divider -->
-          <div style="border-top:1px solid rgba(200,169,110,0.1); margin:12px 0;"></div>
-
-          <!-- Google Photos -->
-          <div>
-            <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--accent); margin-bottom:8px;">GOOGLE PHOTOS (lebih mudah)</div>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">1</span>
-                <span>Buka foto di <strong style="color:var(--text);">Google Photos</strong></span>
-              </div>
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">2</span>
-                <span>Tap ikon <strong style="color:var(--text);">⋮ → Buat link</strong> → Salin</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </details>
-
-      <p style="font-size:12px; color:var(--text-dim); margin-bottom:14px; line-height:1.6;">
-        Kosongkan field yang tidak diperlukan — hanya foto yang diisi yang akan ditampilkan.
-      </p>
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <div>
-          <label>Foto 1</label>
-          <input type="url" id="galleryPhoto1" placeholder="https://drive.google.com/... atau link Instagram" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Foto 2 <span style="font-size:11px; opacity:0.5;">(opsional)</span></label>
-          <input type="url" id="galleryPhoto2" placeholder="https://drive.google.com/..." oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Foto 3 <span style="font-size:11px; opacity:0.5;">(opsional)</span></label>
-          <input type="url" id="galleryPhoto3" placeholder="https://drive.google.com/..." oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Foto 4 <span style="font-size:11px; opacity:0.5;">(opsional)</span></label>
-          <input type="url" id="galleryPhoto4" placeholder="https://drive.google.com/..." oninput="updatePreview()">
-        </div>
-      </div>
-
-    </div>
-
-    <!-- LOVE STORY -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">❤️</span>
-        <span class="section-head-text">Love Story <span style="font-weight:400; opacity:0.6;">(opsional)</span></span>
-      </div>
-      <p style="font-size:12px; color:var(--text-dim); margin-bottom:14px; line-height:1.6;">
-        Ceritakan perjalanan cinta kalian. Minimal 1 cerita, maksimal 4.
-      </p>
-
-      <div id="lsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
-
-      <button type="button" id="lsAddBtn" onclick="addLsEntry()"
-        style="margin-top:12px; width:100%; padding:11px; border:1px dashed rgba(200,169,110,0.35); border-radius:10px; background:transparent; color:var(--accent); font-size:13px; cursor:pointer; letter-spacing:0.5px; transition:all 0.2s;">
-        + Tambah Cerita
-      </button>
-    </div>
+  <!-- CHAT AREA -->
+  <div class="chat-area" id="chatArea">
+    <div class="date-chip"><span>Hari ini</span></div>
+    <div id="chatBottom"></div>
   </div>
 
-  <!-- ===== STEP 4: PREVIEW ===== -->
-  <div class="step" id="step-4">
-    <div class="step-head">
-      <div class="step-counter">step 4 of 5</div>
-      <div class="step-title">Preview Undangan</div>
-      <div class="step-subtitle">Pastikan semua data sudah benar sebelum memesan</div>
-    </div>
+  <!-- QUICK REPLIES / OPTIONS -->
+  <div class="quick-replies" id="quickReplies" style="display:none;"></div>
+  <div class="theme-options" id="themeOptions" style="display:none;"></div>
+  <div class="paket-options" id="paketOptions" style="display:none;"></div>
 
-    <div class="summary-card" id="previewSummary" style="margin-bottom:16px;">
-      <div class="summary-row">
-        <span class="label">Tema</span>
-        <span class="value" id="prevTheme">—</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Mempelai Wanita</span>
-        <span class="value" id="prevBride">—</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Mempelai Pria</span>
-        <span class="value" id="prevGroom">—</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Tanggal</span>
-        <span class="value" id="prevDate">—</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Akad</span>
-        <span class="value" id="prevAkad">—</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Resepsi</span>
-        <span class="value" id="prevResepsi">—</span>
-      </div>
+  <!-- INPUT -->
+  <div class="input-area" id="inputArea">
+    <div class="input-wrap">
+      <textarea id="chatInput" placeholder="Ketik pesan..." rows="1"
+        oninput="autoResize(this)"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"></textarea>
     </div>
-
-    <button onclick="openPreviewTab()" style="
-      width:100%; padding:14px;
-      background: rgba(200,169,110,0.1);
-      border: 1px solid rgba(200,169,110,0.4);
-      color: #c8a96e;
-      font-family: 'Cinzel', serif;
-      font-size: 11px; letter-spacing: 3px;
-      cursor: pointer; margin-bottom: 8px;
-    ">👁️ BUKA PREVIEW DI TAB BARU</button>
-    <p style="text-align:center; font-size:11px; color:rgba(240,230,210,0.4); font-style:italic;">
-      Preview akan terbuka di tab baru. Kembali ke sini untuk lanjut memesan.
-    </p>
-  </div>
-  
-  <!-- ===== STEP 5: BAYAR ===== -->
-  <div class="step" id="step-5">
-    <div class="step-head">
-      <div class="step-counter">step 5 of 5</div>
-      <div class="step-title">Pemesanan</div>
-      <div class="step-subtitle">Selesaikan pembayaran untuk aktivasi undangan</div>
-    </div>
-    
-    <div class="summary-card">
-      <div class="summary-row">
-        <span class="label">Tema</span>
-        <span class="value" id="sumTheme">Royal Classic</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Mempelai</span>
-        <span class="value" id="sumNames">— & —</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Tanggal</span>
-        <span class="value" id="sumDate">—</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Paket</span>
-        <span class="value" id="sumPaket">Premium</span>
-      </div>
-      <div class="summary-row total-row">
-        <span class="label">Total Pembayaran</span>
-        <span class="value" id="sumTotal">Rp 75.000</span>
-      </div>
-    </div>
-    
-    <div class="section-head" style="margin-top: 24px;">
-      <span class="section-head-icon">🛍️</span>
-      <span class="section-head-text">Sumber Pembelian</span>
-    </div>
-
-    <!-- Toggle sumber — tampil sesuai ?src= di URL -->
-    <div id="sumberToggleWrap" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
-      <button type="button" id="srcTransfer" onclick="setSumber('transfer')"
-        style="padding:12px 8px; border:2px solid var(--accent); background:rgba(212,175,108,0.12);
-        color:var(--accent); font-family:'Cinzel',serif; font-size:10px; letter-spacing:1.5px;
-        cursor:pointer; border-radius:8px; transition:all 0.2s;">
-        💳 TRANSFER<br>
-        <span style="font-size:9px; opacity:0.7; letter-spacing:0; font-family:inherit;">SeaBank / Dana</span>
-      </button>
-      <button type="button" id="srcEcommerce" onclick="setSumber('ecommerce')"
-        style="padding:12px 8px; border:2px solid rgba(212,175,108,0.25); background:transparent;
-        color:var(--text-dim); font-family:'Cinzel',serif; font-size:10px; letter-spacing:1.5px;
-        cursor:pointer; border-radius:8px; transition:all 0.2s;">
-        🛒 E-COMMERCE<br>
-        <span style="font-size:9px; opacity:0.7; letter-spacing:0; font-family:inherit;">Shopee / Tokopedia</span>
-      </button>
-    </div>
-
-    <!-- Panel Transfer -->
-    <div id="panelTransfer">
-      <div class="bank-card-mini">
-        <div class="bank-card-mini-info">
-          <div class="bank-card-mini-name">SeaBank</div>
-          <div class="bank-card-mini-num">9010 9567 9260</div>
-        </div>
-        <button class="copy-mini" onclick="copy('901095679260', this)">SALIN</button>
-      </div>
-      <div class="bank-card-mini" style="margin-top:8px;">
-        <div class="bank-card-mini-info">
-          <div class="bank-card-mini-name">Dana</div>
-          <div class="bank-card-mini-num">0896 0562 3197</div>
-        </div>
-        <button class="copy-mini" onclick="copy('089605623197', this)">SALIN</button>
-      </div>
-      <div class="preview-cta" style="margin-top:14px;">
-        ⚠️ <strong>Cara pesan:</strong> (1) Transfer sesuai nominal, (2) Klik <strong>Pesan Sekarang</strong> di bawah, (3) Link langsung aktif di sini, owner juga bisa kirim ke WhatsApp kamu jika kontak pemesan diisi, (4) Link undangan aktif tanpa watermark.
-      </div>
-    </div>
-
-    <!-- Panel E-Commerce -->
-    <div id="panelEcommerce" style="display:none;">
-      <div style="background:rgba(37,211,102,0.07); border:1px solid rgba(37,211,102,0.2);
-        border-radius:10px; padding:16px 14px; margin-bottom:14px;">
-        <div style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:1.5px;
-          color:#25d366; margin-bottom:10px;">✓ SUDAH BAYAR DI SHOPEE/TOKOPEDIA</div>
-        <div style="font-size:13px; color:var(--text-dim); line-height:1.7;">
-          Pembayaran sudah selesai di marketplace. Langsung klik <strong style="color:var(--accent);">⚡ Pesan. AI Bereskan.</strong> di bawah — undanganmu aktif dalam hitungan detik, dikonfirmasi otomatis oleh AI.
-        </div>
-      </div>
-      <div class="preview-cta">
-        ℹ️ Pastikan status pembayaran di Shopee/Tokopedia sudah <strong>Berhasil</strong> sebelum klik tombol di bawah. Link undangan aktif dalam hitungan detik — tidak perlu tunggu konfirmasi manual.
-      </div>
-    </div>
-    
-    <div class="order-status-card" id="orderStatusCard">
-      <div class="order-id">📋 <span id="orderIdDisplay">—</span></div>
-      <div id="statusPillContainer">
-        <span class="status-pill" id="statusPill">
-          <span class="pulse"></span>
-          <span id="statusText">Menunggu konfirmasi owner...</span>
-        </span>
-      </div>
-      <div id="statusDetail" style="margin-top: 12px; font-size: 12px; color: var(--text-dim); line-height: 1.6;"></div>
-    </div>
-
-    <a href="https://www.instagram.com/willyanugrh" target="_blank" style="
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      margin-top: 16px; padding: 12px;
-      border: 1px solid rgba(200,169,110,0.2);
-      color: rgba(240,230,210,0.5); text-decoration: none;
-      font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
-      transition: all 0.2s;
-    " onmouseover="this.style.borderColor='rgba(200,169,110,0.5)';this.style.color='#c8a96e'"
-       onmouseout="this.style.borderColor='rgba(200,169,110,0.2)';this.style.color='rgba(240,230,210,0.5)'">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-      HUBUNGI @WILLYANUGRH
-    </a>
-  </div>
-  
-  <!-- ===== NAV BUTTONS ===== -->
-  <div class="nav">
-    <button class="btn btn-ghost" id="prevBtn" onclick="prevStep()" style="display:none;">← Kembali</button>
-    <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Lanjut →</button>
+    <button class="send-btn" id="sendBtn" onclick="sendMsg()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+      </svg>
+    </button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  // ============ KONFIGURASI ============
-  // GANTI dengan URL Cloudflare Worker bot kamu
-  const BOT_API_URL = 'https://telegram-bot.daksara-dev.workers.dev';
-  
-  // ============ LOVE STORY DYNAMIC ============
-  var LS_PLACEHOLDERS = [
-    { year: '2021', title: 'Pertama Bertemu', story: 'Kami pertama kali bertemu di...' },
-    { year: '2022', title: 'Resmi Bersama', story: 'Setelah saling mengenal, akhirnya...' },
-    { year: '2024', title: 'Lamaran', story: 'Di hadapan kedua keluarga...' },
-    { year: '2026', title: 'Menuju Halal', story: 'Alhamdulillah, tibalah hari yang...' },
-  ];
+// ============ CONFIG ============
+const BOT_API_URL = 'https://telegram-bot.daksara-dev.workers.dev';
+const PRICES = { standard: 29000, premium: 49000 };
+const THEME_FILE_MAP = {
+  'royal-classic': 'tema-royal.html',
+  'sunset-bloom': 'tema-bloom.html',
+  'adat-jawa': 'tema-jawa.html',
+};
+const TEMA_LABEL = {
+  'royal-classic': 'Royal Classic',
+  'sunset-bloom': 'Sunset Bloom',
+  'adat-jawa': 'Adat Jawa',
+};
 
-  function addLsEntry() {
-    var container = document.getElementById('lsContainer');
-    var count = container.querySelectorAll('.ls-entry').length;
-    if (count >= 4) return;
-    var ph = LS_PLACEHOLDERS[count] || LS_PLACEHOLDERS[0];
-    var div = document.createElement('div');
-    div.className = 'ls-entry';
-    div.style.cssText = 'border:1px solid rgba(200,169,110,0.18); border-radius:10px; padding:14px; position:relative; background:rgba(255,255,255,0.015);';
-    div.innerHTML =
-      '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">' +
-        '<span class="ls-num" style="font-size:11px; letter-spacing:1.5px; color:var(--accent); opacity:0.7;">CERITA ' + (count + 1) + '</span>' +
-        '<button type="button" onclick="removeLsEntry(this)" style="background:none; border:none; color:rgba(240,80,80,0.6); font-size:18px; cursor:pointer; line-height:1; padding:0 2px;" title="Hapus">×</button>' +
-      '</div>' +
-      '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">' +
-        '<div><label>Tahun / Waktu</label><input type="text" class="ls-year" placeholder="' + ph.year + '" oninput="updatePreview()"></div>' +
-        '<div><label>Judul Singkat</label><input type="text" class="ls-title" placeholder="' + ph.title + '" oninput="updatePreview()"></div>' +
-      '</div>' +
-      '<div><label>Cerita</label><textarea class="ls-story" rows="3" placeholder="' + ph.story + '" style="width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(200,169,110,0.25); border-radius:8px; padding:10px 12px; color:var(--text); font-size:13px; resize:vertical; font-family:inherit;" oninput="updatePreview()"></textarea></div>';
-    container.appendChild(div);
-    updateLsAddBtn();
-    updatePreview();
+// ============ STATE ============
+let state = {
+  step: 'start',
+  data: {},
+  selectedTheme: null,
+  selectedPaket: null,
+  orderId: null,
+  pollingInterval: null,
+  sumber: 'transfer',
+  galleryCount: 0,
+  lsEntries: [],
+};
+
+// ============ FLOW DEFINITION ============
+// Each step: key, botMsg(s), inputType
+// inputType: 'text' | 'qr' | 'theme' | 'paket' | 'date' | 'time' | 'url' | 'tel' | 'skip' | 'none'
+
+const STEPS = {
+  start: {
+    msgs: ['Haii! 👋 Selamat datang di *UndanganKu*!\n\nYuk bikin undangan digital pernikahan yang cantik & praktis. Mau mulai sekarang?'],
+    inputType: 'qr',
+    qrOptions: ['✨ Mulai sekarang!', '❓ Ada pertanyaan dulu'],
+  },
+  help: {
+    msgs: ['Tentu! Berikut yang sering ditanyakan:\n\n• Undangan aktif setelah konfirmasi pembayaran\n• Link unik untuk setiap pasangan\n• Paket Standard (3 bln) & Premium (6 bln)\n\nAda yang mau ditanyakan lagi?'],
+    inputType: 'qr',
+    qrOptions: ['💬 Lanjut pesan', '📲 Hubungi owner'],
+  },
+  pickTheme: {
+    msgs: ['Oke! Kita mulai ya 🎉\n\n*Step 1 dari 5:* Pilih tema undangan yang paling cocok untuk kalian:'],
+    inputType: 'theme',
+  },
+  brideName: {
+    msgs: ['Bagus pilihannya! ✨\n\n*Step 2 dari 5:* Sekarang data mempelai ya.\n\nSiapa nama lengkap *mempelai wanita*? 👰'],
+    inputType: 'text',
+    dataKey: 'brideName',
+    placeholder: 'Contoh: Andini Putri Maharani',
+  },
+  brideNick: {
+    msgs: ['Nama panggilannya siapa? 😊'],
+    inputType: 'text',
+    dataKey: 'brideNick',
+    placeholder: 'Contoh: Andini',
+  },
+  brideOrder: {
+    msgs: ['Putri ke-berapa dari siapa?'],
+    inputType: 'text',
+    dataKey: 'brideOrder',
+    placeholder: 'Contoh: Putri pertama dari Bapak Ahmad',
+  },
+  brideFather: {
+    msgs: ['Nama ayah mempelai wanita?'],
+    inputType: 'text',
+    dataKey: 'brideFather',
+    placeholder: 'Contoh: Bapak H. Bambang Wijaya',
+  },
+  brideMother: {
+    msgs: ['Nama ibu mempelai wanita?'],
+    inputType: 'text',
+    dataKey: 'brideMother',
+    placeholder: 'Contoh: Ibu Hj. Sri Wahyuni',
+  },
+  brideIG: {
+    msgs: ['Instagram mempelai wanita? (opsional, boleh skip)'],
+    inputType: 'text',
+    dataKey: 'brideIG',
+    placeholder: '@andiniputri',
+    optional: true,
+  },
+  groomName: {
+    msgs: ['Sekarang data *mempelai pria* ya! 🤵\n\nNama lengkapnya siapa?'],
+    inputType: 'text',
+    dataKey: 'groomName',
+    placeholder: 'Contoh: Reza Pratama Adiputra',
+  },
+  groomNick: {
+    msgs: ['Nama panggilannya?'],
+    inputType: 'text',
+    dataKey: 'groomNick',
+    placeholder: 'Contoh: Reza',
+  },
+  groomOrder: {
+    msgs: ['Putra ke-berapa dari siapa?'],
+    inputType: 'text',
+    dataKey: 'groomOrder',
+    placeholder: 'Contoh: Putra kedua dari Bapak Hendra',
+  },
+  groomFather: {
+    msgs: ['Nama ayah mempelai pria?'],
+    inputType: 'text',
+    dataKey: 'groomFather',
+    placeholder: 'Contoh: Bapak Drs. Hendra Adiputra',
+  },
+  groomMother: {
+    msgs: ['Nama ibu mempelai pria?'],
+    inputType: 'text',
+    dataKey: 'groomMother',
+    placeholder: 'Contoh: Ibu Dra. Siti Nurhayati',
+  },
+  groomIG: {
+    msgs: ['Instagram mempelai pria? (opsional, boleh skip)'],
+    inputType: 'text',
+    dataKey: 'groomIG',
+    placeholder: '@rezapratama',
+    optional: true,
+  },
+  weddingDate: {
+    msgs: ['Data mempelai lengkap! 🎊\n\n*Kapan hari pernikahannya?* 📅'],
+    inputType: 'date',
+    dataKey: 'weddingDate',
+  },
+  akadTime: {
+    msgs: ['Jam berapa *akad nikah* mulai dan selesai?\n\nFormat: HH:MM - HH:MM\nContoh: 08:00 - 10:00'],
+    inputType: 'text',
+    dataKey: 'akadTime',
+    placeholder: '08:00 - 10:00',
+  },
+  akadVenue: {
+    msgs: ['Tempat akad nikahnya di mana?'],
+    inputType: 'text',
+    dataKey: 'akadVenue',
+    placeholder: 'Contoh: Masjid Istiqlal',
+  },
+  akadAddress: {
+    msgs: ['Alamat lengkap tempat akad?'],
+    inputType: 'text',
+    dataKey: 'akadAddress',
+    placeholder: 'Contoh: Jl. Taman Wijaya Kusuma, Jakarta Pusat',
+  },
+  akadMaps: {
+    msgs: ['Link Google Maps akad? (opsional, boleh skip)'],
+    inputType: 'text',
+    dataKey: 'akadMaps',
+    placeholder: 'https://maps.google.com/...',
+    optional: true,
+  },
+  resepsiSame: {
+    msgs: ['Apakah resepsi di tempat yang *sama* dengan akad?'],
+    inputType: 'qr',
+    qrOptions: ['✅ Ya, sama', '📍 Beda tempat'],
+  },
+  resepsiTime: {
+    msgs: ['Jam berapa *resepsi* mulai dan selesai?\n\nFormat: HH:MM - HH:MM'],
+    inputType: 'text',
+    dataKey: 'resepsiTime',
+    placeholder: '11:00 - 15:00',
+  },
+  resepsiVenue: {
+    msgs: ['Nama tempat resepsinya?'],
+    inputType: 'text',
+    dataKey: 'resepsiVenue',
+    placeholder: 'Contoh: Hotel Mulia Ballroom',
+  },
+  resepsiAddress: {
+    msgs: ['Alamat lengkap tempat resepsi?'],
+    inputType: 'text',
+    dataKey: 'resepsiAddress',
+    placeholder: 'Contoh: Jl. Asia Afrika No.8, Senayan, Jakarta',
+  },
+  resepsiMaps: {
+    msgs: ['Link Google Maps resepsi? (opsional, boleh skip)'],
+    inputType: 'text',
+    dataKey: 'resepsiMaps',
+    placeholder: 'https://maps.google.com/...',
+    optional: true,
+  },
+  buyerContact: {
+    msgs: ['Hampir selesai! 🎉\n\nNomor *WhatsApp* kamu berapa? (untuk pengiriman link aktif)'],
+    inputType: 'tel',
+    dataKey: 'buyerContact',
+    placeholder: '08xxxxxxxxxx',
+  },
+  buyerIG: {
+    msgs: ['Instagram kamu? (opsional, untuk follow-up jika perlu)'],
+    inputType: 'text',
+    dataKey: 'buyerInstagram',
+    placeholder: '@namakamu',
+    optional: true,
+  },
+  pickPaket: {
+    msgs: ['*Step 3 dari 5:* Pilih paket yang sesuai kebutuhan kalian! 👇'],
+    inputType: 'paket',
+  },
+  premiumPhoto: {
+    msgs: ['Keren! Pilih Premium 👑\n\nSekarang, punya *foto couple* untuk cover undangan?\n\nCara dapat link:\n1. Upload foto ke Google Drive\n2. Klik kanan → "Dapatkan link"\n3. Ubah ke "Siapa saja yang punya link"\n4. Salin & paste di sini\n\n(Opsional, boleh skip jika belum ada)'],
+    inputType: 'text',
+    dataKey: 'couplePhotoUrl',
+    placeholder: 'https://drive.google.com/file/d/...',
+    optional: true,
+  },
+  premiumGallery: {
+    msgs: ['Mau tambahkan *foto galeri*? (maks. 4 foto)\n\nPaste link Google Drive/Instagram foto pertama:\n(Boleh skip jika tidak mau)'],
+    inputType: 'text',
+    dataKey: 'galleryPhoto1',
+    placeholder: 'https://drive.google.com/...',
+    optional: true,
+  },
+  preview: {
+    msgs: null, // generated dynamically
+    inputType: 'qr',
+    qrOptions: ['✅ Data sudah benar, lanjut!', '✏️ Edit data'],
+  },
+  payment: {
+    msgs: null, // generated dynamically
+    inputType: 'qr',
+    qrOptions: ['✅ Sudah transfer, kirim order!'],
+  },
+  submitted: {
+    msgs: null,
+    inputType: 'none',
+  },
+};
+
+// Step order
+const STEP_ORDER_STANDARD = [
+  'start', 'pickTheme',
+  'brideName', 'brideNick', 'brideOrder', 'brideFather', 'brideMother', 'brideIG',
+  'groomName', 'groomNick', 'groomOrder', 'groomFather', 'groomMother', 'groomIG',
+  'weddingDate', 'akadTime', 'akadVenue', 'akadAddress', 'akadMaps',
+  'resepsiSame',
+  'buyerContact', 'buyerIG',
+  'pickPaket', 'preview', 'payment', 'submitted'
+];
+const STEP_ORDER_PREMIUM_EXTRA = ['premiumPhoto', 'premiumGallery'];
+
+// ============ UTILS ============
+function getTime() {
+  return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function scrollToBottom() {
+  setTimeout(() => {
+    const area = document.getElementById('chatArea');
+    area.scrollTop = area.scrollHeight;
+  }, 50);
+}
+
+function setProgress(pct) {
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function formatRp(n) {
+  return 'Rp ' + n.toLocaleString('id-ID');
+}
+
+function markdownToHtml(text) {
+  return text
+    .replace(/\*([^*]+)\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+}
+
+// ============ CHAT RENDER ============
+function addBotBubble(html, extraEl = null, delay = 0) {
+  return new Promise(resolve => {
+    // Show typing first
+    const typingRow = document.createElement('div');
+    typingRow.className = 'typing-row';
+    typingRow.innerHTML = `
+      <div class="bot-ava">💌</div>
+      <div class="typing-bubble">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>`;
+    const area = document.getElementById('chatArea');
+    const bottom = document.getElementById('chatBottom');
+    area.insertBefore(typingRow, bottom);
+    scrollToBottom();
+
+    const typingTime = 600 + delay;
+    setTimeout(() => {
+      typingRow.remove();
+
+      const row = document.createElement('div');
+      row.className = 'msg-row bot';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble bot';
+      bubble.innerHTML = markdownToHtml(html);
+
+      const wrap = document.createElement('div');
+      wrap.style.maxWidth = '82%';
+      wrap.appendChild(bubble);
+      if (extraEl) wrap.appendChild(extraEl);
+
+      const timeEl = document.createElement('div');
+      timeEl.className = 'bubble-time';
+      timeEl.textContent = getTime();
+      wrap.appendChild(timeEl);
+
+      row.innerHTML = `<div class="bot-ava">💌</div>`;
+      row.appendChild(wrap);
+      area.insertBefore(row, bottom);
+      scrollToBottom();
+      resolve();
+    }, typingTime);
+  });
+}
+
+function addUserBubble(text) {
+  const area = document.getElementById('chatArea');
+  const bottom = document.getElementById('chatBottom');
+  const row = document.createElement('div');
+  row.className = 'msg-row user';
+  row.innerHTML = `
+    <div style="max-width:78%;">
+      <div class="bubble user">${markdownToHtml(text)}</div>
+      <div class="bubble-time">${getTime()} ✓✓</div>
+    </div>`;
+  area.insertBefore(row, bottom);
+  scrollToBottom();
+}
+
+// ============ INPUT CONTROLS ============
+function showInput(type, placeholder = '') {
+  const input = document.getElementById('chatInput');
+  const inputArea = document.getElementById('inputArea');
+  const qr = document.getElementById('quickReplies');
+  const themes = document.getElementById('themeOptions');
+  const pakets = document.getElementById('paketOptions');
+
+  qr.style.display = 'none';
+  themes.style.display = 'none';
+  pakets.style.display = 'none';
+  inputArea.style.display = 'flex';
+
+  if (type === 'none') {
+    inputArea.style.display = 'none';
+    return;
   }
 
-  function removeLsEntry(btn) {
-    var entry = btn.closest('.ls-entry');
-    if (entry) {
-      entry.remove();
-      // Re-number remaining labels
-      var entries = document.querySelectorAll('#lsContainer .ls-entry');
-      entries.forEach(function(e, i) {
-        var lbl = e.querySelector('.ls-num');
-        if (lbl) lbl.textContent = 'CERITA ' + (i + 1);
-      });
-      updateLsAddBtn();
-      updatePreview();
-    }
+  input.placeholder = placeholder || 'Ketik pesan...';
+  input.type = type === 'tel' ? 'tel' : 'text';
+  input.inputMode = type === 'tel' ? 'numeric' : (type === 'date' ? 'none' : 'text');
+
+  if (type === 'date') {
+    input.placeholder = 'Contoh: 15 Agustus 2025';
+    input.inputMode = 'text';
   }
 
-  function updateLsAddBtn() {
-    var container = document.getElementById('lsContainer');
-    var btn = document.getElementById('lsAddBtn');
-    if (!container || !btn) return;
-    var count = container.querySelectorAll('.ls-entry').length;
-    btn.disabled = count >= 4;
-    btn.style.opacity = count >= 4 ? '0.35' : '1';
-    btn.style.cursor = count >= 4 ? 'default' : 'pointer';
+  if (type === 'qr') {
+    inputArea.style.display = 'none';
   }
-
-  // Map tema -> file HTML (link langsung tanpa router redirect = lebih cepat)
-  const THEME_FILE_MAP = {
-    'royal-classic': 'tema-royal.html',
-    'sunset-bloom': 'tema-bloom.html',
-    'adat-jawa': 'tema-jawa.html',
-  };
-  
-  // Helper: dapatkan file path tema (relative)
-  function getThemeFile(theme) {
-    return './' + (THEME_FILE_MAP[theme] || 'tema-royal.html');
+  if (type === 'theme') {
+    inputArea.style.display = 'none';
   }
-  
-  // Helper: bangun URL link aktif (absolute) — untuk dishare ke tamu
-  // Helper: bangun URL live via static endpoint /u/:id (instant render, no loading)
-  function buildLiveUrl(orderId, theme) {
-    return `${BOT_API_URL}/u/${encodeURIComponent(orderId)}`;
+  if (type === 'paket') {
+    inputArea.style.display = 'none';
   }
-  
-  // ============ STATE ============
-  let currentStep = 1;
-  let selectedTheme = 'royal-classic';
-  let selectedPaket = 'standard';
-  let currentOrderId = null;
-  let pollingInterval = null;
+}
 
-  // Urutan step dinamis: step 3b hanya muncul kalau premium
-  function getStepOrder() {
-    return selectedPaket === 'premium'
-      ? [1, 2, 3, '3b', 4, 5]
-      : [1, 2, 3, 4, 5];
-  }
-  
-  const PRICES = { standard: 29000, premium: 49000 };
-  const PAKET_LABEL = { standard: 'Standard', premium: 'Premium 👑' };
-  const TEMA_LABEL = {
-    'royal-classic': 'Royal Classic',
-    'sunset-bloom': 'Sunset Bloom',
-    'adat-jawa': 'Adat Jawa',
-  };
-  
-  // ============ STEP NAVIGATION ============
-  // Format jam HH:MM otomatis
-  function formatJam(input) {
-    let v = input.value.replace(/\D/g, '');
-    if (v.length >= 3) v = v.slice(0, 2) + ':' + v.slice(2, 4);
-    if (v.length === 5) {
-      const h = parseInt(v.slice(0, 2));
-      const m = parseInt(v.slice(3, 5));
-      if (h > 23) v = '23' + v.slice(2);
-      if (m > 59) v = v.slice(0, 3) + '59';
-    }
-    input.value = v;
-    updatePreview();
-  }
-
-  // Sumber pembelian toggle
-  let sumberPembelian = 'transfer';
-  function setSumber(s) {
-    sumberPembelian = s;
-    const btnTransfer = document.getElementById('srcTransfer');
-    const btnEcom = document.getElementById('srcEcommerce');
-    const panelTransfer = document.getElementById('panelTransfer');
-    const panelEcom = document.getElementById('panelEcommerce');
-    if (s === 'transfer') {
-      btnTransfer.style.borderColor = 'var(--accent)';
-      btnTransfer.style.background = 'rgba(212,175,108,0.12)';
-      btnTransfer.style.color = 'var(--accent)';
-      btnEcom.style.borderColor = 'rgba(212,175,108,0.25)';
-      btnEcom.style.background = 'transparent';
-      btnEcom.style.color = 'var(--text-dim)';
-      panelTransfer.style.display = 'block';
-      panelEcom.style.display = 'none';
-    } else {
-      btnEcom.style.borderColor = '#25d366';
-      btnEcom.style.background = 'rgba(37,211,102,0.08)';
-      btnEcom.style.color = '#25d366';
-      btnTransfer.style.borderColor = 'rgba(212,175,108,0.25)';
-      btnTransfer.style.background = 'transparent';
-      btnTransfer.style.color = 'var(--text-dim)';
-      panelEcom.style.display = 'block';
-      panelTransfer.style.display = 'none';
-    }
-    // Update teks tombol sesuai sumber
-    const nextBtn = document.getElementById('nextBtn');
-    if (currentStep === 5) {
-      nextBtn.textContent = s === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
-    }
-  }
-
-  function changeStep(n) {
-    // Stop music preview if leaving step 2
-    if (currentStep === 2 && n !== 2 && musicPlaying) {
-      const audio = document.getElementById('musicPreviewAudio');
-      if (audio) { audio.pause(); audio.currentTime = 0; }
-      musicPlaying = false;
-      const btn = document.getElementById('musicPlayBtn');
-      if (btn) btn.textContent = '▶';
-    }
-
-    // Sembunyikan step aktif
-    document.getElementById(`step-${currentStep}`).classList.remove('active');
-    const pill = document.getElementById(`pill-${currentStep}`);
-    if (pill) {
-      const order = getStepOrder();
-      const prevIdx = order.indexOf(currentStep);
-      const nextIdx = order.indexOf(n);
-      if (nextIdx > prevIdx) pill.classList.add('done');
-      else pill.classList.remove('done');
-    }
-
-    currentStep = n;
-    document.getElementById(`step-${currentStep}`).classList.add('active');
-    const newPill = document.getElementById(`pill-${currentStep}`);
-    if (newPill) {
-      newPill.classList.add('active');
-      newPill.classList.remove('done');
-    }
-
-    document.getElementById('prevBtn').style.display = currentStep !== 1 ? 'block' : 'none';
-
-    const nextBtn = document.getElementById('nextBtn');
-    if (currentStep === 5) {
-      nextBtn.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
-      nextBtn.onclick = submitOrder;
-    } else {
-      nextBtn.textContent = 'Lanjut →';
-      nextBtn.onclick = nextStep;
-      nextBtn.disabled = false;
-    }
-
-    // Update preview saat masuk step 4
-    if (n === 4) updatePreview();
-    // Update summary saat masuk step 5
-    if (n === 5) updateSummary();
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-  
-  function nextStep() {
-    const order = getStepOrder();
-    const idx = order.indexOf(currentStep);
-    if (idx < order.length - 1) changeStep(order[idx + 1]);
-  }
-
-  function prevStep() {
-    const order = getStepOrder();
-    const idx = order.indexOf(currentStep);
-    if (idx > 0) changeStep(order[idx - 1]);
-  }
-  
-  // ============ THEME & PAKET ============
-  function selectTheme(theme) {
-    selectedTheme = theme;
-    document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
-    document.querySelector(`[data-theme="${theme}"]`).classList.add('selected');
-    
-    // Auto-suggest best music for this theme
-    const themeMusicMap = {
-      'royal-classic': 'piano-elegant',
-      'sunset-bloom': 'acoustic-love',
-      'adat-jawa': 'javanese-gamelan',
+function showQR(options) {
+  const qr = document.getElementById('quickReplies');
+  qr.innerHTML = '';
+  qr.style.display = 'flex';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'qr-btn';
+    btn.textContent = opt;
+    btn.onclick = () => {
+      handleQR(opt);
     };
-    const suggested = themeMusicMap[theme];
-    const musicSelect = document.getElementById('musicChoice');
-    if (suggested && musicSelect) {
-      musicSelect.value = suggested;
-      updateMusicPreview();
+    qr.appendChild(btn);
+  });
+  scrollToBottom();
+}
+
+function hideQR() {
+  document.getElementById('quickReplies').style.display = 'none';
+  document.getElementById('themeOptions').style.display = 'none';
+  document.getElementById('paketOptions').style.display = 'none';
+}
+
+function showThemes() {
+  const el = document.getElementById('themeOptions');
+  el.style.display = 'flex';
+  el.innerHTML = `
+    <div class="theme-opt" onclick="handleTheme('royal-classic')">
+      <div class="theme-opt-thumb royal">👑</div>
+      <div class="theme-opt-info">
+        <div class="theme-opt-name">Royal Classic</div>
+        <div class="theme-opt-tag">Mewah · Elegan · Formal</div>
+      </div>
+      <div class="theme-opt-arrow">›</div>
+    </div>
+    <div class="theme-opt" onclick="handleTheme('sunset-bloom')">
+      <div class="theme-opt-thumb bloom">🌸</div>
+      <div class="theme-opt-info">
+        <div class="theme-opt-name">Sunset Bloom</div>
+        <div class="theme-opt-tag">Hangat · Romantis · Soft</div>
+      </div>
+      <div class="theme-opt-arrow">›</div>
+    </div>
+    <div class="theme-opt" onclick="handleTheme('adat-jawa')">
+      <div class="theme-opt-thumb jawa">🌿</div>
+      <div class="theme-opt-info">
+        <div class="theme-opt-name">Adat Jawa</div>
+        <div class="theme-opt-tag">Klasik · Tradisional · Elegan</div>
+      </div>
+      <div class="theme-opt-arrow">›</div>
+    </div>
+  `;
+  scrollToBottom();
+}
+
+function showPakets() {
+  const el = document.getElementById('paketOptions');
+  el.style.display = 'flex';
+  el.innerHTML = `
+    <div class="paket-opt" onclick="handlePaket('standard')">
+      <div class="paket-opt-header"><span>🎀</span><span class="paket-opt-name">Standard</span></div>
+      <div class="paket-opt-price">Rp 29.000</div>
+      <div class="paket-opt-sub">Aktif 3 bulan</div>
+      <div class="paket-opt-features">
+        ✓ Nama mempelai & cover<br>
+        ✓ RSVP & ucapan tamu<br>
+        ✓ Countdown hari H<br>
+        ✓ Amplop digital (2 rekening)<br>
+        ✓ Musik auto-play
+      </div>
+    </div>
+    <div class="paket-opt premium" onclick="handlePaket('premium')">
+      <div class="paket-opt-badge">✦ TERPOPULER</div>
+      <div class="paket-opt-header"><span>👑</span><span class="paket-opt-name">Premium</span></div>
+      <div class="paket-opt-price">Rp 49.000</div>
+      <div class="paket-opt-sub">Aktif 6 bulan — 2× lebih lama</div>
+      <div class="paket-opt-features">
+        ✓ Semua fitur Standard<br>
+        <span class="premium-feat">✦ Foto couple di cover<br>
+        ✦ Galeri foto (4 foto)<br>
+        ✦ Love Story timeline<br>
+        ✦ Prioritas konfirmasi &lt; 1 jam</span>
+      </div>
+    </div>
+  `;
+  scrollToBottom();
+}
+
+// ============ HANDLE INPUTS ============
+async function sendMsg() {
+  const input = document.getElementById('chatInput');
+  const val = input.value.trim();
+  if (!val) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  addUserBubble(val);
+  hideQR();
+  document.getElementById('inputArea').style.display = 'none';
+
+  await handleTextInput(val);
+}
+
+async function handleQR(option) {
+  addUserBubble(option);
+  hideQR();
+  document.getElementById('inputArea').style.display = 'none';
+
+  if (state.step === 'start') {
+    if (option.includes('Mulai')) {
+      await goStep('pickTheme');
+    } else {
+      await goStep('help');
     }
+  } else if (state.step === 'help') {
+    if (option.includes('Lanjut')) {
+      await goStep('pickTheme');
+    } else {
+      await addBotBubble('Silakan hubungi owner via Instagram ya! 👉 @willyanugrh');
+      showQR(['✨ Oke, mau lanjut pesan!']);
+    }
+  } else if (state.step === 'resepsiSame') {
+    if (option.includes('sama')) {
+      // Copy akad data to resepsi
+      state.data.resepsiVenue = state.data.akadVenue;
+      state.data.resepsiAddress = state.data.akadAddress;
+      state.data.resepsiMaps = state.data.akadMaps || '';
+      await addBotBubble('Oke, resepsi di tempat yang sama! 👍\n\nJam berapa resepsi mulai dan selesai?\nFormat: HH:MM - HH:MM');
+      showInput('text', '11:00 - 15:00');
+      document.getElementById('inputArea').style.display = 'flex';
+      state.step = 'resepsiTimeOnly';
+    } else {
+      await goStep('resepsiTime');
+    }
+  } else if (state.step === 'preview') {
+    if (option.includes('benar')) {
+      await goStep('payment');
+    } else {
+      await addBotBubble('Oke! Data mana yang mau diedit? Ketik bagian yang mau diubah (misal: "nama mempelai wanita" atau "tanggal")');
+      showInput('text', 'Ketik bagian yang ingin diedit...');
+      document.getElementById('inputArea').style.display = 'flex';
+      state.step = 'edit';
+    }
+  } else if (state.step === 'payment') {
+    await submitOrder();
   }
-  
-  function selectPaket(paket) {
-    selectedPaket = paket;
-    document.querySelectorAll('.paket-card').forEach(c => c.classList.remove('selected'));
-    document.querySelector(`[data-paket="${paket}"]`).classList.add('selected');
-  }
-  
-  // ============ MUSIC OPTIONS ============
-  const MUSIC_BASE_URL = 'https://undanganku-web.vercel.app/music/';
-  const MUSIC_OPTIONS = {
-    'piano-elegant':   { label: 'Piano Elegant',    file: 'piano-elegant.mp3' },
-    'acoustic-love':   { label: 'Acoustic Love',    file: 'acoustic-love.mp3' },
-    'javanese-gamelan':{ label: 'Gamelan Jawa',     file: 'javanese-gamelan.mp3' },
+}
+
+async function handleTheme(theme) {
+  state.selectedTheme = theme;
+  const label = TEMA_LABEL[theme];
+  addUserBubble('🎨 ' + label);
+  hideQR();
+  document.getElementById('inputArea').style.display = 'none';
+
+  // Show preview option
+  const previewBtn = document.createElement('button');
+  previewBtn.style.cssText = 'margin-top:8px; background:rgba(212,175,108,0.08); border:1px solid rgba(212,175,108,0.3); color:var(--accent); padding:8px 16px; border-radius:8px; font-size:12px; cursor:pointer; font-family:inherit; width:100%;';
+  previewBtn.textContent = '👁️ Lihat preview tema';
+  previewBtn.onclick = () => {
+    const themeFile = './' + (THEME_FILE_MAP[theme] || 'tema-royal.html');
+    window.open(themeFile, '_blank');
   };
 
-  let musicPlaying = false;
+  await addBotBubble(`Tema *${label}* dipilih! ✨`, previewBtn);
+  setProgress(20);
+  await goStep('brideName');
+}
 
-  function getMusicUrl() {
-    const choice = document.getElementById('musicChoice')?.value || 'piano-elegant';
-    const opt = MUSIC_OPTIONS[choice];
-    return opt ? MUSIC_BASE_URL + opt.file : MUSIC_BASE_URL + 'piano-elegant.mp3';
-  }
+async function handlePaket(paket) {
+  state.selectedPaket = paket;
+  const isPremium = paket === 'premium';
+  addUserBubble(isPremium ? '👑 Premium' : '🎀 Standard');
+  hideQR();
+  document.getElementById('inputArea').style.display = 'none';
 
-  function updateMusicPreview() {
-    const choice = document.getElementById('musicChoice').value;
-    const opt = MUSIC_OPTIONS[choice];
-    document.getElementById('musicPreviewName').textContent = opt ? opt.label : 'Romantic Piano';
-    // Stop current preview if playing
-    const audio = document.getElementById('musicPreviewAudio');
-    if (audio && musicPlaying) {
-      audio.pause();
-      audio.currentTime = 0;
-      musicPlaying = false;
-      document.getElementById('musicPlayBtn').textContent = '▶';
-    }
-    // Update audio source
-    if (audio) audio.src = getMusicUrl();
-    updatePreview();
-  }
-
-  function toggleMusicPreview() {
-    const audio = document.getElementById('musicPreviewAudio');
-    const btn = document.getElementById('musicPlayBtn');
-    if (!audio) return;
-    if (!audio.src || audio.src === window.location.href) {
-      audio.src = getMusicUrl();
-    }
-    if (musicPlaying) {
-      audio.pause();
-      btn.textContent = '▶';
-      musicPlaying = false;
-    } else {
-      audio.play().then(() => {
-        btn.textContent = '⏸';
-        musicPlaying = true;
-      }).catch(() => {
-        showToast('Tidak bisa memutar audio', 'error');
-      });
-    }
-  }
-
-  // Stop music preview when leaving step 2
-  const origChangeStep = changeStep;
-
-  // ============ DATA COLLECTION ============
-  function collectFormData() {
-    const v = (id) => document.getElementById(id)?.value || '';
-    
-    return {
-      musicUrl: getMusicUrl(),
-      brideName: v('brideName'),
-      brideNick: v('brideNick'),
-      brideOrder: v('brideOrder'),
-      brideFather: v('brideFather'),
-      brideMother: v('brideMother'),
-      brideIG: v('brideIG'),
-      
-      groomName: v('groomName'),
-      groomNick: v('groomNick'),
-      groomOrder: v('groomOrder'),
-      groomFather: v('groomFather'),
-      groomMother: v('groomMother'),
-      groomIG: v('groomIG'),
-      
-      weddingDate: v('weddingDate'),
-      akadStart: v('akadStart'),
-      akadEnd: v('akadEnd'),
-      akadVenue: v('akadVenue'),
-      akadAddress: v('akadAddress'),
-      akadMaps: v('akadMaps'),
-      
-      resepsiStart: v('resepsiStart'),
-      resepsiEnd: v('resepsiEnd'),
-      resepsiVenue: v('resepsiVenue'),
-      resepsiAddress: v('resepsiAddress'),
-      resepsiMaps: v('resepsiMaps'),
-      
-      quoteArabic: v('quoteArabic'),
-      quoteText: v('quoteText'),
-      quoteSource: v('quoteSource'),
-      
-      bank1Name: v('bank1Name'),
-      bank1Num: v('bank1Num'),
-      bank1Holder: v('bank1Holder'),
-      bank2Name: v('bank2Name'),
-      bank2Num: v('bank2Num'),
-      bank2Holder: v('bank2Holder'),
-
-      // ===== PREMIUM FIELDS =====
-      couplePhotoUrl: v('couplePhotoUrl'),
-
-      galleryPhotos: [
-        v('galleryPhoto1'),
-        v('galleryPhoto2'),
-        v('galleryPhoto3'),
-        v('galleryPhoto4'),
-      ].filter(Boolean),
-
-      loveStory: (function() {
-        var entries = document.querySelectorAll('#lsContainer .ls-entry');
-        var result = [];
-        entries.forEach(function(entry) {
-          var year = (entry.querySelector('.ls-year').value || '').trim();
-          var title = (entry.querySelector('.ls-title').value || '').trim();
-          var story = (entry.querySelector('.ls-story').value || '').trim();
-          if (year || title || story) result.push({ year: year, title: title, story: story });
-        });
-        return result;
-      })(),
-    };
-  }
-  
-  // ============ PREVIEW ============
-  function updatePreview() {
-    // Update ringkasan di step 4
-    const data = collectFormData();
-    const el = (id) => document.getElementById(id);
-    if (!el('prevTheme')) return;
-    el('prevTheme').textContent = TEMA_LABEL[selectedTheme] || selectedTheme;
-    el('prevBride').textContent = data.brideName || '—';
-    el('prevGroom').textContent = data.groomName || '—';
-    el('prevDate').textContent = data.weddingDate 
-      ? new Date(data.weddingDate).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })
-      : '—';
-    el('prevAkad').textContent = data.akadVenue 
-      ? `${data.akadStart}–${data.akadEnd} · ${data.akadVenue}` : '—';
-    el('prevResepsi').textContent = data.resepsiVenue 
-      ? `${data.resepsiStart}–${data.resepsiEnd} · ${data.resepsiVenue}` : '—';
-  }
-
-  function openPreviewTab() {
-    const data = collectFormData();
-    const payload = encodeURIComponent(JSON.stringify({
-      theme: selectedTheme,
-      paket: selectedPaket,
-      isPreview: true,
-      watermark: true,
-      data: data,
-    }));
-    // Buka tema file LANGSUNG dengan hash (no router redirect = instan)
-    const themeFile = getThemeFile(selectedTheme);
-    const url = `${themeFile}#${payload}`;
-    window.open(url, '_blank');
-  }
-  
-  // ============ SUMMARY ============
-  function updateSummary() {
-    const data = collectFormData();
-    const bride = data.brideNick || data.brideName.split(' ')[0] || '—';
-    const groom = data.groomNick || data.groomName.split(' ')[0] || '—';
-    
-    document.getElementById('sumTheme').textContent = TEMA_LABEL[selectedTheme];
-    document.getElementById('sumNames').textContent = `${bride} & ${groom}`;
-    document.getElementById('sumDate').textContent = data.weddingDate || '—';
-    document.getElementById('sumPaket').textContent = PAKET_LABEL[selectedPaket];
-    document.getElementById('sumTotal').textContent = `Rp ${PRICES[selectedPaket].toLocaleString('id-ID')}`;
-  }
-  
-  // ============ COPY ============
-  function copy(text, btn) {
-    navigator.clipboard?.writeText(text);
-    const orig = btn.textContent;
-    btn.textContent = '✓';
-    setTimeout(() => btn.textContent = orig, 1200);
-    showToast('Tersalin!', 'success');
-  }
-  
-  // ============ TOAST ============
-  function showToast(text, type = '') {
-    const toast = document.getElementById('toast');
-    toast.textContent = text;
-    toast.className = `toast show ${type}`;
-    setTimeout(() => toast.classList.remove('show'), 3000);
-  }
-  
-  // ============ SUBMIT ORDER ============
-  async function submitOrder() {
-    const data = collectFormData();
-    const buyerContact = document.getElementById('buyerContact').value.trim();
-    const buyerInstagram = document.getElementById('buyerInstagram')?.value.trim() || '';
-    
-    // Validasi kontak WA wajib diisi
-    if (!buyerContact) {
-      showToast('Isi nomor WhatsApp dulu ya', 'error');
-      return;
-    }
-    
-    // Validasi
-    if (!data.brideName || !data.groomName) {
-      showToast('Isi nama mempelai dulu ya', 'error');
-      changeStep(2);
-      return;
-    }
-    
-    const btn = document.getElementById('nextBtn');
-    btn.disabled = true;
-    btn.textContent = '⏳ Mengirim...';
-    
-    try {
-      const response = await fetch(`${BOT_API_URL}/orders/new`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          theme: selectedTheme,
-          paket: selectedPaket,
-          buyerContact: buyerContact,
-          buyerInstagram: buyerInstagram,
-          sumber: sumberPembelian,
-          ...data,
-        }),
-      });
-      
-      const result = await response.json();
-      
-      if (result.ok && result.orderId) {
-        currentOrderId = result.orderId;
-        // Simpan order ID + theme (theme dibutuhkan saat restore polling utk build link benar)
-        localStorage.setItem('undanganku_order', result.orderId);
-        localStorage.setItem('undanganku_theme', selectedTheme);
-        showToast('Pesanan terkirim ke owner!', 'success');
-        
-        // Tampilkan order status card
-        document.getElementById('orderStatusCard').classList.add('show');
-        document.getElementById('orderIdDisplay').textContent = result.orderId;
-        document.getElementById('statusDetail').innerHTML = 
-          'Owner sudah mendapat notifikasi via Telegram. Halaman ini akan otomatis update saat pesanan dikonfirmasi.<br><br>Simpan Order ID di atas untuk referensi.';
-        
-        btn.style.display = 'none';
-        document.getElementById('prevBtn').style.display = 'none';
-        
-        startPolling(result.orderId);
-      } else {
-        showToast('Gagal: ' + (result.error || 'Unknown error'), 'error');
-        btn.disabled = false;
-        btn.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
-      }
-    } catch (err) {
-      showToast('Tidak bisa terhubung ke server bot', 'error');
-      btn.disabled = false;
-      btn.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
-      console.error(err);
-    }
-  }
-  
-  // ============ POLLING STATUS ============
-  function startPolling(orderId) {
-    pollingInterval = setInterval(async () => {
-      try {
-        const response = await fetch(`${BOT_API_URL}/orders/status/${orderId}`);
-        const result = await response.json();
-        
-        if (result.ok) {
-          updateStatusUI(result.status);
-          if (result.status === 'paid' || result.status === 'rejected') {
-            clearInterval(pollingInterval);
-            localStorage.removeItem('undanganku_order');
-            localStorage.removeItem('undanganku_theme');
-          }
-        }
-      } catch (err) {
-        console.error('Polling error:', err);
-      }
-    }, 5000);
-  }
-  
-  function updateStatusUI(status) {
-    const pill = document.getElementById('statusPill');
-    const text = document.getElementById('statusText');
-    const detail = document.getElementById('statusDetail');
-    
-    pill.className = 'status-pill ' + status;
-    
-    if (status === 'pending') {
-      text.textContent = 'Menunggu konfirmasi owner...';
-    } else if (status === 'paid') {
-      pill.innerHTML = `<span style="font-size:14px;">✅</span> <span>Terkonfirmasi</span>`;
-      
-      // Link langsung ke tema file (no router redirect = lebih cepat untuk tamu)
-      const liveUrl = buildLiveUrl(currentOrderId, selectedTheme);
-      
-      detail.innerHTML = `
-        🎉 <strong style="color:var(--success);">Pembayaran terkonfirmasi!</strong><br><br>
-        Link undangan kamu sudah aktif tanpa watermark:<br>
-        <a href="${liveUrl}" target="_blank" style="color:var(--accent); word-break: break-all; display:inline-block; margin-top:8px;">${liveUrl}</a><br><br>
-        <button class="copy-mini" style="margin-top:8px;" onclick="copyLiveUrl(this)">SALIN LINK</button>
-      `;
-      // Simpan link untuk tombol copy (hindari escape issue di onclick string)
-      window._liveUrlForCopy = liveUrl;
-      showToast('🎉 Undangan aktif!', 'success');
-    } else if (status === 'rejected') {
-      pill.innerHTML = `<span style="font-size:14px;">❌</span> <span>Ditolak</span>`;
-      detail.innerHTML = 'Pembayaran ditolak. Silakan hubungi owner via Instagram di bawah untuk klarifikasi.';
-    }
-  }
-  
-  // Helper terpisah untuk copy live URL (lebih aman dari escape issue)
-  function copyLiveUrl(btn) {
-    const url = window._liveUrlForCopy || '';
-    navigator.clipboard?.writeText(url);
-    const orig = btn.textContent;
-    btn.textContent = '✓ TERSALIN';
-    setTimeout(() => btn.textContent = orig, 1500);
-    showToast('Link tersalin!', 'success');
-  }
-  
-  // ============ CHECK EXISTING ORDER (URL param atau localStorage) ============
-  // ============ AUTO-SELECT PAKET FROM URL ============
-  // Init love story with 1 entry
-  addLsEntry();
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const paramPaket = urlParams.get('paket');
-  if (paramPaket && PRICES[paramPaket]) {
-    selectPaket(paramPaket);
-  }
-
-  // ===== OPSI 4: Kontrol sumber via ?src= =====
-  const paramSrc = urlParams.get('src');
-  const isMarketplace = paramSrc === 'shopee' || paramSrc === 'tokped';
-  const btnTransferEl = document.getElementById('srcTransfer');
-  const btnEcomEl = document.getElementById('srcEcommerce');
-  const toggleWrap = document.getElementById('sumberToggleWrap');
-
-  if (isMarketplace) {
-    // Dari Shopee/Tokped — sembunyikan Transfer, auto-select E-Commerce
-    btnTransferEl.style.display = 'none';
-    toggleWrap.style.gridTemplateColumns = '1fr';
-    setSumber('ecommerce');
+  setProgress(70);
+  if (isPremium) {
+    await goStep('premiumPhoto');
   } else {
-    // URL biasa (IG, WA, dll) — sembunyikan E-Commerce, hanya Transfer
-    btnEcomEl.style.display = 'none';
-    toggleWrap.style.gridTemplateColumns = '1fr';
-    setSumber('transfer');
+    await goStep('preview');
   }
-  // ===== END OPSI 4 =====
+}
 
-  const existingOrder = urlParams.get('order') || localStorage.getItem('undanganku_order');
-  if (existingOrder) {
-    currentOrderId = existingOrder;
-    
-    // Restore theme dari localStorage (kalau ada) supaya buildLiveUrl benar
-    const savedTheme = localStorage.getItem('undanganku_theme');
-    if (savedTheme && THEME_FILE_MAP[savedTheme]) {
-      selectedTheme = savedTheme;
+async function handleTextInput(val) {
+  const step = state.step;
+  const stepDef = STEPS[step];
+
+  if (step === 'edit') {
+    await addBotBubble('Untuk edit data, silakan hubungi owner via WhatsApp ya setelah order masuk, atau mulai ulang dengan refresh halaman 😊');
+    await goStep('preview');
+    return;
+  }
+
+  if (step === 'resepsiTimeOnly') {
+    state.data.resepsiTime = val;
+    setProgress(60);
+    await goStep('buyerContact');
+    return;
+  }
+
+  if (stepDef && stepDef.dataKey) {
+    state.data[stepDef.dataKey] = val;
+  }
+
+  // Handle gallery extra photos
+  if (step === 'premiumGallery') {
+    if (val && !val.toLowerCase().includes('skip') && !val.toLowerCase().includes('ga') && val.length > 5) {
+      state.data.galleryPhoto1 = val;
+      state.galleryCount = 1;
+      await addBotBubble('Foto 1 tersimpan! 📸\n\nMau tambah foto 2? (Boleh skip)');
+      showInput('text', 'https://drive.google.com/... atau ketik "skip"');
+      document.getElementById('inputArea').style.display = 'flex';
+      state.step = 'gallery2';
+    } else {
+      await goStep('preview');
+    }
+    return;
+  }
+
+  if (step === 'gallery2') {
+    if (val && !val.toLowerCase().includes('skip') && val.length > 5) {
+      state.data.galleryPhoto2 = val;
+      await addBotBubble('Foto 2 tersimpan! 📸\n\nMau tambah foto 3? (Boleh skip)');
+      showInput('text', 'https://drive.google.com/... atau ketik "skip"');
+      document.getElementById('inputArea').style.display = 'flex';
+      state.step = 'gallery3';
+    } else {
+      await goStep('preview');
+    }
+    return;
+  }
+
+  if (step === 'gallery3') {
+    if (val && !val.toLowerCase().includes('skip') && val.length > 5) {
+      state.data.galleryPhoto3 = val;
+      await addBotBubble('Foto 3 tersimpan! 📸\n\nMau tambah foto 4? (Boleh skip)');
+      showInput('text', 'https://drive.google.com/... atau ketik "skip"');
+      document.getElementById('inputArea').style.display = 'flex';
+      state.step = 'gallery4';
+    } else {
+      await goStep('preview');
+    }
+    return;
+  }
+
+  if (step === 'gallery4') {
+    if (val && !val.toLowerCase().includes('skip') && val.length > 5) {
+      state.data.galleryPhoto4 = val;
+    }
+    await goStep('preview');
+    return;
+  }
+
+  // Advance to next step
+  const nextStep = getNextStep(step);
+  if (nextStep) {
+    await goStep(nextStep);
+  }
+}
+
+function getNextStep(currentStep) {
+  const order = STEP_ORDER_STANDARD;
+  const idx = order.indexOf(currentStep);
+  if (idx >= 0 && idx < order.length - 1) {
+    return order[idx + 1];
+  }
+  return null;
+}
+
+// ============ GO TO STEP ============
+async function goStep(stepKey) {
+  state.step = stepKey;
+  const stepDef = STEPS[stepKey];
+  if (!stepDef) return;
+
+  // Update progress
+  const progressMap = {
+    start: 0, pickTheme: 5,
+    brideName: 20, brideNick: 22, brideOrder: 24, brideFather: 26, brideMother: 28, brideIG: 30,
+    groomName: 35, groomNick: 37, groomOrder: 39, groomFather: 41, groomMother: 43, groomIG: 45,
+    weddingDate: 50, akadTime: 52, akadVenue: 54, akadAddress: 56, akadMaps: 58,
+    resepsiSame: 60, resepsiTime: 62, resepsiVenue: 63, resepsiAddress: 64, resepsiMaps: 65,
+    buyerContact: 68, buyerIG: 70,
+    pickPaket: 72, premiumPhoto: 76, premiumGallery: 80,
+    preview: 85, payment: 90, submitted: 100
+  };
+  if (progressMap[stepKey] !== undefined) setProgress(progressMap[stepKey]);
+
+  // Special: preview
+  if (stepKey === 'preview') {
+    await showPreview();
+    return;
+  }
+
+  // Special: payment
+  if (stepKey === 'payment') {
+    await showPayment();
+    return;
+  }
+
+  // Regular steps
+  if (stepDef.msgs) {
+    for (let i = 0; i < stepDef.msgs.length; i++) {
+      await addBotBubble(stepDef.msgs[i], null, i > 0 ? 300 : 0);
+    }
+  }
+
+  // Show input
+  if (stepDef.inputType === 'qr') {
+    showQR(stepDef.qrOptions);
+  } else if (stepDef.inputType === 'theme') {
+    showThemes();
+  } else if (stepDef.inputType === 'paket') {
+    showPakets();
+  } else if (stepDef.inputType === 'none') {
+    showInput('none');
+  } else {
+    showInput(stepDef.inputType, stepDef.placeholder || '');
+    document.getElementById('inputArea').style.display = 'flex';
+
+    // Add skip button for optional
+    if (stepDef.optional) {
+      const qr = document.getElementById('quickReplies');
+      qr.innerHTML = '';
+      qr.style.display = 'flex';
+      const skipBtn = document.createElement('button');
+      skipBtn.className = 'qr-btn';
+      skipBtn.textContent = 'Lewati (skip)';
+      skipBtn.onclick = async () => {
+        addUserBubble('Lewati');
+        hideQR();
+        document.getElementById('inputArea').style.display = 'none';
+        // Set empty
+        if (stepDef.dataKey) state.data[stepDef.dataKey] = '';
+        const nextStep = getNextStep(stepKey);
+        if (nextStep) await goStep(nextStep);
+      };
+      qr.appendChild(skipBtn);
     }
 
-    // Cek status dulu — kalau sudah paid/rejected, bersihkan localStorage
-    fetch(`${BOT_API_URL}/orders/status/${existingOrder}`)
-      .then(r => r.json())
-      .then(async (r) => {
-        if (!r.ok) {
-          // Order tidak ditemukan, bersihkan
+    setTimeout(() => document.getElementById('chatInput').focus(), 300);
+  }
+}
+
+// ============ PREVIEW ============
+async function showPreview() {
+  const d = state.data;
+  const bride = d.brideNick || d.brideName?.split(' ')[0] || '—';
+  const groom = d.groomNick || d.groomName?.split(' ')[0] || '—';
+
+  const summaryEl = document.createElement('div');
+  summaryEl.className = 'summary-bubble';
+  summaryEl.innerHTML = `
+    <div class="row"><span class="lbl">Tema</span><span class="val">${TEMA_LABEL[state.selectedTheme] || '—'}</span></div>
+    <div class="row"><span class="lbl">Mempelai Wanita</span><span class="val">${d.brideName || '—'}</span></div>
+    <div class="row"><span class="lbl">Mempelai Pria</span><span class="val">${d.groomName || '—'}</span></div>
+    <div class="row"><span class="lbl">Tanggal</span><span class="val">${d.weddingDate || '—'}</span></div>
+    <div class="row"><span class="lbl">Akad</span><span class="val">${d.akadVenue || '—'}</span></div>
+    <div class="row"><span class="lbl">Resepsi</span><span class="val">${d.resepsiVenue || d.akadVenue || '—'}</span></div>
+    <div class="row"><span class="lbl">Paket</span><span class="val">${state.selectedPaket === 'premium' ? 'Premium 👑' : 'Standard'}</span></div>
+    <div class="row total-row"><span class="lbl">Total</span><span class="val">${formatRp(PRICES[state.selectedPaket] || 29000)}</span></div>
+  `;
+
+  // Preview button
+  const previewBtn = document.createElement('button');
+  previewBtn.style.cssText = 'margin-top:10px; background:rgba(212,175,108,0.08); border:1px solid rgba(212,175,108,0.3); color:var(--accent); padding:10px; border-radius:10px; font-size:12px; cursor:pointer; font-family:inherit; width:100%; letter-spacing:0.5px;';
+  previewBtn.textContent = '👁️ Buka preview di tab baru';
+  previewBtn.onclick = () => {
+    const themeFile = './' + (THEME_FILE_MAP[state.selectedTheme] || 'tema-royal.html');
+    const payload = btoa(unescape(encodeURIComponent(JSON.stringify({
+      isPreview: true, watermark: true, data: buildFormData()
+    }))));
+    window.open(`${themeFile}#${payload}`, '_blank');
+  };
+  summaryEl.appendChild(previewBtn);
+
+  await addBotBubble(`*Step 4:* Cek dulu ya datanya! 👇\n\nSemua sudah sesuai?`, summaryEl);
+  showQR(['✅ Data sudah benar, lanjut!', '✏️ Edit data']);
+}
+
+// ============ PAYMENT ============
+async function showPayment() {
+  const price = PRICES[state.selectedPaket] || 29000;
+
+  const bankEl = document.createElement('div');
+  bankEl.innerHTML = `
+    <div class="bank-bubble">
+      <div>
+        <div class="bank-info-name">BCA — a/n Willy Anugrah</div>
+        <div class="bank-info-num">1234567890</div>
+      </div>
+      <button class="copy-btn" onclick="copyBank('1234567890')">SALIN</button>
+    </div>
+    <div class="bank-bubble" style="margin-top:6px;">
+      <div>
+        <div class="bank-info-name">GoPay / OVO / Dana</div>
+        <div class="bank-info-num">0812-3456-7890</div>
+      </div>
+      <button class="copy-btn" onclick="copyBank('081234567890')">SALIN</button>
+    </div>
+  `;
+
+  await addBotBubble(`*Step 5:* Hampir selesai! 🎉\n\nTransfer *${formatRp(price)}* ke salah satu rekening berikut:`, bankEl);
+  await addBotBubble(`Setelah transfer, tap tombol di bawah ya! Owner akan konfirmasi dan link undangan langsung aktif. 🔔`, null, 500);
+  showQR(['✅ Sudah transfer, kirim order!']);
+}
+
+// ============ SUBMIT ORDER ============
+async function submitOrder() {
+  hideQR();
+  document.getElementById('inputArea').style.display = 'none';
+  await addBotBubble('⏳ Mengirim pesanan...');
+
+  const formData = buildFormData();
+
+  try {
+    const response = await fetch(`${BOT_API_URL}/orders/new`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        theme: state.selectedTheme,
+        paket: state.selectedPaket,
+        buyerContact: state.data.buyerContact || '',
+        buyerInstagram: state.data.buyerInstagram || '',
+        sumber: state.sumber,
+        ...formData,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (result.ok && result.orderId) {
+      state.orderId = result.orderId;
+      localStorage.setItem('undanganku_order', result.orderId);
+      localStorage.setItem('undanganku_theme', state.selectedTheme);
+      await showOrderStatus(result.orderId);
+      startPolling(result.orderId);
+    } else {
+      await addBotBubble('❌ Gagal mengirim pesanan. Coba lagi ya!\n\n' + (result.error || ''));
+      showQR(['🔄 Coba lagi']);
+    }
+  } catch (err) {
+    await addBotBubble('❌ Tidak bisa terhubung ke server. Pastikan koneksi internet kamu aktif ya!');
+    showQR(['🔄 Coba lagi']);
+    console.error(err);
+  }
+}
+
+async function showOrderStatus(orderId) {
+  const statusEl = document.createElement('div');
+  statusEl.className = 'status-bubble';
+  statusEl.id = 'statusBubble';
+  statusEl.innerHTML = `
+    <div class="order-id-display">Order #${orderId}</div>
+    <div class="status-pill" id="statusPill">
+      <div class="pulse"></div>
+      <span id="statusText">Menunggu konfirmasi owner...</span>
+    </div>
+    <div class="status-detail" id="statusDetail">
+      Owner sudah mendapat notifikasi via Telegram. Halaman ini otomatis update saat pesanan dikonfirmasi. 🔔
+    </div>
+  `;
+
+  await addBotBubble('🎉 *Pesanan berhasil dikirim!*\n\nOwner akan segera konfirmasi:', statusEl);
+  setProgress(100);
+  showInput('none');
+}
+
+function updateStatusUI(status, orderId) {
+  const pill = document.getElementById('statusPill');
+  const text = document.getElementById('statusText');
+  const detail = document.getElementById('statusDetail');
+  if (!pill) return;
+
+  if (status === 'paid') {
+    pill.className = 'status-pill paid';
+    pill.innerHTML = `<span>✅</span> <span>Terkonfirmasi!</span>`;
+    const liveUrl = `${BOT_API_URL}/u/${encodeURIComponent(orderId)}`;
+    window._liveUrl = liveUrl;
+    detail.innerHTML = `
+      🎉 Pembayaran terkonfirmasi!<br><br>
+      Link undangan kamu sudah aktif:<br>
+      <a href="${liveUrl}" target="_blank" class="link-aktif">${liveUrl}</a><br>
+      <button class="copy-link-btn" onclick="copyLiveUrl()">📋 Salin Link Undangan</button>
+    `;
+    showToast('🎉 Undangan aktif!', 'success');
+  } else if (status === 'rejected') {
+    pill.className = 'status-pill rejected';
+    pill.innerHTML = `<span>❌</span> <span>Ditolak</span>`;
+    detail.textContent = 'Pembayaran ditolak. Hubungi owner via Instagram @willyanugrh untuk klarifikasi.';
+  }
+}
+
+function startPolling(orderId) {
+  state.pollingInterval = setInterval(async () => {
+    try {
+      const r = await fetch(`${BOT_API_URL}/orders/status/${orderId}`);
+      const result = await r.json();
+      if (result.ok) {
+        updateStatusUI(result.status, orderId);
+        if (result.status === 'paid' || result.status === 'rejected') {
+          clearInterval(state.pollingInterval);
           localStorage.removeItem('undanganku_order');
           localStorage.removeItem('undanganku_theme');
+        }
+      }
+    } catch (e) { console.error('Polling:', e); }
+  }, 5000);
+}
+
+// ============ BUILD FORM DATA ============
+function buildFormData() {
+  const d = state.data;
+  // Parse akad time
+  let akadStart = '08:00', akadEnd = '10:00';
+  if (d.akadTime) {
+    const parts = d.akadTime.split('-').map(s => s.trim());
+    if (parts.length >= 1) akadStart = parts[0];
+    if (parts.length >= 2) akadEnd = parts[1];
+  }
+  let resepsiStart = '11:00', resepsiEnd = '15:00';
+  if (d.resepsiTime) {
+    const parts = d.resepsiTime.split('-').map(s => s.trim());
+    if (parts.length >= 1) resepsiStart = parts[0];
+    if (parts.length >= 2) resepsiEnd = parts[1];
+  }
+
+  return {
+    brideName: d.brideName || '',
+    brideNick: d.brideNick || '',
+    brideOrder: d.brideOrder || '',
+    brideFather: d.brideFather || '',
+    brideMother: d.brideMother || '',
+    brideIG: d.brideIG || '',
+    groomName: d.groomName || '',
+    groomNick: d.groomNick || '',
+    groomOrder: d.groomOrder || '',
+    groomFather: d.groomFather || '',
+    groomMother: d.groomMother || '',
+    groomIG: d.groomIG || '',
+    weddingDate: d.weddingDate || '',
+    akadStart, akadEnd,
+    akadVenue: d.akadVenue || '',
+    akadAddress: d.akadAddress || '',
+    akadMaps: d.akadMaps || '',
+    resepsiStart, resepsiEnd,
+    resepsiVenue: d.resepsiVenue || d.akadVenue || '',
+    resepsiAddress: d.resepsiAddress || d.akadAddress || '',
+    resepsiMaps: d.resepsiMaps || d.akadMaps || '',
+    quoteArabic: d.quoteArabic || '',
+    quoteText: d.quoteText || '',
+    quoteSource: d.quoteSource || '',
+    couplePhotoUrl: d.couplePhotoUrl || '',
+    galleryPhoto1: d.galleryPhoto1 || '',
+    galleryPhoto2: d.galleryPhoto2 || '',
+    galleryPhoto3: d.galleryPhoto3 || '',
+    galleryPhoto4: d.galleryPhoto4 || '',
+  };
+}
+
+// ============ COPY UTILS ============
+function copyBank(num) {
+  navigator.clipboard?.writeText(num);
+  showToast('Nomor tersalin! ✓', 'success');
+}
+
+function copyLiveUrl() {
+  const url = window._liveUrl || '';
+  navigator.clipboard?.writeText(url);
+  showToast('Link tersalin! ✓', 'success');
+}
+
+// ============ CHECK EXISTING ORDER ============
+function checkExistingOrder() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const existingOrder = urlParams.get('order') || localStorage.getItem('undanganku_order');
+  const savedTheme = localStorage.getItem('undanganku_theme');
+
+  if (existingOrder) {
+    state.orderId = existingOrder;
+    if (savedTheme) state.selectedTheme = savedTheme;
+
+    fetch(`${BOT_API_URL}/orders/status/${existingOrder}`)
+      .then(r => r.json())
+      .then(async result => {
+        if (!result.ok) {
+          localStorage.removeItem('undanganku_order');
+          localStorage.removeItem('undanganku_theme');
+          goStep('start');
           return;
         }
-        
-        // Kalau theme belum ke-restore dari localStorage, fetch detail order untuk dapat theme
-        if (!savedTheme || !THEME_FILE_MAP[savedTheme]) {
-          try {
-            const dataRes = await fetch(`${BOT_API_URL}/orders/data/${existingOrder}`);
-            const dataJson = await dataRes.json();
-            if (dataJson.ok && dataJson.data && dataJson.data.theme) {
-              selectedTheme = dataJson.data.theme;
-            }
-          } catch (e) { /* abaikan, fallback default */ }
-        }
-        
-        // Langsung ke step 5 polling
-        changeStep(5);
-        document.getElementById('orderStatusCard').classList.add('show');
-        document.getElementById('orderIdDisplay').textContent = existingOrder;
-        document.getElementById('nextBtn').style.display = 'none';
-        document.getElementById('prevBtn').style.display = 'none';
-        updateStatusUI(r.status);
-        if (r.status === 'pending') {
-          startPolling(existingOrder);
-        } else {
-          // Sudah selesai, bersihkan localStorage
+        await addBotBubble(`Haii! 👋 Pesanan kamu sebelumnya ditemukan!\n\nOrder *#${existingOrder}*`);
+        await showOrderStatus(existingOrder);
+        updateStatusUI(result.status, existingOrder);
+        if (result.status === 'pending') startPolling(existingOrder);
+        else {
           localStorage.removeItem('undanganku_order');
           localStorage.removeItem('undanganku_theme');
         }
       })
-      .catch(() => {});
-  }
-</script>
+      .catch(() => { goStep('start'); });
 
+    return true;
+  }
+
+  // Check URL params
+  const paramSrc = urlParams.get('src');
+  if (paramSrc === 'shopee' || paramSrc === 'tokped') {
+    state.sumber = 'ecommerce';
+  }
+
+  return false;
+}
+
+// ============ INIT ============
+(async function init() {
+  const hasExisting = checkExistingOrder();
+  if (!hasExisting) {
+    setTimeout(() => goStep('start'), 400);
+  }
+})();
+</script>
 </body>
 </html>
