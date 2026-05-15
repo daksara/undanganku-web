@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>UndanganKu — Undangan Digital Pernikahan</title>
-<meta name="description" content="Undangan digital pernikahan elegan. Standard Rp 29.000 (3 bulan) atau Premium Rp 49.000 (6 bulan + galeri foto + love story). RSVP, countdown, amplop digital.">
+<meta name="description" content="Undangan digital pernikahan elegan. Standard Rp 29.000 (3 bulan) atau Premium Rp 49.000 (6 bulan + galeri foto + love story).">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <meta property="og:title" content="UndanganKu — Undangan Digital Pernikahan Elegan">
 <meta property="og:description" content="3 tema premium, RSVP online, countdown, amplop digital. Mulai Rp 29.000.">
@@ -14,7 +14,7 @@
 <link rel="canonical" href="https://undanganku-web.vercel.app/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Cinzel:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Cinzel:wght@400;500&family=DM+Sans:wght@300;400;500&family=Allura&family=Caveat:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -22,7 +22,6 @@
     --bg: #0d0a07;
     --gold: #c8a96e;
     --gold-light: #e0c88a;
-    --gold-dim: rgba(200,169,110,0.12);
     --cream: #f5ead8;
     --cream-dim: rgba(245,234,216,0.55);
     --cream-mute: rgba(245,234,216,0.3);
@@ -47,14 +46,12 @@
   body::after {
     content: '';
     position: fixed;
-    top: -10%;
+    top: -5%;
     left: 50%;
     transform: translateX(-50%);
-    width: 320px;
-    height: 320px;
-    background: radial-gradient(ellipse, rgba(200,169,110,0.13), transparent 70%);
-    pointer-events: none;
-    z-index: 0;
+    width: 280px; height: 280px;
+    background: radial-gradient(ellipse, rgba(200,169,110,0.11), transparent 70%);
+    pointer-events: none; z-index: 0;
   }
 
   .page {
@@ -68,6 +65,7 @@
     padding: 0 20px;
   }
 
+  /* ── NAV ── */
   .nav {
     display: flex;
     align-items: center;
@@ -75,52 +73,39 @@
     padding: 14px 0 0;
     flex-shrink: 0;
   }
-
   .nav-logo {
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 22px;
-    color: var(--cream);
-    letter-spacing: 0.5px;
+    font-style: italic; font-size: 21px;
+    color: var(--cream); letter-spacing: 0.5px;
   }
   .nav-logo span { color: var(--gold); }
-
   .nav-tag {
     font-family: 'Cinzel', serif;
-    font-size: 8px;
-    letter-spacing: 2px;
+    font-size: 8px; letter-spacing: 2px;
     color: var(--cream-mute);
     border: 1px solid var(--line);
     padding: 5px 10px;
   }
 
+  /* ── HERO ── */
   .hero {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-bottom: 0;
-    min-height: 0;
+    flex-shrink: 0;
+    padding: 16px 0 12px;
   }
-
   .hero-eyebrow {
     font-family: 'Cinzel', serif;
-    font-size: 8px;
-    letter-spacing: 3.5px;
-    color: var(--gold);
-    opacity: 0.9;
-    margin-bottom: 12px;
-    animation: fadeUp 0.7s ease both;
+    font-size: 7.5px; letter-spacing: 3.5px;
+    color: var(--gold); opacity: 0.9;
+    margin-bottom: 10px;
+    animation: fadeUp 0.6s ease both;
   }
-
   .hero-title {
     font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-style: italic;
-    font-size: clamp(34px, 10vw, 52px);
+    font-weight: 300; font-style: italic;
+    font-size: clamp(32px, 9.5vw, 48px);
     line-height: 1.05;
-    margin-bottom: 10px;
-    animation: fadeUp 0.7s 0.1s ease both;
+    margin-bottom: 8px;
+    animation: fadeUp 0.6s 0.08s ease both;
   }
   .hero-title em {
     font-style: normal;
@@ -129,41 +114,107 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-
   .deco-line {
-    width: 28px;
-    height: 1px;
+    width: 24px; height: 1px;
     background: linear-gradient(to right, transparent, var(--gold), transparent);
-    margin: 0 0 10px;
-    animation: fadeUp 0.7s 0.15s ease both;
+    margin: 0 0 8px;
+    animation: fadeUp 0.6s 0.12s ease both;
   }
-
   .hero-sub {
-    font-size: 12px;
-    color: var(--cream-dim);
+    font-size: 12px; color: var(--cream-dim);
     letter-spacing: 0.3px;
-    margin-bottom: 16px;
-    animation: fadeUp 0.7s 0.2s ease both;
+    animation: fadeUp 0.6s 0.16s ease both;
   }
 
+  /* ── TEMA DEMO ROW ── */
+  .tema-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 12px 0 0;
+    animation: fadeUp 0.6s 0.22s ease both;
+  }
+
+  .tema-card {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: border-color 0.25s, transform 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tema-card:active { transform: scale(0.97); }
+  .tema-card:hover { border-color: rgba(200,169,110,0.45); }
+
+  .tema-thumb {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .tema-thumb.royal {
+    background: linear-gradient(135deg, #1f1208, #3d2418);
+  }
+  .tema-thumb.royal::before {
+    content: '';
+    position: absolute; inset: 8px;
+    border: 1px solid rgba(212,175,108,0.3);
+  }
+  .tema-thumb.bloom {
+    background: linear-gradient(135deg, #fef5ed, #f4a574);
+  }
+  .tema-thumb.jawa {
+    background: linear-gradient(160deg, #2c1f0e, #4a3520);
+  }
+  .tema-thumb.jawa::before {
+    content: '';
+    position: absolute; inset: 8px;
+    border: 1px solid rgba(196,164,100,0.3);
+  }
+
+  .tema-thumb-inner { text-align: center; z-index: 2; position: relative; }
+
+  .tema-meta {
+    padding: 6px 8px;
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .tema-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 12px;
+  }
+  .tema-demo-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 6px; letter-spacing: 1px;
+    color: var(--gold); opacity: 0.8;
+  }
+
+  /* ── PRICE ROW (compact) ── */
   .price-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 0;
-    animation: fadeUp 0.7s 0.3s ease both;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 10px 0 0;
+    animation: fadeUp 0.6s 0.28s ease both;
   }
-
   .price-card {
     border: 1px solid var(--line);
-    padding: 14px 12px 12px;
+    padding: 10px 10px 10px;
     text-align: center;
     text-decoration: none;
     color: inherit;
     display: block;
     background: rgba(200,169,110,0.03);
     position: relative;
-    transition: border-color 0.25s, transform 0.25s;
+    transition: border-color 0.25s, transform 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
   .price-card:active { transform: scale(0.98); }
@@ -171,173 +222,117 @@
     background: linear-gradient(160deg, rgba(200,169,110,0.11), rgba(200,169,110,0.03));
     border-color: rgba(200,169,110,0.4);
   }
-
   .price-badge {
     position: absolute;
-    top: -9px; left: 50%; transform: translateX(-50%);
+    top: -8px; left: 50%; transform: translateX(-50%);
     background: linear-gradient(135deg, var(--gold), #a8892e);
     color: var(--bg);
     font-family: 'Cinzel', serif;
-    font-size: 7px; letter-spacing: 1.5px;
-    padding: 3px 10px;
-    white-space: nowrap;
+    font-size: 6.5px; letter-spacing: 1.5px;
+    padding: 2px 8px; white-space: nowrap;
   }
-
   .price-label {
     font-family: 'Cinzel', serif;
-    font-size: 8px; letter-spacing: 2.5px;
-    color: var(--gold);
-    margin-bottom: 10px;
+    font-size: 7.5px; letter-spacing: 2px;
+    color: var(--gold); margin-bottom: 6px;
   }
-
   .price-strike {
-    font-size: 11px;
-    color: var(--cream-mute);
+    font-size: 10px; color: var(--cream-mute);
     text-decoration: line-through;
-    margin-bottom: 2px;
-    letter-spacing: 0.3px;
+    margin-bottom: 1px; letter-spacing: 0.3px;
   }
-
   .price-amount {
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 19px;
-    font-weight: 500;
-    color: var(--gold-light);
+    font-style: italic; font-size: 17px;
+    font-weight: 500; color: var(--gold-light);
     line-height: 1;
   }
-
   .price-period {
-    font-size: 10px;
-    color: var(--cream-mute);
-    margin-top: 3px;
-    letter-spacing: 0.3px;
+    font-size: 9px; color: var(--cream-mute);
+    margin-top: 2px; letter-spacing: 0.3px;
   }
-
   .price-divider {
-    height: 1px;
-    background: var(--line);
-    margin: 10px 0;
+    height: 1px; background: var(--line); margin: 7px 0;
   }
-
   .price-features {
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    display: flex; flex-direction: column; gap: 3px;
     text-align: left;
   }
   .price-features li {
-    font-size: 10px;
-    color: var(--cream-dim);
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    line-height: 1.4;
+    font-size: 9.5px; color: var(--cream-dim);
+    display: flex; align-items: flex-start; gap: 5px;
+    line-height: 1.35;
   }
   .price-features li::before {
-    content: '✓';
-    color: var(--gold);
-    font-size: 9px;
-    flex-shrink: 0;
-    margin-top: 1px;
+    content: '✓'; color: var(--gold);
+    font-size: 8px; flex-shrink: 0; margin-top: 1px;
   }
 
   /* ── MARQUEE ── */
   .marquee-wrap {
     overflow: hidden;
     margin: 0 -20px;
-    padding: 0;
     flex-shrink: 0;
-    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
   }
-
   .marquee-track {
     display: flex;
-    gap: 0;
     width: max-content;
     animation: marquee 28s linear infinite;
   }
-
   .marquee-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 16px;
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 14px;
     border-right: 1px solid var(--line);
-    white-space: nowrap;
-    flex-shrink: 0;
+    white-space: nowrap; flex-shrink: 0;
   }
-
-  .marquee-stars {
-    color: var(--gold);
-    font-size: 9px;
-    letter-spacing: 1px;
-  }
-
+  .marquee-stars { color: var(--gold); font-size: 8px; letter-spacing: 1px; }
   .marquee-text {
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 12px;
-    color: var(--cream-dim);
+    font-style: italic; font-size: 12px; color: var(--cream-dim);
   }
-
   .marquee-author {
-    font-family: 'Cinzel', serif;
-    font-size: 8px;
-    letter-spacing: 1.5px;
-    color: var(--gold);
-    opacity: 0.75;
+    font-family: 'Cinzel', serif; font-size: 7.5px;
+    letter-spacing: 1.5px; color: var(--gold); opacity: 0.75;
   }
-
   @keyframes marquee {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }
   }
 
+  /* ── CTA ── */
   .cta-row {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    animation: fadeUp 0.7s 0.4s ease both;
+    display: flex; flex-direction: column; gap: 8px;
     flex-shrink: 0;
-    padding: 10px 0 16px;
+    padding: 8px 0 14px;
+    animation: fadeUp 0.6s 0.34s ease both;
   }
-
   .btn-primary {
-    display: block;
-    width: 100%;
-    padding: 14px;
+    display: block; width: 100%; padding: 13px;
     background: linear-gradient(135deg, var(--gold), #a8892e);
     color: var(--bg);
     font-family: 'Cinzel', serif;
-    font-size: 11px;
-    letter-spacing: 3px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
+    font-size: 10.5px; letter-spacing: 3px;
+    border: none; cursor: pointer;
+    text-decoration: none; text-align: center;
     transition: opacity 0.2s, transform 0.2s;
-    box-shadow: 0 8px 28px rgba(200,169,110,0.2);
+    box-shadow: 0 6px 24px rgba(200,169,110,0.2);
     -webkit-tap-highlight-color: transparent;
   }
-  .btn-primary:active {
-    opacity: 0.85;
-    transform: scale(0.99);
-  }
+  .btn-primary:active { opacity: 0.85; transform: scale(0.99); }
 
   .cta-note {
     text-align: center;
     font-family: 'Cinzel', serif;
-    font-size: 9px;
-    letter-spacing: 2px;
+    font-size: 8.5px; letter-spacing: 2px;
     color: var(--cream-mute);
   }
   .cta-note span { color: var(--gold); }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
+    from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 </style>
@@ -346,53 +341,102 @@
 
 <div class="page">
 
+  <!-- NAV -->
   <div class="nav">
     <div class="nav-logo">Undangan<span>Ku</span></div>
     <div class="nav-tag">DIBANTU AI</div>
   </div>
 
+  <!-- HERO -->
   <div class="hero">
     <div class="hero-eyebrow">UNDANGAN DIGITAL · DIBANTU AI</div>
-    <h1 class="hero-title">
-      Hari Spesialmu,<br><em>Tampil Sempurna</em>
-    </h1>
+    <h1 class="hero-title">Hari Spesialmu,<br><em>Tampil Sempurna</em></h1>
     <div class="deco-line"></div>
     <p class="hero-sub">Berkelas. Otomatis. Siap dibagikan.</p>
-
-    <div class="price-row">
-      <a href="./builder.html?paket=standard" class="price-card">
-        <div class="price-label">STANDARD</div>
-        <div class="price-strike">Rp 99.000</div>
-        <div class="price-amount">Rp 29.000</div>
-        <div class="price-period">Aktif 3 bulan</div>
-        <div class="price-divider"></div>
-        <ul class="price-features">
-          <li>3 tema pilihan</li>
-          <li>RSVP &amp; ucapan</li>
-          <li>Countdown</li>
-          <li>Amplop digital</li>
-        </ul>
-      </a>
-
-      <a href="./builder.html?paket=premium" class="price-card featured">
-        <div class="price-badge">TERPOPULER</div>
-        <div class="price-label">PREMIUM</div>
-        <div class="price-strike">Rp 149.000</div>
-        <div class="price-amount">Rp 49.000</div>
-        <div class="price-period">Aktif 6 bulan</div>
-        <div class="price-divider"></div>
-        <ul class="price-features">
-          <li>Semua fitur Standard</li>
-          <li>Foto couple di cover</li>
-          <li>Galeri foto</li>
-          <li>Love Story</li>
-          <li>Revisi 1&times; gratis</li>
-        </ul>
-      </a>
-    </div>
   </div>
 
-  <!-- MARQUEE TESTIMONI -->
+  <!-- TEMA DEMO -->
+  <div class="tema-row">
+    <a href="./demo.html?tema=royal-classic&paket=premium" class="tema-card" target="_blank">
+      <div class="tema-thumb royal">
+        <div class="tema-thumb-inner">
+          <div style="font-family:'Cinzel',serif;font-size:5px;letter-spacing:2px;color:#d4af6c;margin-bottom:6px;">THE WEDDING OF</div>
+          <div style="font-family:'Allura',cursive;font-size:16px;color:#f0e6d2;line-height:1;">Aulia</div>
+          <div style="color:#d4af6c;font-size:10px;font-family:'Allura',cursive;">&amp;</div>
+          <div style="font-family:'Allura',cursive;font-size:16px;color:#f0e6d2;line-height:1;">Rizky</div>
+        </div>
+      </div>
+      <div class="tema-meta">
+        <div class="tema-name">Royal</div>
+        <div class="tema-demo-tag">DEMO →</div>
+      </div>
+    </a>
+
+    <a href="./demo.html?tema=sunset-bloom&paket=premium" class="tema-card" target="_blank">
+      <div class="tema-thumb bloom">
+        <div class="tema-thumb-inner">
+          <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:7px;color:#d97c6c;margin-bottom:6px;">The Wedding of</div>
+          <div style="font-family:'Caveat',cursive;font-size:16px;color:#5d3a2e;line-height:1.1;">Andini</div>
+          <div style="color:#ec8772;font-size:12px;font-family:'Caveat',cursive;">&amp;</div>
+          <div style="font-family:'Caveat',cursive;font-size:16px;color:#5d3a2e;line-height:1.1;">Reza</div>
+        </div>
+      </div>
+      <div class="tema-meta">
+        <div class="tema-name">Bloom</div>
+        <div class="tema-demo-tag">DEMO →</div>
+      </div>
+    </a>
+
+    <a href="./demo.html?tema=adat-jawa&paket=premium" class="tema-card" target="_blank">
+      <div class="tema-thumb jawa">
+        <div class="tema-thumb-inner">
+          <div style="font-family:'Cinzel',serif;font-size:5px;letter-spacing:2px;color:#c4a464;margin-bottom:6px;">THE WEDDING OF</div>
+          <div style="font-family:'Playfair Display',serif;font-size:14px;color:#f0e0c0;line-height:1.2;">Sari</div>
+          <div style="color:#c4a464;font-size:12px;">❧</div>
+          <div style="font-family:'Playfair Display',serif;font-size:14px;color:#f0e0c0;line-height:1.2;">Bagas</div>
+        </div>
+      </div>
+      <div class="tema-meta">
+        <div class="tema-name">Jawa</div>
+        <div class="tema-demo-tag">DEMO →</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- HARGA -->
+  <div class="price-row">
+    <a href="./builder.html?paket=standard" class="price-card">
+      <div class="price-label">STANDARD</div>
+      <div class="price-strike">Rp 99.000</div>
+      <div class="price-amount">Rp 29.000</div>
+      <div class="price-period">Aktif 3 bulan</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>3 tema pilihan</li>
+        <li>RSVP &amp; ucapan</li>
+        <li>Countdown</li>
+        <li>Amplop digital</li>
+      </ul>
+    </a>
+
+    <a href="./builder.html?paket=premium" class="price-card featured">
+      <div class="price-badge">TERPOPULER</div>
+      <div class="price-label">PREMIUM</div>
+      <div class="price-strike">Rp 149.000</div>
+      <div class="price-amount">Rp 49.000</div>
+      <div class="price-period">Aktif 6 bulan</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li>Semua fitur Standard</li>
+        <li>Foto couple di cover</li>
+        <li>Galeri foto</li>
+        <li>Love Story</li>
+        <li>Revisi 1&times; gratis</li>
+      </ul>
+    </a>
+  </div>
+
+  <!-- MARQUEE -->
   <div class="marquee-wrap">
     <div class="marquee-track">
       <div class="marquee-item">
@@ -438,6 +482,7 @@
     </div>
   </div>
 
+  <!-- CTA -->
   <div class="cta-row">
     <a href="./builder.html" class="btn-primary">BUAT UNDANGAN SEKARANG</a>
     <div class="cta-note">Mulai dari <span>Rp 29.000</span> · Sekali bayar</div>
