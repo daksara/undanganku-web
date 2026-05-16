@@ -43,7 +43,7 @@
     margin: 0 auto;
     min-height: 100vh;
     background: var(--bg);
-    padding-bottom: 100px;
+    padding-bottom: 110px;
   }
   
   /* ============ TOPBAR ============ */
@@ -51,13 +51,18 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(15, 13, 10, 0.92);
-    backdrop-filter: blur(16px);
-    padding: 14px 20px;
+    background: rgba(15, 13, 10, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 12px 20px 0;
     border-bottom: 1px solid var(--line);
+  }
+
+  .topbar-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 12px;
   }
   
   .logo {
@@ -67,25 +72,35 @@
     letter-spacing: 0.5px;
   }
   .logo span { color: var(--accent); }
+
+  .step-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+  }
+  .step-label strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
   
-  .step-pills {
-    display: flex;
-    gap: 4px;
-    align-items: center;
+  /* Progress bar */
+  .progress-bar-wrap {
+    height: 3px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 0;
+    overflow: hidden;
   }
-  .pill {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    transition: all 0.3s;
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+    border-radius: 0;
+    transition: width 0.45s cubic-bezier(0.4,0,0.2,1);
+    width: 20%;
   }
-  .pill.done { background: var(--accent); }
-  .pill.active {
-    background: var(--accent-bright);
-    width: 22px;
-    border-radius: 4px;
-  }
+
+  /* Legacy pills — keep for JS compat but hide visually */
+  .step-pills { display: none; }
+  .pill { display: none; }
   
   /* ============ STEP CONTAINERS ============ */
   .step {
@@ -341,6 +356,18 @@
     letter-spacing: 0.8px;
     font-weight: 500;
   }
+  label .req {
+    color: var(--accent);
+    margin-left: 2px;
+  }
+  label .opt {
+    color: var(--text-mute);
+    font-size: 9px;
+    letter-spacing: 0.3px;
+    text-transform: none;
+    font-weight: 400;
+    margin-left: 4px;
+  }
   
   input, textarea, select {
     width: 100%;
@@ -369,6 +396,89 @@
     transition: background-color 5000s ease-in-out 0s;
   }
   textarea { resize: vertical; min-height: 60px; }
+
+  /* Input helper text */
+  .input-hint {
+    font-size: 11px;
+    color: var(--text-mute);
+    margin-top: 5px;
+    line-height: 1.4;
+  }
+
+  /* Collapsible form sections */
+  .collapsible-section {
+    margin-bottom: 20px;
+  }
+  .collapsible-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    padding: 0 0 10px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .collapsible-toggle-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .collapsible-chevron {
+    font-size: 12px;
+    color: var(--text-mute);
+    transition: transform 0.25s;
+  }
+  .collapsible-section.collapsed .collapsible-chevron {
+    transform: rotate(-90deg);
+  }
+  .collapsible-section.collapsed .collapsible-body {
+    display: none;
+  }
+
+  /* Validation error state */
+  input.error, textarea.error, select.error {
+    border-color: var(--danger) !important;
+    background: rgba(232,122,122,0.05) !important;
+  }
+  input.error:focus, textarea.error:focus {
+    box-shadow: 0 0 0 2px rgba(232,122,122,0.15);
+  }
+
+  /* Step 4 preview button */
+  .preview-open-btn {
+    width: 100%;
+    padding: 15px;
+    background: rgba(200,169,110,0.1);
+    border: 1px solid rgba(200,169,110,0.4);
+    border-radius: 10px;
+    color: #c8a96e;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+  }
+  .preview-open-btn:hover {
+    background: rgba(200,169,110,0.18);
+    border-color: rgba(200,169,110,0.7);
+  }
+
+  /* Step 3b counter badge */
+  .step-counter .badge {
+    display: inline-block;
+    background: rgba(212,175,108,0.15);
+    color: var(--accent);
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 99px;
+    margin-left: 6px;
+    letter-spacing: 1px;
+    vertical-align: middle;
+  }
   
   /* ============ PAKET PICKER ============ */
   .paket-grid {
@@ -682,8 +792,8 @@
     transform: translateX(-50%);
     width: 100%;
     max-width: 480px;
-    padding: 14px 20px 18px;
-    background: linear-gradient(to top, var(--bg) 75%, transparent);
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(to top, var(--bg) 65%, rgba(15,13,10,0));
     display: flex;
     gap: 10px;
     z-index: 50;
@@ -746,8 +856,15 @@
 
 <div class="app">
   <div class="topbar">
-    <div class="logo">Undangan<span>Ku</span></div>
-    <div class="step-pills">
+    <div class="topbar-row">
+      <div class="logo">Undangan<span>Ku</span></div>
+      <div class="step-label" id="topbarStepLabel"><strong>Langkah 1</strong> dari 5 — Pilih Tema</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBarFill"></div>
+    </div>
+    <!-- Legacy pills kept for JS pill manipulation (hidden) -->
+    <div class="step-pills" style="display:none;">
       <div class="pill active" id="pill-1"></div>
       <div class="pill" id="pill-2"></div>
       <div class="pill" id="pill-3"></div>
@@ -820,7 +937,7 @@
     <div class="step-head">
       <div class="step-counter">step 2 of 5</div>
       <div class="step-title">Data Undangan</div>
-      <div class="step-subtitle">Lengkapi semua data agar undangan jadi sempurna</div>
+      <div class="step-subtitle">Field bertanda <span style="color:var(--accent);">✦</span> wajib diisi</div>
     </div>
     
     <!-- Mempelai -->
@@ -832,54 +949,54 @@
       
       <div class="form-grid">
         <div>
-          <label>Nama Lengkap Mempelai Wanita</label>
-          <input type="text" id="brideName" placeholder="Andini Putri Maharani" oninput="updatePreview()">
+          <label>Nama Lengkap Mempelai Wanita <span class="req">✦</span></label>
+          <input type="text" id="brideName" placeholder="Andini Putri Maharani" oninput="updatePreview(); clearErr(this)">
         </div>
         <div>
-          <label>Panggilan</label>
+          <label>Panggilan <span class="opt">(opsional)</span></label>
           <input type="text" id="brideNick" placeholder="Andini" oninput="updatePreview()">
         </div>
         <div>
-          <label>Putri ke-berapa</label>
+          <label>Putri ke-berapa <span class="opt">(opsional)</span></label>
           <input type="text" id="brideOrder" placeholder="Putri pertama dari" oninput="updatePreview()">
         </div>
         <div>
-          <label>Nama Ayah Mempelai Wanita</label>
+          <label>Nama Ayah Mempelai Wanita <span class="opt">(opsional)</span></label>
           <input type="text" id="brideFather" placeholder="Bapak H. Bambang Wijaya" oninput="updatePreview()">
         </div>
         <div>
-          <label>Nama Ibu Mempelai Wanita</label>
+          <label>Nama Ibu Mempelai Wanita <span class="opt">(opsional)</span></label>
           <input type="text" id="brideMother" placeholder="Ibu Hj. Sri Wahyuni" oninput="updatePreview()">
         </div>
         <div>
-          <label>Instagram Mempelai Wanita (opsional)</label>
+          <label>Instagram Mempelai Wanita <span class="opt">(opsional)</span></label>
           <input type="text" id="brideIG" placeholder="@andiniputri" oninput="updatePreview()">
         </div>
         
         <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
         
         <div>
-          <label>Nama Lengkap Mempelai Pria</label>
-          <input type="text" id="groomName" placeholder="Reza Pratama Adiputra" oninput="updatePreview()">
+          <label>Nama Lengkap Mempelai Pria <span class="req">✦</span></label>
+          <input type="text" id="groomName" placeholder="Reza Pratama Adiputra" oninput="updatePreview(); clearErr(this)">
         </div>
         <div>
-          <label>Panggilan</label>
+          <label>Panggilan <span class="opt">(opsional)</span></label>
           <input type="text" id="groomNick" placeholder="Reza" oninput="updatePreview()">
         </div>
         <div>
-          <label>Putra ke-berapa</label>
+          <label>Putra ke-berapa <span class="opt">(opsional)</span></label>
           <input type="text" id="groomOrder" placeholder="Putra kedua dari" oninput="updatePreview()">
         </div>
         <div>
-          <label>Nama Ayah Mempelai Pria</label>
+          <label>Nama Ayah Mempelai Pria <span class="opt">(opsional)</span></label>
           <input type="text" id="groomFather" placeholder="Bapak Drs. Hendra Adiputra" oninput="updatePreview()">
         </div>
         <div>
-          <label>Nama Ibu Mempelai Pria</label>
+          <label>Nama Ibu Mempelai Pria <span class="opt">(opsional)</span></label>
           <input type="text" id="groomMother" placeholder="Ibu Dra. Siti Nurhayati" oninput="updatePreview()">
         </div>
         <div>
-          <label>Instagram Mempelai Pria (opsional)</label>
+          <label>Instagram Mempelai Pria <span class="opt">(opsional)</span></label>
           <input type="text" id="groomIG" placeholder="@rezapratama" oninput="updatePreview()">
         </div>
       </div>
@@ -894,8 +1011,8 @@
       
       <div class="form-grid">
         <div>
-          <label>Tanggal Pernikahan</label>
-          <input type="date" id="weddingDate" oninput="updatePreview()">
+          <label>Tanggal Pernikahan <span class="req">✦</span></label>
+          <input type="date" id="weddingDate" oninput="updatePreview(); clearErr(this)">
         </div>
         
         <div class="form-grid cols-2">
@@ -908,17 +1025,18 @@
             <input type="text" id="akadEnd" value="10:00" placeholder="10:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
           </div>
         </div>
+        <div class="input-hint" style="margin-top:-6px;">Format 24 jam, contoh: 08:00 atau 14:30</div>
         
         <div>
-          <label>Tempat Akad</label>
-          <input type="text" id="akadVenue" placeholder="Masjid Istiqlal" oninput="updatePreview()">
+          <label>Tempat Akad <span class="req">✦</span></label>
+          <input type="text" id="akadVenue" placeholder="Masjid Istiqlal" oninput="updatePreview(); clearErr(this)">
         </div>
         <div>
-          <label>Alamat Akad</label>
+          <label>Alamat Akad <span class="opt">(opsional)</span></label>
           <textarea id="akadAddress" placeholder="Jl. Taman Wijaya Kusuma, Jakarta Pusat" oninput="updatePreview()"></textarea>
         </div>
         <div>
-          <label>Link Maps Akad (opsional)</label>
+          <label>Link Maps Akad <span class="opt">(opsional)</span></label>
           <input type="text" id="akadMaps" placeholder="https://maps.google.com/..." oninput="updatePreview()">
         </div>
         
@@ -934,83 +1052,93 @@
             <input type="text" id="resepsiEnd" value="15:00" placeholder="15:00" maxlength="5" inputmode="numeric" oninput="formatJam(this)" style="letter-spacing:2px;font-size:16px;">
           </div>
         </div>
+        <div class="input-hint" style="margin-top:-6px;">Format 24 jam, contoh: 11:00 atau 17:00</div>
         
         <div>
-          <label>Tempat Resepsi</label>
-          <input type="text" id="resepsiVenue" placeholder="Hotel Mulia Ballroom" oninput="updatePreview()">
+          <label>Tempat Resepsi <span class="req">✦</span></label>
+          <input type="text" id="resepsiVenue" placeholder="Hotel Mulia Ballroom" oninput="updatePreview(); clearErr(this)">
         </div>
         <div>
-          <label>Alamat Resepsi</label>
+          <label>Alamat Resepsi <span class="opt">(opsional)</span></label>
           <textarea id="resepsiAddress" placeholder="Jl. Asia Afrika No.8, Senayan, Jakarta" oninput="updatePreview()"></textarea>
         </div>
         <div>
-          <label>Link Maps Resepsi (opsional)</label>
+          <label>Link Maps Resepsi <span class="opt">(opsional)</span></label>
           <input type="text" id="resepsiMaps" placeholder="https://maps.google.com/..." oninput="updatePreview()">
         </div>
       </div>
     </div>
     
     <!-- Ayat & Quote -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">📖</span>
-        <span class="section-head-text">Ayat / Quote</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>Tulisan Arab (opsional)</label>
-          <textarea id="quoteArabic" placeholder="وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا" oninput="updatePreview()"></textarea>
+    <div class="collapsible-section" id="colQuote">
+      <button type="button" class="collapsible-toggle" onclick="toggleSection('colQuote')">
+        <div class="collapsible-toggle-left">
+          <span class="section-head-icon">📖</span>
+          <span class="section-head-text">Ayat / Quote</span>
+          <span style="font-size:10px; color:var(--text-mute); margin-left:6px; font-style:italic; text-transform:none; letter-spacing:0;">(opsional)</span>
         </div>
-        <div>
-          <label>Terjemahan / Quote</label>
-          <textarea id="quoteText" placeholder="Dan di antara tanda-tanda kekuasaan-Nya..." oninput="updatePreview()"></textarea>
-        </div>
-        <div>
-          <label>Sumber</label>
-          <input type="text" id="quoteSource" placeholder="QS. Ar-Rum : 21" oninput="updatePreview()">
+        <span class="collapsible-chevron">▼</span>
+      </button>
+      <div class="collapsible-body">
+        <div class="form-grid">
+          <div>
+            <label>Tulisan Arab <span class="opt">(opsional)</span></label>
+            <textarea id="quoteArabic" placeholder="وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا" oninput="updatePreview()"></textarea>
+          </div>
+          <div>
+            <label>Terjemahan / Quote <span class="opt">(opsional)</span></label>
+            <textarea id="quoteText" placeholder="Dan di antara tanda-tanda kekuasaan-Nya..." oninput="updatePreview()"></textarea>
+          </div>
+          <div>
+            <label>Sumber <span class="opt">(opsional)</span></label>
+            <input type="text" id="quoteSource" placeholder="QS. Ar-Rum : 21" oninput="updatePreview()">
+          </div>
         </div>
       </div>
     </div>
-    
     <!-- Hadiah / Amplop -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">💝</span>
-        <span class="section-head-text">Hadiah Pernikahan</span>
-      </div>
-      
-      <div class="form-grid">
-        <div class="form-grid cols-2">
-          <div>
-            <label>Bank 1</label>
-            <input type="text" id="bank1Name" placeholder="BCA" oninput="updatePreview()">
-          </div>
-          <div>
-            <label>No. Rekening 1</label>
-            <input type="text" id="bank1Num" placeholder="1234567890" oninput="updatePreview()">
-          </div>
+    <div class="collapsible-section" id="colHadiah">
+      <button type="button" class="collapsible-toggle" onclick="toggleSection('colHadiah')">
+        <div class="collapsible-toggle-left">
+          <span class="section-head-icon">💝</span>
+          <span class="section-head-text">Hadiah Pernikahan</span>
+          <span style="font-size:10px; color:var(--text-mute); margin-left:6px; font-style:italic; text-transform:none; letter-spacing:0;">(opsional)</span>
         </div>
-        <div>
-          <label>Atas Nama 1</label>
-          <input type="text" id="bank1Holder" placeholder="Andini Putri" oninput="updatePreview()">
-        </div>
-        
-        <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
-        
-        <div class="form-grid cols-2">
-          <div>
-            <label>Bank 2 (opsional)</label>
-            <input type="text" id="bank2Name" placeholder="Mandiri" oninput="updatePreview()">
+        <span class="collapsible-chevron">▼</span>
+      </button>
+      <div class="collapsible-body">
+        <div class="form-grid">
+          <div class="form-grid cols-2">
+            <div>
+              <label>Bank 1 <span class="opt">(opsional)</span></label>
+              <input type="text" id="bank1Name" placeholder="BCA" oninput="updatePreview()">
+            </div>
+            <div>
+              <label>No. Rekening 1</label>
+              <input type="text" id="bank1Num" placeholder="1234567890" oninput="updatePreview()">
+            </div>
           </div>
           <div>
-            <label>No. Rekening 2</label>
-            <input type="text" id="bank2Num" placeholder="9876543210" oninput="updatePreview()">
+            <label>Atas Nama 1 <span class="opt">(opsional)</span></label>
+            <input type="text" id="bank1Holder" placeholder="Andini Putri" oninput="updatePreview()">
           </div>
-        </div>
-        <div>
-          <label>Atas Nama 2</label>
-          <input type="text" id="bank2Holder" placeholder="Reza Pratama" oninput="updatePreview()">
+          
+          <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
+          
+          <div class="form-grid cols-2">
+            <div>
+              <label>Bank 2 <span class="opt">(opsional)</span></label>
+              <input type="text" id="bank2Name" placeholder="Mandiri" oninput="updatePreview()">
+            </div>
+            <div>
+              <label>No. Rekening 2</label>
+              <input type="text" id="bank2Num" placeholder="9876543210" oninput="updatePreview()">
+            </div>
+          </div>
+          <div>
+            <label>Atas Nama 2 <span class="opt">(opsional)</span></label>
+            <input type="text" id="bank2Holder" placeholder="Reza Pratama" oninput="updatePreview()">
+          </div>
         </div>
       </div>
     </div>
@@ -1030,9 +1158,7 @@
             <option value="acoustic-love">🎸 Acoustic Love — Sunset Bloom</option>
             <option value="javanese-gamelan">🎶 Gamelan Jawa — Adat Jawa</option>
           </select>
-          <div style="font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.5;">
-            🎧 Musik akan otomatis diputar saat tamu membuka undangan.
-          </div>
+          <div class="input-hint">🎧 Musik otomatis diputar saat tamu membuka undangan.</div>
         </div>
         <!-- Mini player preview -->
         <div id="musicPreviewBox" style="
@@ -1061,32 +1187,6 @@
           </div>
         </div>
         <audio id="musicPreviewAudio" preload="none"></audio>
-      </div>
-    </div>
-
-    <!-- Kontak Pembeli -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">📞</span>
-        <span class="section-head-text">Kontak Pemesan</span>
-      </div>
-      
-      <div class="form-grid">
-        <div>
-          <label>Nomor WhatsApp</label>
-          <input type="tel" id="buyerContact" placeholder="08xxxxxxxxxx" inputmode="numeric"
-            style="letter-spacing:0.5px;">
-          <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
-            ⚡ Link undangan aktif akan dikirimkan via WhatsApp setelah konfirmasi pembayaran.
-          </div>
-        </div>
-        <div>
-          <label>Instagram (opsional)</label>
-          <input type="text" id="buyerInstagram" placeholder="@namakamu" oninput="updatePreview()">
-          <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
-            Untuk dihubungi jika ada pertanyaan.
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -1347,15 +1447,7 @@
       </div>
     </div>
 
-    <button onclick="openPreviewTab()" style="
-      width:100%; padding:14px;
-      background: rgba(200,169,110,0.1);
-      border: 1px solid rgba(200,169,110,0.4);
-      color: #c8a96e;
-      font-family: 'Cinzel', serif;
-      font-size: 11px; letter-spacing: 3px;
-      cursor: pointer; margin-bottom: 8px;
-    ">👁️ BUKA PREVIEW DI TAB BARU</button>
+    <button onclick="openPreviewTab()" class="preview-open-btn">👁️ BUKA PREVIEW DI TAB BARU</button>
     <p style="text-align:center; font-size:11px; color:rgba(240,230,210,0.4); font-style:italic;">
       Preview akan terbuka di tab baru. Kembali ke sini untuk lanjut memesan.
     </p>
@@ -1451,6 +1543,25 @@
       </div>
     </div>
     
+    <!-- Kontak Pembeli — dipindah ke sini agar kontekstual dengan pemesanan -->
+    <div class="section-head" style="margin-top: 24px;">
+      <span class="section-head-icon">📞</span>
+      <span class="section-head-text">Kontak Pemesan</span>
+    </div>
+    <div class="form-grid" style="margin-bottom:20px;">
+      <div>
+        <label>Nomor WhatsApp <span class="req">✦</span></label>
+        <input type="tel" id="buyerContact" placeholder="08xxxxxxxxxx" inputmode="numeric"
+          style="letter-spacing:0.5px;" oninput="clearErr(this)">
+        <div class="input-hint">⚡ Link undangan aktif dikirim ke WhatsApp setelah konfirmasi pembayaran.</div>
+      </div>
+      <div>
+        <label>Instagram <span class="opt">(opsional)</span></label>
+        <input type="text" id="buyerInstagram" placeholder="@namakamu" oninput="updatePreview()">
+        <div class="input-hint">Untuk dihubungi owner jika ada pertanyaan.</div>
+      </div>
+    </div>
+
     <div class="order-status-card" id="orderStatusCard">
       <div class="order-id">📋 <span id="orderIdDisplay">—</span></div>
       <div id="statusPillContainer">
@@ -1506,6 +1617,43 @@
     return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
   })();
   
+  // ============ COLLAPSIBLE SECTIONS ============
+  function toggleSection(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('collapsed');
+  }
+
+  // Clear error state on input
+  function clearErr(el) {
+    if (el) el.classList.remove('error');
+  }
+
+  // ============ PROGRESS BAR + TOPBAR LABEL ============
+  const STEP_NAMES = {
+    1: 'Pilih Tema',
+    2: 'Data Undangan',
+    3: 'Pilih Paket',
+    '3b': 'Data Premium',
+    4: 'Preview',
+    5: 'Pemesanan',
+  };
+
+  function updateProgressUI(step) {
+    var order = getStepOrder();
+    var idx = order.indexOf(step);
+    var total = order.length;
+    var pct = Math.round(((idx + 1) / total) * 100);
+    var fill = document.getElementById('progressBarFill');
+    if (fill) fill.style.width = pct + '%';
+    var lbl = document.getElementById('topbarStepLabel');
+    if (lbl) {
+      var displayNum = idx + 1;
+      var name = STEP_NAMES[step] || '';
+      lbl.innerHTML = '<strong>Langkah ' + displayNum + '</strong> dari ' + total + (name ? ' — ' + name : '');
+    }
+  }
+
   // ============ LOVE STORY DYNAMIC ============
   var LS_PLACEHOLDERS = [
     { year: '2021', title: 'Pertama Bertemu', story: 'Kami pertama kali bertemu di...' },
@@ -1719,6 +1867,7 @@
     if (n === 5) updateSummary();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateProgressUI(n);
   }
   
   // ============ VALIDASI PER STEP ============
@@ -1739,16 +1888,26 @@
     }
 
     if (step === 2) {
-      if (!v('brideName')) return err('Nama lengkap mempelai wanita wajib diisi', 'brideName');
-      if (!v('groomName')) return err('Nama lengkap mempelai pria wajib diisi', 'groomName');
-      if (!v('weddingDate')) return err('Tanggal pernikahan wajib diisi', 'weddingDate');
-      if (!v('akadVenue')) return err('Tempat akad wajib diisi', 'akadVenue');
-      if (!v('resepsiVenue')) return err('Tempat resepsi wajib diisi', 'resepsiVenue');
-      // Validasi format nomor WA
-      const wa = v('buyerContact');
-      if (!wa) return err('Nomor WhatsApp pemesan wajib diisi', 'buyerContact');
-      if (!/^(\+62|62|0)[0-9]{8,13}$/.test(wa.replace(/\s/g,'')))
-        return err('Format nomor WhatsApp tidak valid', 'buyerContact');
+      if (!v('brideName')) {
+        document.getElementById('brideName')?.classList.add('error');
+        return err('Nama lengkap mempelai wanita wajib diisi', 'brideName');
+      }
+      if (!v('groomName')) {
+        document.getElementById('groomName')?.classList.add('error');
+        return err('Nama lengkap mempelai pria wajib diisi', 'groomName');
+      }
+      if (!v('weddingDate')) {
+        document.getElementById('weddingDate')?.classList.add('error');
+        return err('Tanggal pernikahan wajib diisi', 'weddingDate');
+      }
+      if (!v('akadVenue')) {
+        document.getElementById('akadVenue')?.classList.add('error');
+        return err('Tempat akad wajib diisi', 'akadVenue');
+      }
+      if (!v('resepsiVenue')) {
+        document.getElementById('resepsiVenue')?.classList.add('error');
+        return err('Tempat resepsi wajib diisi', 'resepsiVenue');
+      }
       return true;
     }
 
@@ -2044,7 +2203,15 @@
     
     // Validasi kontak WA wajib diisi
     if (!buyerContact) {
+      document.getElementById('buyerContact')?.classList.add('error');
+      document.getElementById('buyerContact')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       showToast('Isi nomor WhatsApp dulu ya', 'error');
+      return;
+    }
+    if (!/^(\+62|62|0)[0-9]{8,13}$/.test(buyerContact.replace(/\s/g,''))) {
+      document.getElementById('buyerContact')?.classList.add('error');
+      document.getElementById('buyerContact')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      showToast('Format nomor WhatsApp tidak valid', 'error');
       return;
     }
     
@@ -2208,6 +2375,9 @@
   document.getElementById('nextBtn').addEventListener('click', function() {
     if (typeof _activeNextHandler === 'function') _activeNextHandler();
   });
+
+  // Init progress bar
+  updateProgressUI(1);
 
   // ============ HELPER: hash Order ID (untuk simpan di sessionStorage) ============
   async function _hashOrderId(orderId) {
