@@ -1447,6 +1447,14 @@
         <span class="label">Musik</span>
         <span class="value" id="prevMusik">—</span>
       </div>
+      <div class="summary-row">
+        <span class="label">No. WhatsApp</span>
+        <span class="value" id="prevBuyer">—</span>
+      </div>
+      <div class="summary-row" id="prevIGRow">
+        <span class="label">Instagram</span>
+        <span class="value" id="prevIG">—</span>
+      </div>
     </div>
 
     <button onclick="openPreviewTab()" class="preview-open-btn">👁️ BUKA PREVIEW DI TAB BARU</button>
@@ -1554,7 +1562,7 @@
       <div>
         <label>Nomor WhatsApp <span class="req">✦</span></label>
         <input type="tel" id="buyerContact" placeholder="08xxxxxxxxxx" inputmode="numeric"
-          style="letter-spacing:0.5px;" oninput="clearErr(this)">
+          style="letter-spacing:0.5px;" oninput="clearErr(this); updatePreview()">
         <div class="input-hint">⚡ Link undangan aktif dikirim ke WhatsApp setelah konfirmasi pembayaran.</div>
       </div>
       <div>
@@ -2124,6 +2132,13 @@
       var mOpt = MUSIC_OPTIONS[data.musicChoice || 'piano-elegant'];
       el('prevMusik').textContent = mOpt ? mOpt.label : '—';
     }
+    // Buyer contact (diisi di step 5 tapi ditampilkan di preview step 4)
+    var buyerContactVal = (document.getElementById('buyerContact') || {}).value || '';
+    var buyerIGVal = (document.getElementById('buyerInstagram') || {}).value || '';
+    if (el('prevBuyer')) el('prevBuyer').textContent = buyerContactVal || '(diisi di langkah berikutnya)';
+    if (el('prevBuyer')) el('prevBuyer').style.color = buyerContactVal ? '' : 'var(--text-mute)';
+    if (el('prevIG')) el('prevIG').textContent = buyerIGVal || '—';
+    if (el('prevIGRow')) el('prevIGRow').style.display = buyerIGVal ? '' : 'none';
   }
 
   // ============ PREVIEW SESSION KEY ============
