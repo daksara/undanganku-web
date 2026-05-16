@@ -2211,14 +2211,8 @@
       showToast('Isi nomor WhatsApp dulu ya', 'error');
       return;
     }
-    if (!/^(\+62|62|0)[0-9]{8,13}$/.test(buyerContact.replace(/\s/g,''))) {
-      document.getElementById('buyerContact')?.classList.add('error');
-      document.getElementById('buyerContact')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      showToast('Format nomor WhatsApp tidak valid', 'error');
-      return;
-    }
     
-    // Validasi
+    // Validasi nama mempelai
     if (!data.brideName || !data.groomName) {
       showToast('Isi nama mempelai dulu ya', 'error');
       changeStep(2);
