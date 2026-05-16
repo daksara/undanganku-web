@@ -467,17 +467,19 @@
     border-color: rgba(200,169,110,0.7);
   }
 
-  /* Step 3b counter badge */
-  .step-counter .badge {
+  /* Required field missing badge on Next button */
+  .btn-primary .missing-badge {
     display: inline-block;
-    background: rgba(212,175,108,0.15);
-    color: var(--accent);
-    font-size: 9px;
-    padding: 2px 7px;
+    background: rgba(232,122,122,0.9);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
     border-radius: 99px;
-    margin-left: 6px;
-    letter-spacing: 1px;
+    margin-left: 8px;
     vertical-align: middle;
+    line-height: 1.6;
+    letter-spacing: 0;
   }
   
   /* ============ PAKET PICKER ============ */
@@ -1259,9 +1261,9 @@
   <!-- ===== STEP 3b: DATA PREMIUM (hanya muncul jika pilih premium) ===== -->
   <div class="step" id="step-3b">
     <div class="step-head">
-      <div class="step-counter">step 3b of 5</div>
-      <div class="step-title">👑 Data Premium</div>
-      <div class="step-subtitle">Isi data tambahan untuk fitur Premium kamu</div>
+      <div class="step-counter">step 4 of 6 <span style="font-family:'Inter',sans-serif; font-size:10px; background:rgba(212,175,108,0.15); color:var(--accent); padding:2px 8px; border-radius:99px; margin-left:6px; letter-spacing:1px;">PREMIUM</span></div>
+      <div class="step-title">Data Premium</div>
+      <div class="step-subtitle">Isi data tambahan untuk fitur Premium kamu — semua opsional</div>
     </div>
 
     <!-- FOTO COUPLE -->
@@ -1868,6 +1870,7 @@
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
     updateProgressUI(n);
+    saveDraft();
   }
   
   // ============ VALIDASI PER STEP ============
@@ -2253,6 +2256,7 @@
         const _oHash = await _hashOrderId(result.orderId);
         sessionStorage.setItem('_uk_sess', JSON.stringify({ h: _oHash, t: selectedTheme, id: result.orderId }));
         showToast('Pesanan terkirim ke owner!', 'success');
+        try { sessionStorage.removeItem(DRAFT_KEY); } catch(e) {}
         
         // Tampilkan order status card
         document.getElementById('orderStatusCard').classList.add('show');
@@ -2445,6 +2449,134 @@
       })
       .catch(() => {});
   });
+  // ============ AUTO-SAVE DRAFT (sessionStorage) ============
+  const DRAFT_KEY = '_uk_draft_v1';
+  const DRAFT_FIELDS = [
+    'brideName','brideNick','brideOrder','brideFather','brideMother','brideIG',
+    'groomName','groomNick','groomOrder','groomFather','groomMother','groomIG',
+    'weddingDate','akadStart','akadEnd','akadVenue','akadAddress','akadMaps',
+    'resepsiStart','resepsiEnd','resepsiVenue','resepsiAddress','resepsiMaps',
+    'quoteArabic','quoteText','quoteSource',
+    'bank1Name','bank1Num','bank1Holder','bank2Name','bank2Num','bank2Holder',
+    'couplePhotoUrl','galleryPhoto1','galleryPhoto2','galleryPhoto3','galleryPhoto4',
+    'buyerContact','buyerInstagram',
+  ];
+
+  function saveDraft() {
+    try {
+      var draft = { _step: currentStep, _theme: selectedTheme, _paket: selectedPaket };
+      DRAFT_FIELDS.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) draft[id] = el.value;
+      });
+      // Save love story entries
+      var lsEntries = [];
+      document.querySelectorAll('#lsContainer .ls-entry').forEach(function(entry) {
+        lsEntries.push({
+          year: (entry.querySelector('.ls-year') || {}).value || '',
+          title: (entry.querySelector('.ls-title') || {}).value || '',
+          story: (entry.querySelector('.ls-story') || {}).value || '',
+        });
+      });
+      draft._loveStory = lsEntries;
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    } catch(e) {}
+  }
+
+  function restoreDraft() {
+    try {
+      var raw = sessionStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      var draft = JSON.parse(raw);
+      DRAFT_FIELDS.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && draft[id] !== undefined && draft[id] !== '') el.value = draft[id];
+      });
+      if (draft._theme && TEMA_LABEL[draft._theme]) selectTheme(draft._theme);
+      if (draft._paket && PRICES[draft._paket]) selectPaket(draft._paket);
+      // Restore love story
+      if (Array.isArray(draft._loveStory) && draft._loveStory.length > 0) {
+        var cont = document.getElementById('lsContainer');
+        if (cont) {
+          cont.innerHTML = '';
+          draft._loveStory.forEach(function(entry) {
+            addLsEntry();
+            var entries = cont.querySelectorAll('.ls-entry');
+            var last = entries[entries.length - 1];
+            if (!last) return;
+            var y = last.querySelector('.ls-year'); if (y) y.value = entry.year || '';
+            var t = last.querySelector('.ls-title'); if (t) t.value = entry.title || '';
+            var s = last.querySelector('.ls-story'); if (s) s.value = entry.story || '';
+          });
+        }
+      }
+      showToast('Draft dipulihkan otomatis ✓', 'success');
+      updatePreview();
+    } catch(e) {}
+  }
+
+  // Auto-save every 3s while user is active
+  var _draftTimer = null;
+  function scheduleDraftSave() {
+    clearTimeout(_draftTimer);
+    _draftTimer = setTimeout(saveDraft, 3000);
+  }
+  document.addEventListener('input', scheduleDraftSave);
+  document.addEventListener('change', scheduleDraftSave);
+
+  // Restore draft on load (after a tick so DOM/addLsEntry is ready)
+  setTimeout(restoreDraft, 100);
+
+  // ============ REQUIRED FIELD COUNTER (Step 2) ============
+  const STEP2_REQUIRED = ['brideName', 'groomName', 'weddingDate', 'akadVenue', 'resepsiVenue'];
+
+  function updateMissingBadge() {
+    if (currentStep !== 2) { updateNextBtnLabel(); return; }
+    var missing = STEP2_REQUIRED.filter(function(id) {
+      var el = document.getElementById(id);
+      return !el || !(el.value || '').trim();
+    }).length;
+    updateNextBtnLabel(missing);
+  }
+
+  function updateNextBtnLabel(missing) {
+    var nb = document.getElementById('nextBtn');
+    if (!nb) return;
+    // Remove existing badge if any
+    var existing = nb.querySelector('.missing-badge');
+    if (existing) existing.remove();
+    if (missing && missing > 0 && currentStep === 2) {
+      var badge = document.createElement('span');
+      badge.className = 'missing-badge';
+      badge.textContent = missing + ' wajib';
+      nb.appendChild(badge);
+    }
+  }
+
+  // Update badge on any input change
+  document.addEventListener('input', function() {
+    if (currentStep === 2) updateMissingBadge();
+  });
+
+  // Also update when entering step 2
+  var _origChangeStep = changeStep;
+
+  // Patch: update badge after step transitions
+  var _patchedChangeStep = changeStep;
+  (function() {
+    var orig = window.changeStep || changeStep;
+    // We already have changeStep defined — just hook into updateProgressUI
+    var origUpdateProgress = updateProgressUI;
+    updateProgressUI = function(step) {
+      origUpdateProgress(step);
+      if (step === 2) { setTimeout(updateMissingBadge, 50); }
+      else { updateNextBtnLabel(0); }
+    };
+  })();
+
+  // Initial badge check
+  setTimeout(updateMissingBadge, 150);
+
 </script>
 
 </body>
