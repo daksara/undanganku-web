@@ -1871,8 +1871,8 @@
       var sCtr = sEl.querySelector('.step-counter');
       if (sCtr) sCtr.textContent = 'step ' + (sIdx + 1) + ' of ' + sOrder.length;
     }
-    // Update preview saat masuk step 4
-    if (n === 4) updatePreview();
+    // Update preview saat masuk step 4 (langsung, tanpa debounce)
+    if (n === 4) { clearTimeout(_previewTimer); if (typeof _doUpdatePreview === 'function') _doUpdatePreview(); }
     // Update summary saat masuk step 5
     if (n === 5) updateSummary();
 
@@ -1950,7 +1950,11 @@
   function prevStep() {
     var order = getStepOrder();
     var idx = order.indexOf(currentStep);
-    if (idx > 0) { _goingBack = true; changeStep(order[idx - 1]); _goingBack = false; }
+    if (idx > 0) {
+      _goingBack = true;
+      changeStep(order[idx - 1]);
+      _goingBack = false;
+    }
   }
   
   // ============ THEME & PAKET ============
@@ -2138,7 +2142,7 @@
     if (el('prevBuyer')) el('prevBuyer').textContent = buyerContactVal || '(diisi di langkah berikutnya)';
     if (el('prevBuyer')) el('prevBuyer').style.color = buyerContactVal ? '' : 'var(--text-mute)';
     if (el('prevIG')) el('prevIG').textContent = buyerIGVal || '—';
-    if (el('prevIGRow')) el('prevIGRow').style.display = buyerIGVal ? '' : 'none';
+    if (el('prevIGRow')) el('prevIGRow').style.display = '';  // selalu tampilkan row IG
   }
 
   // ============ PREVIEW SESSION KEY ============
