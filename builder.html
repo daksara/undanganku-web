@@ -2165,7 +2165,14 @@
     };
 
     try {
-      sessionStorage.setItem(previewKey, JSON.stringify(payload));
+      var payloadStr = JSON.stringify(payload);
+      sessionStorage.setItem(previewKey, payloadStr);
+      // Simpan juga ke localStorage sebagai fallback untuk Instagram in-app browser
+      // yang memblokir sessionStorage lintas tab. Auto-cleanup setelah 10 menit.
+      try {
+        localStorage.setItem(previewKey, payloadStr);
+        setTimeout(function() { try { localStorage.removeItem(previewKey); } catch(e){} }, 600000);
+      } catch (e) {}
     } catch (e) {
       showToast('Tidak bisa membuka preview, coba lagi', 'error');
       return;
