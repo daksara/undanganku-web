@@ -1077,24 +1077,49 @@ body.preview-mode [data-preview-only] { display: block; }
   var ORDER_ID = '';
   var THEME_KEY = 'royal-classic';
 
-  // ===== Data source: window._invitationData (static) or hash (preview) or fetch (legacy) =====
+  // ===== Data source: window._invitationData (static) > sessionStorage/localStorage (preview) > hash > fetch =====
   function getDataSource() {
+    var params = new URLSearchParams(window.location.search);
+
+    // 1. Static data injected by generator (live mode)
     if (window._invitationData && window._invitationData.data) {
       return Promise.resolve(window._invitationData);
     }
-    // Hash mode (builder preview)
+
+    // 2. Preview key dari builder — cek ?previewKey= di URL
+    // Instagram in-app browser memblokir sessionStorage lintas tab,
+    // sehingga builder juga menyimpan ke localStorage sebagai fallback.
+    var previewKey = params.get('previewKey');
+    if (previewKey) {
+      var raw = null;
+      try { raw = sessionStorage.getItem(previewKey); } catch (e) {}
+      if (!raw) { try { raw = localStorage.getItem(previewKey); } catch (e) {} }
+      if (raw) {
+        try {
+          var payload = JSON.parse(raw);
+          try { sessionStorage.removeItem(previewKey); } catch(e) {}
+          return Promise.resolve(payload);
+        } catch (e) {}
+      }
+      // previewKey ada tapi data tidak ditemukan (dibuka di browser/app berbeda)
+      return Promise.resolve({ _previewExpired: true });
+    }
+
+    // 3. Hash mode (legacy builder preview)
     if (window.location.hash && window.location.hash.length > 5) {
       try {
-        var payload = JSON.parse(decodeURIComponent(window.location.hash.slice(1)));
-        return Promise.resolve(payload);
+        var hPayload = JSON.parse(decodeURIComponent(window.location.hash.slice(1)));
+        return Promise.resolve(hPayload);
       } catch (e) {}
     }
-    // Fallback: fetch by id (legacy mode)
-    var qid = new URLSearchParams(window.location.search).get('id') || ORDER_ID;
+
+    // 4. Fetch by order id (live mode via ?id= atau ORDER_ID static)
+    var qid = params.get('id') || ORDER_ID;
     if (qid && qid.indexOf('{{') !== 0) {
       return fetch(BOT_API_URL + '/orders/data/' + encodeURIComponent(qid))
         .then(function(r) { return r.json(); });
     }
+
     return Promise.resolve(null);
   }
 
@@ -1784,8 +1809,25 @@ body.preview-mode [data-preview-only] { display: block; }
     getDataSource().then(function(payload) {
       if (payload) {
         applyData(payload);
+      } else if (payload && payload._previewExpired) {
+        // Preview key ada di URL tapi data tidak ditemukan di storage
+        // Kemungkinan dibuka dari Instagram/app lain yang blokir storage
+        document.getElementById('cover').innerHTML =
+          '<div style="text-align:center;color:var(--cream-soft);font-style:italic;padding:20px;">' +
+          '<h1 style="font-family:Allura,cursive;font-size:48px;color:var(--gold);margin-bottom:16px;">Wedding Invitation</h1>' +
+          '<p style="margin-bottom:18px;line-height:1.7;font-size:15px;">Preview tidak dapat dimuat.<br>Browser ini tidak bisa membaca data preview.</p>' +
+          '<p style="font-size:13px;opacity:0.7;margin-bottom:20px;">Salin link dan buka di <strong style="color:var(--gold);">Chrome</strong> atau <strong style="color:var(--gold);">Safari</strong> untuk melihat preview.</p>' +
+          '<button id="_cpBtn" style="background:linear-gradient(135deg,#d4af6c,#8b6f3a);color:#0a0a0a;border:none;padding:12px 28px;font-family:Cinzel,serif;font-size:11px;letter-spacing:0.25em;border-radius:999px;cursor:pointer;margin-top:4px;">SALIN LINK PREVIEW</button>' +
+          '</div>';
+        var _cpBtn = document.getElementById('_cpBtn');
+        if (_cpBtn && navigator.clipboard) {
+          _cpBtn.addEventListener('click', function() {
+            var btn = this;
+            navigator.clipboard.writeText(location.href).then(function() { btn.textContent = '✓ Tersalin'; }).catch(function(){});
+          });
+        }
       } else {
-        // No data — kemungkinan buka langsung tanpa parameter
+        // No data sama sekali — link salah atau langsung buka file
         document.getElementById('cover').innerHTML =
           '<div style="text-align:center;color:var(--cream-soft);font-style:italic;">' +
           '<h1 style="font-family:Allura,cursive;font-size:48px;color:var(--gold);">Wedding Invitation</h1>' +
