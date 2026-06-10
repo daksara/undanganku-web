@@ -483,6 +483,19 @@
   }
   
   /* ============ PAKET PICKER ============ */
+  .live-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #ff4d4d;
+    margin-right: 6px;
+    vertical-align: middle;
+    animation: livePulse 1.2s ease-in-out infinite;
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.7); }
+  }
   .paket-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -1193,220 +1206,50 @@
     </div>
   </div>
   
-  <!-- ===== STEP 3: PAKET ===== -->
+  <!-- ===== STEP 3: PAKET ORIGINAL — HARGA LIVE $1 ===== -->
   <div class="step" id="step-3">
     <div class="step-head">
       <div class="step-counter">step 3 of 5</div>
-      <div class="step-title">Pilih Paket</div>
-      <div class="step-subtitle">Pilih paket yang paling sesuai kebutuhanmu</div>
+      <div class="step-title">Paket Original</div>
+      <div class="step-subtitle">Satu paket, semua fitur. Harganya <strong style="color:var(--accent);">$1</strong> — otomatis mengikuti kurs dolar hari ini</div>
     </div>
-    
-    <div class="paket-grid">
 
-      <!-- STANDARD -->
-      <div class="paket-card selected" data-paket="standard" onclick="selectPaket('standard')">
-        <div class="paket-header">
-          <span class="paket-icon">🎀</span>
-          <span class="paket-name">Standard</span>
-        </div>
-        <div class="paket-price">Rp 29.000</div>
-        <div class="paket-price-sub">Aktif 3 bulan</div>
-        <div class="paket-features">
-          <div class="paket-feature-item"><span class="check">✓</span><span>3 pilihan tema undangan</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Cover nama mempelai + Buka Undangan</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>RSVP & ucapan tamu</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Countdown hari H</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Amplop digital (2 rekening)</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Musik auto-play</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Tampilan polos &amp; elegan (tanpa foto)</span></div>
-        </div>
-        <div class="paket-select-indicator">
-          <div class="radio"></div>
-          <span>Pilih Standard</span>
-        </div>
-      </div>
+    <div class="paket-grid" style="grid-template-columns:1fr; max-width:430px; margin:0 auto;">
 
-      <!-- PREMIUM -->
-      <div class="paket-card premium-card" data-paket="premium" onclick="selectPaket('premium')">
-        <div class="paket-badge">✦ TERPOPULER</div>
+      <div class="paket-card premium-card selected" data-paket="standard">
+        <div class="paket-badge"><span class="live-dot"></span>HARGA LIVE — IKUT KURS DOLAR</div>
         <div class="paket-header">
-          <span class="paket-icon">👑</span>
-          <span class="paket-name">Premium</span>
+          <span class="paket-icon">✦</span>
+          <span class="paket-name">Original</span>
         </div>
-        <div class="paket-price">Rp 49.000</div>
-        <div class="paket-price-sub">Aktif 6 bulan — 2× lebih lama</div>
+        <div class="paket-price-sub" style="text-decoration:line-through; opacity:0.5; margin-bottom:2px;">Rp 99.000</div>
+        <div class="paket-price" style="font-size:36px;">$1</div>
+        <div class="paket-price-sub">≈ <strong id="paketPriceIdr" style="color:var(--accent); font-size:14px;">Rp —</strong> &nbsp;·&nbsp; aktif 3 bulan</div>
         <div class="paket-features">
-          <div class="paket-feature-item"><span class="check">✓</span><span>Semua fitur Standard</span></div>
-          <div class="paket-divider"></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Foto couple di cover</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Galeri foto (4 foto)</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Love Story timeline</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Kutipan / quote custom</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Nama tamu personal di cover</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Revisi data 1× gratis</span></div>
-          <div class="paket-feature-item premium-feat"><span class="check">✦</span><span>Prioritas konfirmasi &lt; 1 jam</span></div>
+          <div class="paket-feature-item"><span class="check">✓</span><span>3 tema eksklusif (Royal, Bloom, Adat Jawa)</span></div>
+          <div class="paket-feature-item"><span class="check">✓</span><span>Nama tamu personal di cover — tiap tamu merasa diundang khusus</span></div>
+          <div class="paket-feature-item"><span class="check">✓</span><span>RSVP &amp; ucapan tamu real-time</span></div>
+          <div class="paket-feature-item"><span class="check">✓</span><span>Countdown hari H + musik auto-play</span></div>
+          <div class="paket-feature-item"><span class="check">✓</span><span>Amplop digital (2 rekening / e-wallet)</span></div>
+          <div class="paket-feature-item"><span class="check">✓</span><span>Ayat / kutipan custom</span></div>
+          <div class="paket-feature-item"><span class="check">✓</span><span>Desain polos &amp; elegan — fokus ke nama kalian, tanpa foto</span></div>
+          <div class="paket-feature-item"><span class="check">✓</span><span>Link unik siap dishare ke WhatsApp</span></div>
         </div>
-        <div class="paket-select-indicator">
-          <div class="radio"></div>
-          <span>Pilih Premium</span>
+        <div class="paket-divider"></div>
+        <div style="font-size:11px; color:var(--text-mute); text-align:center; line-height:1.7;">
+          Kurs USD/IDR saat ini: <strong id="kursVal" style="color:var(--text);">—</strong>
+          <span class="live-dot" style="margin-left:4px;"></span><br>
+          <span style="color:var(--accent);">Kunci harga hari ini — kurs besok bisa naik.</span>
         </div>
       </div>
 
     </div>
-    
+
     <div class="preview-cta">
-      💡 <strong>Semua paket termasuk:</strong> Link undangan unik, tanpa watermark setelah konfirmasi, RSVP, countdown, dan amplop digital.
+      ☕ <strong>Semurah segelas es teh.</strong> Lihat preview gratis di langkah berikutnya — pesan hanya kalau kamu suka. Tanpa watermark setelah konfirmasi.
     </div>
   </div>
   
-  <!-- ===== STEP 3b: DATA PREMIUM (hanya muncul jika pilih premium) ===== -->
-  <div class="step" id="step-3b">
-    <div class="step-head">
-      <div class="step-counter">step 4 of 6 <span style="font-family:'Inter',sans-serif; font-size:10px; background:rgba(212,175,108,0.15); color:var(--accent); padding:2px 8px; border-radius:99px; margin-left:6px; letter-spacing:1px;">PREMIUM</span></div>
-      <div class="step-title">Data Premium</div>
-      <div class="step-subtitle">Isi data tambahan untuk fitur Premium kamu — semua opsional</div>
-    </div>
-
-    <!-- FOTO COUPLE -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">💑</span>
-        <span class="section-head-text">Foto Cover (opsional)</span>
-      </div>
-      <div>
-        <label>Link Foto Couple</label>
-        <input type="url" id="couplePhotoUrl" placeholder="https://drive.google.com/file/d/...">
-        <div style="font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.5;">
-          📸 Foto kalian berdua akan tampil di frame cover undangan. Gunakan foto portrait (tegak) untuk hasil terbaik.
-        </div>
-      </div>
-      <!-- Panduan link -->
-      <details style="margin-top:12px; border:1px solid rgba(200,169,110,0.2); border-radius:8px; overflow:hidden;">
-        <summary style="padding:11px 14px; cursor:pointer; font-family:'Cinzel',serif; font-size:9px; letter-spacing:1.5px; color:var(--accent); list-style:none; display:flex; align-items:center; justify-content:space-between;">
-          <span>📋 CARA DAPAT LINK FOTO</span><span style="opacity:0.6;">▼</span>
-        </summary>
-        <div style="padding:14px; border-top:1px solid rgba(200,169,110,0.1); display:flex; flex-direction:column; gap:8px;">
-          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">1</span>
-            <span>Buka <strong style="color:var(--text);">drive.google.com</strong> → upload foto couple</span>
-          </div>
-          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">2</span>
-            <span>Klik kanan foto → <strong style="color:var(--text);">"Dapatkan link"</strong></span>
-          </div>
-          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">3</span>
-            <span>Ubah akses ke <strong style="color:var(--text);">"Siapa saja yang punya link"</strong> → Salin</span>
-          </div>
-          <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-            <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">4</span>
-            <span>Tempel link di field di atas ✅</span>
-          </div>
-        </div>
-      </details>
-    </div>
-
-    <!-- GALERI FOTO -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">🖼️</span>
-        <span class="section-head-text">Galeri Foto <span style="font-weight:400; opacity:0.6;">(opsional, maks. 4)</span></span>
-      </div>
-
-      <!-- Panduan cara dapat link foto -->
-      <details style="margin-bottom:16px; border:1px solid rgba(200,169,110,0.25); border-radius:10px; overflow:hidden;">
-        <summary style="padding:13px 14px; cursor:pointer; font-family:'Cinzel',serif; font-size:10px; letter-spacing:1.5px; color:var(--accent); list-style:none; display:flex; align-items:center; justify-content:space-between;">
-          <span>📋 CARA DAPAT LINK FOTO</span><span style="opacity:0.6;">▼</span>
-        </summary>
-        <div style="padding:14px; border-top:1px solid rgba(200,169,110,0.15);">
-
-          <!-- Google Drive -->
-          <div style="margin-bottom:14px;">
-            <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--accent); margin-bottom:8px;">GOOGLE DRIVE</div>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">1</span>
-                <span>Buka <strong style="color:var(--text);">drive.google.com</strong> → upload foto kamu</span>
-              </div>
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">2</span>
-                <span>Klik kanan foto → <strong style="color:var(--text);">"Dapatkan link"</strong></span>
-              </div>
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">3</span>
-                <span>Ubah akses ke <strong style="color:var(--text);">"Siapa saja yang punya link"</strong> → Salin link</span>
-              </div>
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">4</span>
-                <span>Tempel link di field foto di bawah ✅</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Divider -->
-          <div style="border-top:1px solid rgba(200,169,110,0.1); margin:12px 0;"></div>
-
-          <!-- Google Photos -->
-          <div>
-            <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--accent); margin-bottom:8px;">GOOGLE PHOTOS (lebih mudah)</div>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">1</span>
-                <span>Buka foto di <strong style="color:var(--text);">Google Photos</strong></span>
-              </div>
-              <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-dim); line-height:1.5;">
-                <span style="background:rgba(200,169,110,0.15); color:var(--accent); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; font-family:'Cinzel',serif;">2</span>
-                <span>Tap ikon <strong style="color:var(--text);">⋮ → Buat link</strong> → Salin</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </details>
-
-      <p style="font-size:12px; color:var(--text-dim); margin-bottom:14px; line-height:1.6;">
-        Kosongkan field yang tidak diperlukan — hanya foto yang diisi yang akan ditampilkan.
-      </p>
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <div>
-          <label>Foto 1</label>
-          <input type="url" id="galleryPhoto1" placeholder="https://drive.google.com/... atau link Instagram" oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Foto 2 <span style="font-size:11px; opacity:0.5;">(opsional)</span></label>
-          <input type="url" id="galleryPhoto2" placeholder="https://drive.google.com/..." oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Foto 3 <span style="font-size:11px; opacity:0.5;">(opsional)</span></label>
-          <input type="url" id="galleryPhoto3" placeholder="https://drive.google.com/..." oninput="updatePreview()">
-        </div>
-        <div>
-          <label>Foto 4 <span style="font-size:11px; opacity:0.5;">(opsional)</span></label>
-          <input type="url" id="galleryPhoto4" placeholder="https://drive.google.com/..." oninput="updatePreview()">
-        </div>
-      </div>
-
-    </div>
-
-    <!-- LOVE STORY -->
-    <div class="form-section">
-      <div class="section-head">
-        <span class="section-head-icon">❤️</span>
-        <span class="section-head-text">Love Story <span style="font-weight:400; opacity:0.6;">(opsional)</span></span>
-      </div>
-      <p style="font-size:12px; color:var(--text-dim); margin-bottom:14px; line-height:1.6;">
-        Ceritakan perjalanan cinta kalian. Minimal 1 cerita, maksimal 4.
-      </p>
-
-      <div id="lsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
-
-      <button type="button" id="lsAddBtn" onclick="addLsEntry()"
-        style="margin-top:12px; width:100%; padding:11px; border:1px dashed rgba(200,169,110,0.35); border-radius:10px; background:transparent; color:var(--accent); font-size:13px; cursor:pointer; letter-spacing:0.5px; transition:all 0.2s;">
-        + Tambah Cerita
-      </button>
-    </div>
-  </div>
-
   <!-- ===== STEP 4: PREVIEW ===== -->
   <div class="step" id="step-4">
     <div class="step-head">
@@ -1487,11 +1330,11 @@
       </div>
       <div class="summary-row">
         <span class="label">Paket</span>
-        <span class="value" id="sumPaket">Premium</span>
+        <span class="value" id="sumPaket">Original ✦</span>
       </div>
       <div class="summary-row total-row">
         <span class="label">Total Pembayaran</span>
-        <span class="value" id="sumTotal">Rp 75.000</span>
+        <span class="value" id="sumTotal">—</span>
       </div>
     </div>
     
@@ -1644,8 +1487,7 @@
   const STEP_NAMES = {
     1: 'Pilih Tema',
     2: 'Data Undangan',
-    3: 'Pilih Paket',
-    '3b': 'Data Premium',
+    3: 'Paket & Harga',
     4: 'Preview',
     5: 'Pemesanan',
   };
@@ -1675,6 +1517,7 @@
 
   function addLsEntry() {
     var container = document.getElementById('lsContainer');
+    if (!container) return;
     var count = container.querySelectorAll('.ls-entry').length;
     if (count >= 4) return;
     var ph = LS_PLACEHOLDERS[count] || LS_PLACEHOLDERS[0];
@@ -1748,15 +1591,57 @@
   let _activeNextHandler = null; // init setelah DOM ready
   var _goingBack = false;
 
-  // Urutan step dinamis: step 3b hanya muncul kalau premium
   function getStepOrder() {
-    return selectedPaket === 'premium'
-      ? [1, 2, 3, '3b', 4, 5]
-      : [1, 2, 3, 4, 5];
+    return [1, 2, 3, 4, 5];
   }
-  
-  const PRICES = { standard: 29000, premium: 49000 };
-  const PAKET_LABEL = { standard: 'Standard', premium: 'Premium 👑' };
+
+  // ============ HARGA LIVE $1 (ikut kurs USD/IDR) ============
+  // selectedPaket tetap 'standard' untuk kompatibilitas dengan tema & bot;
+  // label yang ditampilkan ke user adalah "Original".
+  const USD_PRICE = 1;
+  const FALLBACK_RATE = 16500; // dipakai jika API kurs tidak bisa diakses
+  const RATE_CACHE_KEY = '_uk_usd_rate';
+  const RATE_CACHE_TTL = 30 * 60 * 1000; // 30 menit
+  var usdRate = FALLBACK_RATE;
+
+  // Charm pricing: bulatkan ke ribuan lalu mundur 100 (mis. kurs 16.534 -> Rp 16.900)
+  function charmRp(n) { return Math.max(9900, Math.ceil(n / 1000) * 1000 - 100); }
+  function getLivePrice() { return charmRp(USD_PRICE * usdRate); }
+  function formatRp(n) { return 'Rp ' + Math.round(n).toLocaleString('id-ID'); }
+
+  function refreshPriceUI() {
+    var p = document.getElementById('paketPriceIdr');
+    if (p) p.textContent = formatRp(getLivePrice());
+    var k = document.getElementById('kursVal');
+    if (k) k.textContent = formatRp(usdRate);
+    if (currentStep === 5 && typeof updateSummary === 'function') updateSummary();
+  }
+
+  function initLiveRate() {
+    try {
+      var cached = JSON.parse(sessionStorage.getItem(RATE_CACHE_KEY) || 'null');
+      if (cached && cached.rate > 0 && (Date.now() - cached.t) < RATE_CACHE_TTL) {
+        usdRate = cached.rate;
+        refreshPriceUI();
+        return;
+      }
+    } catch (e) {}
+    fetch('https://open.er-api.com/v6/latest/USD')
+      .then(function(r) { return r.json(); })
+      .then(function(j) {
+        var rate = j && j.rates && j.rates.IDR;
+        if (rate > 0) {
+          usdRate = rate;
+          try { sessionStorage.setItem(RATE_CACHE_KEY, JSON.stringify({ rate: rate, t: Date.now() })); } catch (e) {}
+          refreshPriceUI();
+        }
+      })
+      .catch(function() {});
+  }
+  refreshPriceUI();
+  initLiveRate();
+
+  const PAKET_LABEL = { standard: 'Original ✦' };
   const TEMA_LABEL = {
     'royal-classic': 'Royal Classic',
     'sunset-bloom': 'Sunset Bloom',
@@ -1830,8 +1715,7 @@
 
     // Sembunyikan step aktif
     document.getElementById('step-' + currentStep).classList.remove('active');
-    var _ppid = (currentStep === '3b') ? 'pill-3' : 'pill-' + currentStep;
-    var pill = document.getElementById(_ppid);
+    var pill = document.getElementById('pill-' + currentStep);
     if (pill) {
       var order2 = getStepOrder();
       var prevIdx = order2.indexOf(currentStep);
@@ -1844,9 +1728,7 @@
     var _nse = document.getElementById('step-' + currentStep);
     _nse.classList.add('active');
     if (_goingBack) { _nse.classList.add('going-back'); setTimeout(function(){_nse.classList.remove('going-back');},400); }
-    // step-3b berbagi pill dengan step-3
-    var _npid = (currentStep === '3b') ? 'pill-3' : 'pill-' + currentStep;
-    var newPill = document.getElementById(_npid);
+    var newPill = document.getElementById('pill-' + currentStep);
     if (newPill) {
       newPill.classList.add('active');
       newPill.classList.remove('done');
@@ -1924,12 +1806,7 @@
     }
 
     if (step === 3) {
-      // Paket sudah selalu terpilih (default standard)
-      return true;
-    }
-
-    if (step === '3b') {
-      // Data premium semua opsional — tidak wajib diisi
+      // Hanya satu paket — selalu valid
       return true;
     }
 
@@ -1976,13 +1853,6 @@
       musicSelect.value = suggested;
       updateMusicPreview();
     }
-  }
-  
-  function selectPaket(paket) {
-    selectedPaket = paket;
-    document.querySelectorAll('.paket-card').forEach(c => c.classList.remove('selected'));
-    document.querySelector('[data-paket="' + paket + '"]').classList.add('selected');
-    if (paket === 'standard' && currentStep === '3b') changeStep(3);
   }
   
   // ============ MUSIC OPTIONS ============
@@ -2092,36 +1962,11 @@
       bank2Num: v('bank2Num'),
       bank2Holder: v('bank2Holder'),
 
-      // ===== PREMIUM FIELDS =====
-      couplePhotoUrl: v('couplePhotoUrl'),
-
-      galleryPhotos: [
-        v('galleryPhoto1'),
-        v('galleryPhoto2'),
-        v('galleryPhoto3'),
-        v('galleryPhoto4'),
-      ].filter(Boolean),
-
-      loveStory: (function() {
-        var entries = document.querySelectorAll('#lsContainer .ls-entry');
-        var result = [];
-        entries.forEach(function(entry) {
-          var year = (entry.querySelector('.ls-year').value || '').trim();
-          var title = (entry.querySelector('.ls-title').value || '').trim();
-          var story = (entry.querySelector('.ls-story').value || '').trim();
-          if (year || title || story) result.push({ year: year, title: title, story: story });
-        });
-        return result;
-      })(),
+      // Paket Original tampil polos — foto, galeri & love story tidak dijual
+      couplePhotoUrl: '',
+      galleryPhotos: [],
+      loveStory: [],
     };
-
-    // Paket standard: kosongkan data fitur premium agar undangan tampil polos
-    // (misal user sempat isi data premium lalu ganti ke standard)
-    if (selectedPaket === 'standard') {
-      data.couplePhotoUrl = '';
-      data.galleryPhotos = [];
-      data.loveStory = [];
-    }
 
     return data;
   }
@@ -2210,7 +2055,7 @@
       ? (function(d){var p=d.split('-');return p.length===3?new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):d;})(data.weddingDate)
       : '—';
     document.getElementById('sumPaket').textContent = PAKET_LABEL[selectedPaket];
-    document.getElementById('sumTotal').textContent = 'Rp ' + PRICES[selectedPaket].toLocaleString('id-ID');
+    document.getElementById('sumTotal').textContent = formatRp(getLivePrice()) + ' ($1)';
   }
   
   // ============ COPY ============
@@ -2270,6 +2115,9 @@
         body: JSON.stringify({
           theme: selectedTheme,
           paket: selectedPaket,
+          priceUsd: USD_PRICE,
+          priceIdr: getLivePrice(),
+          usdRate: usdRate,
           buyerContact: buyerContact,
           buyerInstagram: buyerInstagram,
           sumber: sumberPembelian,
@@ -2373,15 +2221,7 @@
   }
   
   // ============ CHECK EXISTING ORDER (URL param atau localStorage) ============
-  // ============ AUTO-SELECT PAKET FROM URL ============
-  // Init love story with 1 entry
-  addLsEntry();
-
   const urlParams = new URLSearchParams(window.location.search);
-  const paramPaket = urlParams.get('paket');
-  if (paramPaket && PRICES[paramPaket]) {
-    selectPaket(paramPaket);
-  }
 
   // ===== OPSI 4: Kontrol sumber via ?src= =====
   const paramSrc = urlParams.get('src');
@@ -2489,7 +2329,6 @@
     'resepsiStart','resepsiEnd','resepsiVenue','resepsiAddress','resepsiMaps',
     'quoteArabic','quoteText','quoteSource',
     'bank1Name','bank1Num','bank1Holder','bank2Name','bank2Num','bank2Holder',
-    'couplePhotoUrl','galleryPhoto1','galleryPhoto2','galleryPhoto3','galleryPhoto4',
     'buyerContact','buyerInstagram',
   ];
 
@@ -2524,7 +2363,6 @@
         if (el && draft[id] !== undefined && draft[id] !== '') el.value = draft[id];
       });
       if (draft._theme && TEMA_LABEL[draft._theme]) selectTheme(draft._theme);
-      if (draft._paket && PRICES[draft._paket]) selectPaket(draft._paket);
       // Restore love story
       if (Array.isArray(draft._loveStory) && draft._loveStory.length > 0) {
         var cont = document.getElementById('lsContainer');
