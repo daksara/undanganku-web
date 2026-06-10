@@ -795,6 +795,22 @@ body.preview-mode [data-preview-only] { display: block; }
   object-fit: cover;
 }
 
+
+/* Interaksi sentuh halus — tanpa kotak tap-highlight biru */
+* { -webkit-tap-highlight-color: transparent; }
+button { touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid rgba(212,175,108,0.55); outline-offset: 2px; border-radius: 6px; }
+button { transition: transform 0.16s ease, opacity 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+button:active { transform: scale(0.96); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
 <script defer src="/_vercel/insights/script.js"></script>

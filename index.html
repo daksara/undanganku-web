@@ -363,6 +363,32 @@
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+
+  /* ── PREMIUM INTERACTIONS ── */
+  * { -webkit-tap-highlight-color: transparent; }
+  a, button { touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid rgba(200,169,110,0.55); outline-offset: 2px; border-radius: 4px; }
+
+  .tema-card:hover, .price-card:hover { border-color: rgba(200,169,110,0.55); }
+  .btn-primary { position: relative; overflow: hidden; transition: transform 0.16s ease, box-shadow 0.25s ease; }
+  .btn-primary:hover { box-shadow: 0 6px 24px rgba(200,169,110,0.35); }
+  .btn-primary:active { transform: scale(0.97); opacity: 1; }
+  .btn-primary::after {
+    content: ''; position: absolute; top: 0; bottom: 0; left: -90%; width: 60%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: skewX(-20deg); pointer-events: none;
+    animation: btnShine 3.6s ease-in-out infinite;
+  }
+  @keyframes btnShine { 0%, 60% { left: -90%; } 85%, 100% { left: 140%; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
 <script defer src="/_vercel/insights/script.js"></script>
