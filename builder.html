@@ -495,7 +495,7 @@
     letter-spacing: 0;
   }
   
-  /* ============ PAKET PICKER ============ */
+  /* ============ LIVE PRICE DOT ============ */
   .live-dot {
     display: inline-block;
     width: 6px; height: 6px;
@@ -509,150 +509,6 @@
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.35; transform: scale(0.7); }
   }
-  .paket-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  
-  .paket-card {
-    background: var(--bg-card);
-    border: 2px solid var(--line);
-    border-radius: 16px;
-    padding: 20px 18px;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-  .paket-card.selected {
-    border-color: var(--accent);
-    background: rgba(212, 175, 108, 0.07);
-  }
-  .paket-card:active { transform: scale(0.99); }
-
-  /* Premium card — mencolok */
-  .paket-card.premium-card {
-    border-color: var(--accent);
-    background: linear-gradient(135deg, rgba(212,175,108,0.12) 0%, rgba(184,149,106,0.06) 100%);
-  }
-  .paket-card.premium-card.selected {
-    background: linear-gradient(135deg, rgba(212,175,108,0.18) 0%, rgba(184,149,106,0.1) 100%);
-    border-color: var(--accent-bright);
-    box-shadow: 0 0 0 1px var(--accent), 0 8px 28px rgba(212,175,108,0.2);
-  }
-  .paket-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: linear-gradient(135deg, var(--accent), #c8870a);
-    color: #0a0a0a;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    text-transform: uppercase;
-  }
-  .paket-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  .paket-icon {
-    font-size: 20px;
-    line-height: 1;
-  }
-  .paket-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-  }
-  .paket-price {
-    font-family: 'DM Serif Display', serif;
-    font-size: 26px;
-    color: var(--accent-bright);
-    margin-bottom: 2px;
-    line-height: 1;
-  }
-  .paket-price-sub {
-    font-size: 10px;
-    color: var(--text-mute);
-    letter-spacing: 0.5px;
-    margin-bottom: 12px;
-  }
-  .paket-features {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-top: 4px;
-    line-height: 1.3;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .paket-feature-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 7px;
-  }
-  .paket-feature-item .check {
-    color: var(--accent);
-    font-size: 12px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .paket-feature-item.premium-feat {
-    color: var(--accent-bright);
-    font-weight: 500;
-  }
-  .paket-feature-item.premium-feat .check {
-    color: var(--accent-bright);
-  }
-  .paket-divider {
-    height: 1px;
-    background: var(--line);
-    margin: 10px 0;
-  }
-  .paket-select-indicator {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 14px;
-    font-size: 11px;
-    color: var(--text-mute);
-    letter-spacing: 0.5px;
-  }
-  .paket-select-indicator .radio {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 2px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s;
-  }
-  .paket-card.selected .paket-select-indicator .radio {
-    border-color: var(--accent);
-    background: var(--accent);
-  }
-  .paket-card.selected .paket-select-indicator .radio::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #0a0a0a;
-  }
-  .paket-card.selected .paket-select-indicator {
-    color: var(--accent);
-  }
-  
   /* ============ PREVIEW ============ */
   .preview-frame {
     border-radius: 14px;
@@ -898,15 +754,13 @@
       <div class="pill active" id="pill-1"></div>
       <div class="pill" id="pill-2"></div>
       <div class="pill" id="pill-3"></div>
-      <div class="pill" id="pill-4"></div>
-      <div class="pill" id="pill-5"></div>
     </div>
   </div>
   
   <!-- ===== STEP 1: TEMA ===== -->
   <div class="step active" id="step-1">
     <div class="step-head">
-      <div class="step-counter">step 1 of 5</div>
+      <div class="step-counter">step 1 of 3</div>
       <div class="step-title">Pilih Tema</div>
       <div class="step-subtitle">Pilih desain yang sesuai dengan karakter pernikahanmu</div>
     </div>
@@ -965,7 +819,7 @@
   </div>
   <div class="step" id="step-2">
     <div class="step-head">
-      <div class="step-counter">step 2 of 5</div>
+      <div class="step-counter">step 2 of 3</div>
       <div class="step-title">Data Undangan</div>
       <div class="step-subtitle">Field bertanda <span style="color:var(--accent);">✦</span> wajib diisi</div>
     </div>
@@ -997,11 +851,7 @@
           <label>Nama Ibu Mempelai Wanita <span class="opt">(opsional)</span></label>
           <input type="text" id="brideMother" placeholder="Ibu Hj. Sri Wahyuni" oninput="updatePreview()">
         </div>
-        <div>
-          <label>Instagram Mempelai Wanita <span class="opt">(opsional)</span></label>
-          <input type="text" id="brideIG" placeholder="@andiniputri" oninput="updatePreview()">
-        </div>
-        
+
         <hr style="border: none; border-top: 1px dashed var(--line); margin: 4px 0;">
         
         <div>
@@ -1024,13 +874,32 @@
           <label>Nama Ibu Mempelai Pria <span class="opt">(opsional)</span></label>
           <input type="text" id="groomMother" placeholder="Ibu Dra. Siti Nurhayati" oninput="updatePreview()">
         </div>
-        <div>
-          <label>Instagram Mempelai Pria <span class="opt">(opsional)</span></label>
-          <input type="text" id="groomIG" placeholder="@rezapratama" oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- Instagram Mempelai (jarang diisi — dilipat agar form utama ringkas) -->
+    <div class="collapsible-section" id="colIG">
+      <button type="button" class="collapsible-toggle" onclick="toggleSection('colIG')">
+        <div class="collapsible-toggle-left">
+          <span class="section-head-text">Instagram Mempelai</span>
+          <span style="font-size:10px; color:var(--text-mute); margin-left:6px; font-style:italic; text-transform:none; letter-spacing:0;">(opsional)</span>
+        </div>
+        <span class="collapsible-chevron">▼</span>
+      </button>
+      <div class="collapsible-body">
+        <div class="form-grid">
+          <div>
+            <label>Instagram Mempelai Wanita <span class="opt">(opsional)</span></label>
+            <input type="text" id="brideIG" placeholder="@andiniputri" oninput="updatePreview()">
+          </div>
+          <div>
+            <label>Instagram Mempelai Pria <span class="opt">(opsional)</span></label>
+            <input type="text" id="groomIG" placeholder="@rezapratama" oninput="updatePreview()">
+          </div>
         </div>
       </div>
     </div>
-    
+
     <!-- Acara -->
     <div class="form-section">
       <div class="section-head">
@@ -1216,56 +1085,12 @@
     </div>
   </div>
   
-  <!-- ===== STEP 3: PAKET ORIGINAL — HARGA LIVE $1 ===== -->
+  <!-- ===== STEP 3: PREVIEW & PESAN ===== -->
   <div class="step" id="step-3">
     <div class="step-head">
-      <div class="step-counter">step 3 of 5</div>
-      <div class="step-title">Paket Original</div>
-      <div class="step-subtitle">Satu paket, semua fitur. Harganya <strong style="color:var(--accent);">$1</strong> — otomatis mengikuti kurs dolar hari ini</div>
-    </div>
-
-    <div class="paket-grid" style="grid-template-columns:1fr; max-width:430px; margin:0 auto;">
-
-      <div class="paket-card premium-card selected" data-paket="standard">
-        <div class="paket-badge"><span class="live-dot"></span>HARGA LIVE — IKUT KURS DOLAR</div>
-        <div class="paket-header">
-          <span class="paket-icon">✦</span>
-          <span class="paket-name">Original</span>
-        </div>
-        <div class="paket-price-sub" style="text-decoration:line-through; opacity:0.5; margin-bottom:2px;">Rp 99.000</div>
-        <div class="paket-price" style="font-size:36px;">$1</div>
-        <div class="paket-price-sub">≈ <strong id="paketPriceIdr" style="color:var(--accent); font-size:14px;">Rp —</strong> &nbsp;·&nbsp; aktif 3 bulan</div>
-        <div class="paket-features">
-          <div class="paket-feature-item"><span class="check">✓</span><span>3 tema eksklusif (Royal, Bloom, Adat Jawa)</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Nama tamu personal di cover — tiap tamu merasa diundang khusus</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>RSVP &amp; ucapan tamu real-time</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Countdown hari H + musik auto-play</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Amplop digital (2 rekening / e-wallet)</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Ayat / kutipan custom</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Desain polos &amp; elegan — fokus ke nama kalian, tanpa foto</span></div>
-          <div class="paket-feature-item"><span class="check">✓</span><span>Link unik siap dishare ke WhatsApp</span></div>
-        </div>
-        <div class="paket-divider"></div>
-        <div style="font-size:11px; color:var(--text-mute); text-align:center; line-height:1.7;">
-          Kurs USD/IDR saat ini: <strong id="kursVal" style="color:var(--text);">—</strong>
-          <span class="live-dot" style="margin-left:4px;"></span><br>
-          <span style="color:var(--accent);">Kunci harga hari ini — kurs besok bisa naik.</span>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="preview-cta">
-      <strong>Semurah segelas es teh.</strong> Lihat preview gratis di langkah berikutnya — pesan hanya kalau kamu suka. Tanpa watermark setelah konfirmasi.
-    </div>
-  </div>
-  
-  <!-- ===== STEP 4: PREVIEW ===== -->
-  <div class="step" id="step-4">
-    <div class="step-head">
-      <div class="step-counter">step 4 of 5</div>
-      <div class="step-title">Preview Undangan</div>
-      <div class="step-subtitle">Pastikan semua data sudah benar sebelum memesan</div>
+      <div class="step-counter">step 3 of 3</div>
+      <div class="step-title">Preview &amp; Pesan</div>
+      <div class="step-subtitle">Cek hasilnya — suka? Kunci harga hari ini juga</div>
     </div>
 
     <div class="summary-card" id="previewSummary" style="margin-bottom:16px;">
@@ -1315,39 +1140,27 @@
     <p style="text-align:center; font-size:11px; color:rgba(240,230,210,0.4); font-style:italic;">
       Preview akan terbuka di tab baru. Kembali ke sini untuk lanjut memesan.
     </p>
-  </div>
-  
-  <!-- ===== STEP 5: BAYAR ===== -->
-  <div class="step" id="step-5">
-    <div class="step-head">
-      <div class="step-counter">step 5 of 5</div>
-      <div class="step-title">Pemesanan</div>
-      <div class="step-subtitle">Selesaikan pembayaran untuk aktivasi undangan</div>
-    </div>
-    
-    <div class="summary-card">
-      <div class="summary-row">
-        <span class="label">Tema</span>
-        <span class="value" id="sumTheme">Royal Classic</span>
+
+    <!-- Harga compact — tepat di samping keputusan memesan -->
+    <div style="border:1px solid rgba(212,175,108,0.45); border-radius:12px; padding:14px 16px; margin:20px 0 4px;
+      background:linear-gradient(160deg, rgba(212,175,108,0.10), rgba(212,175,108,0.02));
+      display:flex; align-items:center; justify-content:space-between; gap:14px;">
+      <div style="min-width:0;">
+        <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:1.5px; color:var(--accent);">
+          <span class="live-dot"></span>HARGA LIVE — IKUT KURS DOLAR
+        </div>
+        <div style="font-size:11px; color:var(--text-mute); margin-top:7px; line-height:1.6;">
+          Kurs USD/IDR: <strong id="kursVal" style="color:var(--text);">—</strong> · aktif 3 bulan<br>
+          <span style="color:var(--accent);">Kunci harga hari ini — kurs besok bisa naik.</span>
+        </div>
       </div>
-      <div class="summary-row">
-        <span class="label">Mempelai</span>
-        <span class="value" id="sumNames">— & —</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Tanggal</span>
-        <span class="value" id="sumDate">—</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Paket</span>
-        <span class="value" id="sumPaket">Original ✦</span>
-      </div>
-      <div class="summary-row total-row">
-        <span class="label">Total Pembayaran</span>
-        <span class="value" id="sumTotal">—</span>
+      <div style="text-align:right; flex-shrink:0;">
+        <div style="font-size:12px; color:var(--text-mute); text-decoration:line-through;">Rp 99.000</div>
+        <div style="font-family:'DM Serif Display',serif; font-style:italic; font-size:32px; line-height:1.1; color:var(--accent-bright);">$1</div>
+        <div style="font-size:12px; color:var(--text-dim);">≈ <strong id="paketPriceIdr" style="color:var(--accent);">Rp —</strong></div>
       </div>
     </div>
-    
+
     <div class="section-head" style="margin-top: 24px;">
       <span class="section-head-text">Sumber Pembelian</span>
     </div>
@@ -1495,9 +1308,7 @@
   const STEP_NAMES = {
     1: 'Pilih Tema',
     2: 'Data Undangan',
-    3: 'Paket & Harga',
-    4: 'Preview',
-    5: 'Pemesanan',
+    3: 'Preview & Pesan',
   };
 
   function updateProgressUI(step) {
@@ -1513,63 +1324,6 @@
       var name = STEP_NAMES[step] || '';
       lbl.innerHTML = '<strong>Langkah ' + displayNum + '</strong> dari ' + total + (name ? ' — ' + name : '');
     }
-  }
-
-  // ============ LOVE STORY DYNAMIC ============
-  var LS_PLACEHOLDERS = [
-    { year: '2021', title: 'Pertama Bertemu', story: 'Kami pertama kali bertemu di...' },
-    { year: '2022', title: 'Resmi Bersama', story: 'Setelah saling mengenal, akhirnya...' },
-    { year: '2024', title: 'Lamaran', story: 'Di hadapan kedua keluarga...' },
-    { year: '2026', title: 'Menuju Halal', story: 'Alhamdulillah, tibalah hari yang...' },
-  ];
-
-  function addLsEntry() {
-    var container = document.getElementById('lsContainer');
-    if (!container) return;
-    var count = container.querySelectorAll('.ls-entry').length;
-    if (count >= 4) return;
-    var ph = LS_PLACEHOLDERS[count] || LS_PLACEHOLDERS[0];
-    var div = document.createElement('div');
-    div.className = 'ls-entry';
-    div.style.cssText = 'border:1px solid rgba(200,169,110,0.18); border-radius:10px; padding:14px; position:relative; background:rgba(255,255,255,0.015);';
-    div.innerHTML =
-      '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">' +
-        '<span class="ls-num" style="font-size:11px; letter-spacing:1.5px; color:var(--accent); opacity:0.7;">CERITA ' + (count + 1) + '</span>' +
-        '<button type="button" onclick="removeLsEntry(this)" style="background:none; border:none; color:rgba(240,80,80,0.6); font-size:18px; cursor:pointer; line-height:1; padding:0 2px;" title="Hapus">×</button>' +
-      '</div>' +
-      '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">' +
-        '<div><label>Tahun / Waktu</label><input type="text" class="ls-year" placeholder="' + ph.year + '" oninput="updatePreview()"></div>' +
-        '<div><label>Judul Singkat</label><input type="text" class="ls-title" placeholder="' + ph.title + '" oninput="updatePreview()"></div>' +
-      '</div>' +
-      '<div><label>Cerita</label><textarea class="ls-story" rows="3" placeholder="' + ph.story + '" style="width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(200,169,110,0.25); border-radius:8px; padding:10px 12px; color:var(--text); font-size:13px; resize:vertical; font-family:inherit;" oninput="updatePreview()"></textarea></div>';
-    container.appendChild(div);
-    updateLsAddBtn();
-    updatePreview();
-  }
-
-  function removeLsEntry(btn) {
-    var entry = btn.closest('.ls-entry');
-    if (entry) {
-      entry.remove();
-      // Re-number remaining labels
-      var entries = document.querySelectorAll('#lsContainer .ls-entry');
-      entries.forEach(function(e, i) {
-        var lbl = e.querySelector('.ls-num');
-        if (lbl) lbl.textContent = 'CERITA ' + (i + 1);
-      });
-      updateLsAddBtn();
-      updatePreview();
-    }
-  }
-
-  function updateLsAddBtn() {
-    var container = document.getElementById('lsContainer');
-    var btn = document.getElementById('lsAddBtn');
-    if (!container || !btn) return;
-    var count = container.querySelectorAll('.ls-entry').length;
-    btn.disabled = count >= 4;
-    btn.style.opacity = count >= 4 ? '0.35' : '1';
-    btn.style.cursor = count >= 4 ? 'default' : 'pointer';
   }
 
   // Map tema -> file HTML (link langsung tanpa router redirect = lebih cepat)
@@ -1600,7 +1354,7 @@
   var _goingBack = false;
 
   function getStepOrder() {
-    return [1, 2, 3, 4, 5];
+    return [1, 2, 3];
   }
 
   // ============ HARGA LIVE $1 (ikut kurs USD/IDR) ============
@@ -1622,7 +1376,6 @@
     if (p) p.textContent = formatRp(getLivePrice());
     var k = document.getElementById('kursVal');
     if (k) k.textContent = formatRp(usdRate);
-    if (currentStep === 5 && typeof updateSummary === 'function') updateSummary();
   }
 
   function initLiveRate() {
@@ -1711,7 +1464,7 @@
       panelTransfer.style.display = 'none';
     }
     // Update teks tombol sesuai sumber
-    if (currentStep === 5) {
+    if (currentStep === 3) {
       document.getElementById('nextBtn').textContent = s === 'ecommerce' ? 'Pesan. AI Bereskan.' : 'Pesan Sekarang →';
     }
   }
@@ -1750,7 +1503,7 @@
     document.getElementById('prevBtn').style.display = currentStep !== 1 ? 'block' : 'none';
 
     var nb = document.getElementById('nextBtn');
-    if (currentStep === 5) {
+    if (currentStep === 3) {
       nb.textContent = sumberPembelian === 'ecommerce' ? 'Pesan. AI Bereskan.' : 'Pesan Sekarang →';
       _activeNextHandler = submitOrder;
     } else {
@@ -1767,10 +1520,8 @@
       var sCtr = sEl.querySelector('.step-counter');
       if (sCtr) sCtr.textContent = 'step ' + (sIdx + 1) + ' of ' + sOrder.length;
     }
-    // Update preview saat masuk step 4 (langsung, tanpa debounce)
-    if (n === 4) { clearTimeout(_previewTimer); if (typeof _doUpdatePreview === 'function') _doUpdatePreview(); }
-    // Update summary saat masuk step 5
-    if (n === 5) updateSummary();
+    // Update ringkasan & preview saat masuk step terakhir (langsung, tanpa debounce)
+    if (n === 3) { clearTimeout(_previewTimer); if (typeof _doUpdatePreview === 'function') _doUpdatePreview(); }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
     updateProgressUI(n);
@@ -1819,16 +1570,7 @@
       return true;
     }
 
-    if (step === 3) {
-      // Hanya satu paket — selalu valid
-      return true;
-    }
-
-    if (step === 4) {
-      // Preview — tidak ada yang wajib
-      return true;
-    }
-
+    // Step 3 (Preview & Pesan): validasi WA dilakukan di submitOrder
     return true;
   }
 
@@ -2009,7 +1751,7 @@
     // Buyer contact (diisi di step 5 tapi ditampilkan di preview step 4)
     var buyerContactVal = (document.getElementById('buyerContact') || {}).value || '';
     var buyerIGVal = (document.getElementById('buyerInstagram') || {}).value || '';
-    if (el('prevBuyer')) el('prevBuyer').textContent = buyerContactVal || '(diisi di langkah berikutnya)';
+    if (el('prevBuyer')) el('prevBuyer').textContent = buyerContactVal || '(isi di bagian Kontak Pemesan di bawah)';
     if (el('prevBuyer')) el('prevBuyer').style.color = buyerContactVal ? '' : 'var(--text-mute)';
     if (el('prevIG')) el('prevIG').textContent = buyerIGVal || '—';
     if (el('prevIGRow')) el('prevIGRow').style.display = '';  // selalu tampilkan row IG
@@ -2056,21 +1798,6 @@
 
     // Auto-cleanup setelah 5 menit
     setTimeout(function() { try { sessionStorage.removeItem(previewKey); } catch(e){} }, 300000);
-  }
-  
-  // ============ SUMMARY ============
-  function updateSummary() {
-    const data = collectFormData();
-    const bride = data.brideNick || data.brideName.split(' ')[0] || '—';
-    const groom = data.groomNick || data.groomName.split(' ')[0] || '—';
-    
-    document.getElementById('sumTheme').textContent = TEMA_LABEL[selectedTheme];
-    document.getElementById('sumNames').textContent = bride + ' & ' + groom;
-    document.getElementById('sumDate').textContent = data.weddingDate
-      ? (function(d){var p=d.split('-');return p.length===3?new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):d;})(data.weddingDate)
-      : '—';
-    document.getElementById('sumPaket').textContent = PAKET_LABEL[selectedPaket];
-    document.getElementById('sumTotal').textContent = formatRp(getLivePrice()) + ' ($1)';
   }
   
   // ============ COPY ============
@@ -2363,16 +2090,6 @@
         var el = document.getElementById(id);
         if (el) draft[id] = el.value;
       });
-      // Save love story entries
-      var lsEntries = [];
-      document.querySelectorAll('#lsContainer .ls-entry').forEach(function(entry) {
-        lsEntries.push({
-          year: (entry.querySelector('.ls-year') || {}).value || '',
-          title: (entry.querySelector('.ls-title') || {}).value || '',
-          story: (entry.querySelector('.ls-story') || {}).value || '',
-        });
-      });
-      draft._loveStory = lsEntries;
       draft._savedAt = Date.now();
       // localStorage agar draft selamat walau tab/browser ditutup (kedaluwarsa 7 hari)
       localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -2395,22 +2112,6 @@
         if (el && draft[id] !== undefined && draft[id] !== '') el.value = draft[id];
       });
       if (draft._theme && TEMA_LABEL[draft._theme]) selectTheme(draft._theme);
-      // Restore love story
-      if (Array.isArray(draft._loveStory) && draft._loveStory.length > 0) {
-        var cont = document.getElementById('lsContainer');
-        if (cont) {
-          cont.innerHTML = '';
-          draft._loveStory.forEach(function(entry) {
-            addLsEntry();
-            var entries = cont.querySelectorAll('.ls-entry');
-            var last = entries[entries.length - 1];
-            if (!last) return;
-            var y = last.querySelector('.ls-year'); if (y) y.value = entry.year || '';
-            var t = last.querySelector('.ls-title'); if (t) t.value = entry.title || '';
-            var s = last.querySelector('.ls-story'); if (s) s.value = entry.story || '';
-          });
-        }
-      }
       showToast('Draft dipulihkan otomatis ✓', 'success');
       updatePreview();
     } catch(e) {}
@@ -2425,7 +2126,7 @@
   document.addEventListener('input', scheduleDraftSave);
   document.addEventListener('change', scheduleDraftSave);
 
-  // Restore draft on load (after a tick so DOM/addLsEntry is ready)
+  // Restore draft on load (after a tick so DOM is ready)
   setTimeout(restoreDraft, 100);
 
   // ============ REQUIRED FIELD COUNTER (Step 2) ============
