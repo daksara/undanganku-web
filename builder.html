@@ -10,6 +10,13 @@
 --> 
 <meta name="x-api-base" content="https://telegram-bot.daksara-dev.workers.dev">
 <title>Builder Undangan — UndanganKu</title>
+<meta name="description" content="Buat undangan pernikahan digital elegan dalam 5 langkah — cuma $1, harga live ikut kurs dolar.">
+<meta property="og:title" content="Buat Undangan Pernikahan Digital — $1">
+<meta property="og:description" content="5 langkah, preview gratis, bayar kalau suka. Harga live mengikuti kurs dolar.">
+<meta property="og:image" content="https://undanganku-web.vercel.app/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://undanganku-web.vercel.app/og-image.png">
+<meta name="theme-color" content="#0d0a07">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -872,6 +879,8 @@
   .toast.success { border-color: var(--success); color: var(--success); }
   .toast.error { border-color: var(--danger); color: var(--danger); }
 </style>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -1647,6 +1656,11 @@
     'adat-jawa': 'Adat Jawa',
   };
   
+  // ============ ANALYTICS (Vercel Web Analytics custom events) ============
+  function track(name, data) {
+    try { if (window.va) window.va('event', { name: name, data: data || {} }); } catch (e) {}
+  }
+
   // ============ STEP NAVIGATION ============
   // Format jam HH:MM otomatis
   function formatJam(input) {
@@ -1761,6 +1775,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
     updateProgressUI(n);
     saveDraft();
+    track('step_' + n);
   }
   
   // ============ VALIDASI PER STEP ============
@@ -2005,6 +2020,7 @@
   // Gunakan sessionStorage dengan key acak — hanya terbaca di tab same-origin.
   function openPreviewTab() {
     const data = collectFormData();
+    track('preview_opened');
 
     // Key acak per klik — mencegah tab lain baca data orang lain
     const arr = new Uint8Array(8);
@@ -2133,8 +2149,9 @@
         // agar tidak persisten antar sesi & tidak mudah dibaca/dimanipulasi
         const _oHash = await _hashOrderId(result.orderId);
         sessionStorage.setItem('_uk_sess', JSON.stringify({ h: _oHash, t: selectedTheme, id: result.orderId }));
+        track('order_submitted', { paket: selectedPaket, sumber: sumberPembelian });
         showToast('Pesanan terkirim ke owner!', 'success');
-        try { sessionStorage.removeItem(DRAFT_KEY); } catch(e) {}
+        try { localStorage.removeItem(DRAFT_KEY); sessionStorage.removeItem(DRAFT_KEY); } catch(e) {}
         
         // Tampilkan order status card
         document.getElementById('orderStatusCard').classList.add('show');
@@ -2193,17 +2210,25 @@
       text.textContent = 'Menunggu konfirmasi owner...';
     } else if (status === 'paid') {
       pill.innerHTML = '<span style="font-size:14px;">✓</span> <span>Terkonfirmasi</span>';
-      
+
       // Link langsung ke tema file (no router redirect = lebih cepat untuk tamu)
       const liveUrl = buildLiveUrl(currentOrderId, selectedTheme);
-      
+      const waText = encodeURIComponent(
+        'Bismillahirrahmanirrahim.\n\nDengan penuh syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pernikahan kami.\n\nUndangan lengkap dapat dibuka di:\n' + liveUrl + '\n\nMerupakan suatu kehormatan apabila Bapak/Ibu/Saudara/i berkenan hadir.'
+      );
+
       detail.innerHTML =
         '<strong style="color:var(--success);">Pembayaran terkonfirmasi!</strong><br><br>' +
         'Link undangan kamu sudah aktif tanpa watermark:<br>' +
         '<a href="' + liveUrl + '" target="_blank" style="color:var(--accent);word-break:break-all;display:inline-block;margin-top:8px;">' + liveUrl + '</a><br><br>' +
-        '<button class="copy-mini" style="margin-top:8px;" onclick="copyLiveUrl(this)">SALIN LINK</button>';
+        '<div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">' +
+        '<a href="https://wa.me/?text=' + waText + '" target="_blank" rel="noopener" style="display:block; text-align:center; padding:12px; background:linear-gradient(135deg,var(--accent),#8b6f3a); color:#0a0a0a; border-radius:8px; text-decoration:none; font-size:13px; letter-spacing:0.5px; font-weight:600;">Bagikan ke WhatsApp</a>' +
+        '<a href="./tamu.html?u=' + encodeURIComponent(liveUrl) + '" target="_blank" style="display:block; text-align:center; padding:12px; background:rgba(212,175,108,0.08); border:1px solid rgba(212,175,108,0.4); color:var(--accent); border-radius:8px; text-decoration:none; font-size:13px; letter-spacing:0.5px;">Buat Link Personal per Tamu</a>' +
+        '<button class="copy-mini" onclick="copyLiveUrl(this)">SALIN LINK</button>' +
+        '</div>';
       // Simpan link untuk tombol copy (hindari escape issue di onclick string)
       window._liveUrlForCopy = liveUrl;
+      track('order_paid');
       showToast('Undangan aktif!', 'success');
     } else if (status === 'rejected') {
       pill.innerHTML = '<span style="font-size:14px;">✕</span> <span>Ditolak</span>';
@@ -2348,15 +2373,23 @@
         });
       });
       draft._loveStory = lsEntries;
-      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+      draft._savedAt = Date.now();
+      // localStorage agar draft selamat walau tab/browser ditutup (kedaluwarsa 7 hari)
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     } catch(e) {}
   }
 
+  var DRAFT_TTL = 7 * 24 * 60 * 60 * 1000; // 7 hari
+
   function restoreDraft() {
     try {
-      var raw = sessionStorage.getItem(DRAFT_KEY);
+      var raw = localStorage.getItem(DRAFT_KEY) || sessionStorage.getItem(DRAFT_KEY);
       if (!raw) return;
       var draft = JSON.parse(raw);
+      if (draft._savedAt && (Date.now() - draft._savedAt) > DRAFT_TTL) {
+        try { localStorage.removeItem(DRAFT_KEY); } catch(e) {}
+        return;
+      }
       DRAFT_FIELDS.forEach(function(id) {
         var el = document.getElementById(id);
         if (el && draft[id] !== undefined && draft[id] !== '') el.value = draft[id];

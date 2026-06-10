@@ -8,6 +8,7 @@
 <meta property="og:title" content="The Wedding of {{brideShort}} & {{groomShort}}">
 <meta property="og:description" content="{{weddingDateLong}} — Hadirilah pernikahan kami">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://undanganku-web.vercel.app/og-image.png">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -794,6 +795,8 @@ body.preview-mode [data-preview-only] { display: block; }
 }
 
 </style>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -1035,6 +1038,7 @@ body.preview-mode [data-preview-only] { display: block; }
 
     <div class="divider"><span></span><span></span></div>
     <h3 style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.3em;color:var(--gold);margin-bottom:8px;">UCAPAN PARA TAMU</h3>
+    <div id="rsvpCount" style="font-size:11px; letter-spacing:0.15em; opacity:0.55; margin-bottom:10px; font-style:italic;"></div>
     <div class="rsvp-list" id="rsvpList">
       <div style="opacity:0.5;font-style:italic;text-align:center;padding:20px;font-size:13px;">Memuat ucapan...</div>
     </div>
@@ -1609,6 +1613,8 @@ body.preview-mode [data-preview-only] { display: block; }
 
   function renderRsvpList(list) {
     var el = document.getElementById('rsvpList');
+    var cnt = document.getElementById('rsvpCount');
+    if (cnt) cnt.textContent = (list && list.length > 0) ? list.length + ' ucapan & doa telah diterima' : '';
     if (!list || list.length === 0) {
       el.innerHTML = '<div style="opacity:0.5;font-style:italic;text-align:center;padding:20px;font-size:13px;">Belum ada ucapan. Jadilah yang pertama!</div>';
       return;
