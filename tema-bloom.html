@@ -1420,9 +1420,9 @@ body.preview-mode [data-preview-only] { display: block; }
       document.title = (bs && gs) ? bs + ' & ' + gs + ' | Wedding Invitation' : 'Wedding Invitation';
     }
 
-    // Recipient name from URL ?to= (nama tamu personal — premium only)
+    // Recipient name from URL ?to= (nama tamu personal)
     var recipient = new URLSearchParams(window.location.search).get('to');
-    if (recipient && !isStandard) {
+    if (recipient) {
       var rEl = document.getElementById('recipientName');
       if (rEl) rEl.textContent = decodeURIComponent(recipient);
     }

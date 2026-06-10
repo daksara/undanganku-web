@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>UndanganKu — Undangan Digital Pernikahan</title>
-<meta name="description" content="Undangan digital pernikahan elegan. Standard Rp 29.000 (3 bulan) atau Premium Rp 49.000 (6 bulan + galeri foto + love story).">
+<meta name="description" content="Undangan digital pernikahan elegan cuma $1 — harga live mengikuti kurs dolar. RSVP, countdown, amplop digital, musik, nama tamu personal.">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <meta property="og:title" content="UndanganKu — Undangan Digital Pernikahan Elegan">
-<meta property="og:description" content="3 tema premium, RSVP online, countdown, amplop digital. Mulai Rp 29.000.">
+<meta property="og:description" content="3 tema elegan, RSVP online, countdown, amplop digital. Cuma $1 — harga live ikut kurs dolar.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://undanganku-web.vercel.app/">
 <meta name="twitter:card" content="summary">
@@ -279,6 +279,20 @@
     font-size: 8px; flex-shrink: 0; margin-top: 1px;
   }
 
+  .live-dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #d92626;
+    margin-right: 5px;
+    vertical-align: middle;
+    animation: livePulse 1.2s ease-in-out infinite;
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.7); }
+  }
+
   /* ── MARQUEE ── */
   .marquee-wrap {
     overflow: hidden;
@@ -366,7 +380,7 @@
 
   <!-- TEMA DEMO -->
   <div class="tema-row">
-    <a href="./demo.html?tema=royal-classic&paket=premium" class="tema-card royal" target="_blank">
+    <a href="./demo.html?tema=royal-classic&paket=standard" class="tema-card royal" target="_blank">
       <div class="tema-center">
         <div style="font-family:'Cinzel',serif;font-size:5px;letter-spacing:3px;color:#d4af6c;margin-bottom:4px;">THE WEDDING OF</div>
         <div style="font-family:'Allura',cursive;font-size:22px;color:#f0e6d2;line-height:1;">Aulia <span style="font-size:14px;color:#d4af6c;">&amp;</span> Rizky</div>
@@ -375,7 +389,7 @@
       <div class="tema-demo-tag">DEMO →</div>
     </a>
 
-    <a href="./demo.html?tema=sunset-bloom&paket=premium" class="tema-card bloom" target="_blank">
+    <a href="./demo.html?tema=sunset-bloom&paket=standard" class="tema-card bloom" target="_blank">
       <div class="tema-center">
         <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:7px;color:#d97c6c;margin-bottom:4px;">The Wedding of</div>
         <div style="font-family:'Caveat',cursive;font-size:22px;color:#5d3a2e;line-height:1;">Andini <span style="font-size:16px;color:#ec8772;">&amp;</span> Reza</div>
@@ -384,7 +398,7 @@
       <div class="tema-demo-tag">DEMO →</div>
     </a>
 
-    <a href="./demo.html?tema=adat-jawa&paket=premium" class="tema-card jawa" target="_blank">
+    <a href="./demo.html?tema=adat-jawa&paket=standard" class="tema-card jawa" target="_blank">
       <div class="tema-center">
         <div style="font-family:'Cinzel',serif;font-size:5px;letter-spacing:3px;color:#c4a464;margin-bottom:4px;">THE WEDDING OF</div>
         <div style="font-family:'Playfair Display',serif;font-size:20px;color:#f0e0c0;line-height:1;">Sari <span style="font-size:14px;color:#c4a464;">❧</span> Bagas</div>
@@ -394,37 +408,26 @@
     </a>
   </div>
 
-  <!-- HARGA -->
-  <div class="price-row">
-    <a href="./builder.html?paket=standard" class="price-card">
-      <div class="price-label">STANDARD</div>
+  <!-- HARGA — satu paket, live $1 -->
+  <div class="price-row" style="grid-template-columns:1fr;">
+    <a href="./builder.html" class="price-card featured" style="padding:12px 14px 10px;">
+      <div class="price-badge"><span class="live-dot"></span>HARGA LIVE — IKUT KURS DOLAR</div>
+      <div class="price-label">PAKET ORIGINAL — SEMUA FITUR</div>
       <div class="price-strike">Rp 99.000</div>
-      <div class="price-amount">Rp 29.000</div>
-      <div class="price-period">Aktif 3 bulan</div>
+      <div class="price-amount" style="font-size:26px;">$1 <span style="font-size:12px; font-style:normal; opacity:0.85;">≈ <span id="livePriceIdr">Rp —</span></span></div>
+      <div class="price-period">Aktif 3 bulan · kurs USD/IDR hari ini: <span id="liveRateVal">—</span></div>
       <div class="price-divider"></div>
-      <ul class="price-features">
-        <li>3 tema pilihan</li>
+      <ul class="price-features" style="display:grid; grid-template-columns:1fr 1fr; gap:2px 10px;">
+        <li>3 tema elegan</li>
+        <li>Nama tamu personal</li>
         <li>RSVP &amp; ucapan</li>
-        <li>Countdown</li>
+        <li>Countdown &amp; musik</li>
         <li>Amplop digital</li>
-        <li>Tampilan polos &amp; elegan</li>
+        <li>Polos &amp; elegan, tanpa foto</li>
       </ul>
-    </a>
-
-    <a href="./builder.html?paket=premium" class="price-card featured">
-      <div class="price-badge">TERPOPULER</div>
-      <div class="price-label">PREMIUM</div>
-      <div class="price-strike">Rp 149.000</div>
-      <div class="price-amount">Rp 49.000</div>
-      <div class="price-period">Aktif 6 bulan</div>
-      <div class="price-divider"></div>
-      <ul class="price-features">
-        <li>Semua fitur Standard</li>
-        <li>Foto couple di cover</li>
-        <li>Galeri foto</li>
-        <li>Love Story</li>
-        <li>Revisi 1&times; gratis</li>
-      </ul>
+      <div style="margin-top:7px; font-size:9px; letter-spacing:0.5px; color:var(--gold-light); text-align:center;">
+        ⚡ Kunci harga hari ini — kurs besok bisa naik · Preview gratis, bayar kalau suka
+      </div>
     </a>
   </div>
 
@@ -476,11 +479,53 @@
 
   <!-- CTA -->
   <div class="cta-row">
-    <a href="./builder.html" class="btn-primary">BUAT UNDANGAN SEKARANG</a>
-    <div class="cta-note">Mulai dari <span>Rp 29.000</span> · Sekali bayar</div>
+    <a href="./builder.html" class="btn-primary">KUNCI HARGA $1 SEKARANG</a>
+    <div class="cta-note">Cuma <span>$1</span> (≈ <span class="js-live-idr">Rp 16.400</span>) · Sekali bayar · Preview gratis</div>
   </div>
 
 </div>
+
+<script>
+(function() {
+  // Harga live $1 — konversi ke Rupiah mengikuti kurs USD/IDR
+  var FALLBACK_RATE = 16500;
+  var CACHE_KEY = '_uk_usd_rate';
+  var CACHE_TTL = 30 * 60 * 1000;
+
+  function charmRp(n) { return Math.max(9900, Math.ceil(n / 1000) * 1000 - 100); }
+  function formatRp(n) { return 'Rp ' + Math.round(n).toLocaleString('id-ID'); }
+
+  function render(rate) {
+    var price = formatRp(charmRp(rate));
+    var el = document.getElementById('livePriceIdr');
+    if (el) el.textContent = price;
+    var rv = document.getElementById('liveRateVal');
+    if (rv) rv.textContent = formatRp(rate);
+    document.querySelectorAll('.js-live-idr').forEach(function(e) { e.textContent = price; });
+  }
+
+  render(FALLBACK_RATE);
+
+  try {
+    var cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
+    if (cached && cached.rate > 0 && (Date.now() - cached.t) < CACHE_TTL) {
+      render(cached.rate);
+      return;
+    }
+  } catch (e) {}
+
+  fetch('https://open.er-api.com/v6/latest/USD')
+    .then(function(r) { return r.json(); })
+    .then(function(j) {
+      var rate = j && j.rates && j.rates.IDR;
+      if (rate > 0) {
+        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ rate: rate, t: Date.now() })); } catch (e) {}
+        render(rate);
+      }
+    })
+    .catch(function() {});
+})();
+</script>
 
 </body>
 </html>
