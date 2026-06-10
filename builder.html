@@ -734,6 +734,58 @@
   }
   .toast.success { border-color: var(--success); color: var(--success); }
   .toast.error { border-color: var(--danger); color: var(--danger); }
+
+  /* ============ PREMIUM INTERACTIONS ============ */
+  /* Hilangkan kotak biru tap-highlight & outline default; ganti ring emas yang mengikuti radius */
+  * { -webkit-tap-highlight-color: transparent; }
+  button, a, select, .theme-card, .collapsible-toggle { touch-action: manipulation; }
+  button { -webkit-user-select: none; user-select: none; }
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid rgba(212,175,108,0.55); outline-offset: 2px; border-radius: 8px; }
+
+  input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px rgba(212,175,108,0.12); }
+
+  .btn {
+    position: relative; overflow: hidden;
+    transition: transform 0.16s ease, box-shadow 0.25s ease, opacity 0.2s ease;
+    will-change: transform;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn-primary::after {
+    content: ''; position: absolute; top: 0; bottom: 0; left: -90%; width: 60%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.32), transparent);
+    transform: skewX(-20deg); pointer-events: none;
+    animation: btnShine 3.6s ease-in-out infinite;
+  }
+  .btn-primary:disabled::after { display: none; }
+  @keyframes btnShine { 0%, 60% { left: -90%; } 85%, 100% { left: 140%; } }
+  .btn-ghost:hover { border-color: rgba(212,175,108,0.45); color: var(--accent-bright); }
+
+  .preview-open-btn { transition: all 0.2s, transform 0.16s ease; }
+  .preview-open-btn:active { transform: scale(0.97); }
+
+  .copy-mini { transition: all 0.18s ease; }
+  .copy-mini:hover { background: rgba(212,175,108,0.2); border-color: rgba(212,175,108,0.5); }
+  .copy-mini:active { transform: scale(0.93); }
+
+  .theme-card:active { transform: scale(0.985); }
+  .theme-card.selected { animation: cardPop 0.3s ease; }
+  @keyframes cardPop { 0% { transform: scale(0.985); } 60% { transform: scale(1.008); } 100% { transform: scale(1); } }
+
+  .collapsible-toggle:active { background: rgba(212,175,108,0.06); }
+
+  .progress-bar-fill {
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 0 10px rgba(212,175,108,0.45);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
 <script defer src="/_vercel/insights/script.js"></script>
@@ -744,7 +796,7 @@
   <div class="topbar">
     <div class="topbar-row">
       <div class="logo">Undangan<span>Ku</span></div>
-      <div class="step-label" id="topbarStepLabel"><strong>Langkah 1</strong> dari 5 — Pilih Tema</div>
+      <div class="step-label" id="topbarStepLabel"><strong>Langkah 1</strong> dari 3 — Pilih Tema</div>
     </div>
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" id="progressBarFill"></div>

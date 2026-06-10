@@ -113,6 +113,39 @@
     transition:transform 0.3s ease; z-index:99; white-space:nowrap;
   }
   .toast.show { transform:translateX(-50%) translateY(0); }
+
+  /* Premium interactions */
+  * { -webkit-tap-highlight-color: transparent; }
+  button, a { touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid rgba(200,169,110,0.55); outline-offset: 2px; border-radius: 8px; }
+  input:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(200,169,110,0.12); }
+
+  .gen-btn { position: relative; overflow: hidden; transition: transform 0.16s ease, box-shadow 0.25s ease; }
+  .gen-btn:hover { box-shadow: 0 6px 24px rgba(200,169,110,0.3); }
+  .gen-btn:active { transform: scale(0.97); }
+  .gen-btn::after {
+    content: ''; position: absolute; top: 0; bottom: 0; left: -90%; width: 60%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: skewX(-20deg); pointer-events: none;
+    animation: btnShine 3.6s ease-in-out infinite;
+  }
+  @keyframes btnShine { 0%, 60% { left: -90%; } 85%, 100% { left: 140%; } }
+
+  .btn-ghost, .btn-gold, .copy-all, .back { transition: all 0.18s ease; }
+  .btn-ghost:hover { border-color: rgba(200,169,110,0.45); color: var(--accent-bright); }
+  .btn-gold:hover { background: rgba(212,175,108,0.2); }
+  .btn-ghost:active, .btn-gold:active, .copy-all:active { transform: scale(0.95); }
+  .guest-card { transition: border-color 0.2s ease; }
+  .guest-card:hover { border-color: rgba(200,169,110,0.4); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>
 </head>
 <body>
