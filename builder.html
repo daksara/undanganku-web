@@ -328,15 +328,21 @@
     padding-bottom: 8px;
     border-bottom: 1px solid var(--line);
   }
-  .section-head-icon {
-    font-size: 14px;
-    color: var(--accent);
-  }
   .section-head-text {
     font-family: 'DM Serif Display', serif;
     font-style: italic;
     font-size: 16px;
     color: var(--accent-bright);
+  }
+  .section-head-text::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 1px;
+    background: var(--accent);
+    margin-right: 10px;
+    vertical-align: middle;
+    opacity: 0.8;
   }
   
   .form-grid {
@@ -958,7 +964,6 @@
     <!-- Mempelai -->
     <div class="form-section">
       <div class="section-head">
-        <span class="section-head-icon">👰🤵</span>
         <span class="section-head-text">Mempelai</span>
       </div>
       
@@ -1020,7 +1025,6 @@
     <!-- Acara -->
     <div class="form-section">
       <div class="section-head">
-        <span class="section-head-icon">📅</span>
         <span class="section-head-text">Akad &amp; Resepsi</span>
       </div>
       
@@ -1088,7 +1092,6 @@
     <div class="collapsible-section" id="colQuote">
       <button type="button" class="collapsible-toggle" onclick="toggleSection('colQuote')">
         <div class="collapsible-toggle-left">
-          <span class="section-head-icon">📖</span>
           <span class="section-head-text">Ayat / Quote</span>
           <span style="font-size:10px; color:var(--text-mute); margin-left:6px; font-style:italic; text-transform:none; letter-spacing:0;">(opsional)</span>
         </div>
@@ -1115,7 +1118,6 @@
     <div class="collapsible-section" id="colHadiah">
       <button type="button" class="collapsible-toggle" onclick="toggleSection('colHadiah')">
         <div class="collapsible-toggle-left">
-          <span class="section-head-icon">💝</span>
           <span class="section-head-text">Hadiah Pernikahan</span>
           <span style="font-size:10px; color:var(--text-mute); margin-left:6px; font-style:italic; text-transform:none; letter-spacing:0;">(opsional)</span>
         </div>
@@ -1161,7 +1163,6 @@
     <!-- Musik -->
     <div class="form-section">
       <div class="section-head">
-        <span class="section-head-icon">🎵</span>
         <span class="section-head-text">Musik Latar</span>
       </div>
       
@@ -1169,11 +1170,11 @@
         <div>
           <label>Pilih Musik</label>
           <select id="musicChoice" onchange="updateMusicPreview()">
-            <option value="piano-elegant">🎼 Piano Elegant — Royal Classic</option>
-            <option value="acoustic-love">🎸 Acoustic Love — Sunset Bloom</option>
-            <option value="javanese-gamelan">🎶 Gamelan Jawa — Adat Jawa</option>
+            <option value="piano-elegant">Piano Elegant — Royal Classic</option>
+            <option value="acoustic-love">Acoustic Love — Sunset Bloom</option>
+            <option value="javanese-gamelan">Gamelan Jawa — Adat Jawa</option>
           </select>
-          <div class="input-hint">🎧 Musik otomatis diputar saat tamu membuka undangan.</div>
+          <div class="input-hint">Musik otomatis diputar saat tamu membuka undangan.</div>
         </div>
         <!-- Mini player preview -->
         <div id="musicPreviewBox" style="
@@ -1195,7 +1196,7 @@
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
-          ">▶</button>
+          ">▸</button>
           <div>
             <div id="musicPreviewName" style="font-size:13px; color:var(--text); font-weight:500;">Piano Elegant</div>
             <div style="font-size:10px; color:var(--text-mute);">Tap untuk dengarkan preview</div>
@@ -1246,7 +1247,7 @@
     </div>
 
     <div class="preview-cta">
-      ☕ <strong>Semurah segelas es teh.</strong> Lihat preview gratis di langkah berikutnya — pesan hanya kalau kamu suka. Tanpa watermark setelah konfirmasi.
+      <strong>Semurah segelas es teh.</strong> Lihat preview gratis di langkah berikutnya — pesan hanya kalau kamu suka. Tanpa watermark setelah konfirmasi.
     </div>
   </div>
   
@@ -1301,7 +1302,7 @@
       </div>
     </div>
 
-    <button onclick="openPreviewTab()" class="preview-open-btn">👁️ BUKA PREVIEW DI TAB BARU</button>
+    <button onclick="openPreviewTab()" class="preview-open-btn">BUKA PREVIEW DI TAB BARU</button>
     <p style="text-align:center; font-size:11px; color:rgba(240,230,210,0.4); font-style:italic;">
       Preview akan terbuka di tab baru. Kembali ke sini untuk lanjut memesan.
     </p>
@@ -1339,7 +1340,6 @@
     </div>
     
     <div class="section-head" style="margin-top: 24px;">
-      <span class="section-head-icon">🛍️</span>
       <span class="section-head-text">Sumber Pembelian</span>
     </div>
 
@@ -1349,14 +1349,14 @@
         style="padding:12px 8px; border:2px solid var(--accent); background:rgba(212,175,108,0.12);
         color:var(--accent); font-family:'Cinzel',serif; font-size:10px; letter-spacing:1.5px;
         cursor:pointer; border-radius:8px; transition:all 0.2s;">
-        💳 TRANSFER<br>
+        TRANSFER<br>
         <span style="font-size:9px; opacity:0.7; letter-spacing:0; font-family:inherit;">SeaBank / Dana</span>
       </button>
       <button type="button" id="srcEcommerce" onclick="setSumber('ecommerce')"
         style="padding:12px 8px; border:2px solid rgba(212,175,108,0.25); background:transparent;
         color:var(--text-dim); font-family:'Cinzel',serif; font-size:10px; letter-spacing:1.5px;
         cursor:pointer; border-radius:8px; transition:all 0.2s;">
-        🛒 E-COMMERCE<br>
+        E-COMMERCE<br>
         <span style="font-size:9px; opacity:0.7; letter-spacing:0; font-family:inherit;">Shopee / Tokopedia</span>
       </button>
     </div>
@@ -1378,7 +1378,7 @@
         <button class="copy-mini" onclick="copy('089605623197', this)">SALIN</button>
       </div>
       <div class="preview-cta" style="margin-top:14px;">
-        ⚠️ <strong>Cara pesan:</strong> (1) Transfer sesuai nominal, (2) Klik <strong>Pesan Sekarang</strong> di bawah, (3) Link langsung aktif di sini, owner juga bisa kirim ke WhatsApp kamu jika kontak pemesan diisi, (4) Link undangan aktif tanpa watermark.
+        <strong>Cara pesan:</strong> (1) Transfer sesuai nominal, (2) Klik <strong>Pesan Sekarang</strong> di bawah, (3) Link langsung aktif di sini, owner juga bisa kirim ke WhatsApp kamu jika kontak pemesan diisi, (4) Link undangan aktif tanpa watermark.
       </div>
     </div>
 
@@ -1389,17 +1389,16 @@
         <div style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:1.5px;
           color:#25d366; margin-bottom:10px;">✓ SUDAH BAYAR DI SHOPEE/TOKOPEDIA</div>
         <div style="font-size:13px; color:var(--text-dim); line-height:1.7;">
-          Pembayaran sudah selesai di marketplace. Langsung klik <strong style="color:var(--accent);">⚡ Pesan. AI Bereskan.</strong> di bawah — undanganmu aktif dalam hitungan detik, dikonfirmasi otomatis oleh AI.
+          Pembayaran sudah selesai di marketplace. Langsung klik <strong style="color:var(--accent);">Pesan. AI Bereskan.</strong> di bawah — undanganmu aktif dalam hitungan detik, dikonfirmasi otomatis oleh AI.
         </div>
       </div>
       <div class="preview-cta">
-        ℹ️ Pastikan status pembayaran di Shopee/Tokopedia sudah <strong>Berhasil</strong> sebelum klik tombol di bawah. Link undangan aktif dalam hitungan detik — tidak perlu tunggu konfirmasi manual.
+        Pastikan status pembayaran di Shopee/Tokopedia sudah <strong>Berhasil</strong> sebelum klik tombol di bawah. Link undangan aktif dalam hitungan detik — tidak perlu tunggu konfirmasi manual.
       </div>
     </div>
     
     <!-- Kontak Pembeli — dipindah ke sini agar kontekstual dengan pemesanan -->
     <div class="section-head" style="margin-top: 24px;">
-      <span class="section-head-icon">📞</span>
       <span class="section-head-text">Kontak Pemesan</span>
     </div>
     <div class="form-grid" style="margin-bottom:20px;">
@@ -1407,7 +1406,7 @@
         <label>Nomor WhatsApp <span class="req">✦</span></label>
         <input type="tel" id="buyerContact" placeholder="08xxxxxxxxxx" inputmode="numeric"
           style="letter-spacing:0.5px;" oninput="clearErr(this); updatePreview()">
-        <div class="input-hint">⚡ Link undangan aktif dikirim ke WhatsApp setelah konfirmasi pembayaran.</div>
+        <div class="input-hint">Link undangan aktif dikirim ke WhatsApp setelah konfirmasi pembayaran.</div>
       </div>
       <div>
         <label>Instagram <span class="opt">(opsional)</span></label>
@@ -1417,7 +1416,7 @@
     </div>
 
     <div class="order-status-card" id="orderStatusCard">
-      <div class="order-id">📋 <span id="orderIdDisplay">—</span></div>
+      <div class="order-id"><span id="orderIdDisplay">—</span></div>
       <div id="statusPillContainer">
         <span class="status-pill" id="statusPill">
           <span class="pulse"></span>
@@ -1699,7 +1698,7 @@
     }
     // Update teks tombol sesuai sumber
     if (currentStep === 5) {
-      document.getElementById('nextBtn').textContent = s === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
+      document.getElementById('nextBtn').textContent = s === 'ecommerce' ? 'Pesan. AI Bereskan.' : 'Pesan Sekarang →';
     }
   }
 
@@ -1710,7 +1709,7 @@
       if (audio) { audio.pause(); audio.currentTime = 0; }
       musicPlaying = false;
       const btn = document.getElementById('musicPlayBtn');
-      if (btn) btn.textContent = '▶';
+      if (btn) btn.textContent = '▸';
     }
 
     // Sembunyikan step aktif
@@ -1738,7 +1737,7 @@
 
     var nb = document.getElementById('nextBtn');
     if (currentStep === 5) {
-      nb.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
+      nb.textContent = sumberPembelian === 'ecommerce' ? 'Pesan. AI Bereskan.' : 'Pesan Sekarang →';
       _activeNextHandler = submitOrder;
     } else {
       nb.textContent = 'Lanjut →';
@@ -1881,7 +1880,7 @@
       audio.pause();
       audio.currentTime = 0;
       musicPlaying = false;
-      document.getElementById('musicPlayBtn').textContent = '▶';
+      document.getElementById('musicPlayBtn').textContent = '▸';
     }
     // Update audio source
     if (audio) { audio.src = getMusicUrl(); audio.currentTime = 0; }
@@ -1897,11 +1896,11 @@
     }
     if (musicPlaying) {
       audio.pause();
-      btn.textContent = '▶';
+      btn.textContent = '▸';
       musicPlaying = false;
     } else {
       audio.play().then(() => {
-        btn.textContent = '⏸';
+        btn.textContent = '‖';
         musicPlaying = true;
       }).catch(() => {
         showToast('Tidak bisa memutar audio', 'error');
@@ -2103,7 +2102,7 @@
     
     const btn = document.getElementById('nextBtn');
     btn.disabled = true;
-    btn.textContent = '⏳ Mengirim...';
+    btn.textContent = 'Mengirim...';
     
     try {
       const response = await fetch(BOT_API_URL + '/orders/new', {
@@ -2150,12 +2149,12 @@
       } else {
         showToast('Gagal: ' + (result.error || 'Unknown error'), 'error');
         btn.disabled = false;
-        btn.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
+        btn.textContent = sumberPembelian === 'ecommerce' ? 'Pesan. AI Bereskan.' : 'Pesan Sekarang →';
       }
     } catch (err) {
       showToast('Tidak bisa terhubung ke server bot', 'error');
       btn.disabled = false;
-      btn.textContent = sumberPembelian === 'ecommerce' ? '⚡ Pesan. AI Bereskan.' : 'Pesan Sekarang →';
+      btn.textContent = sumberPembelian === 'ecommerce' ? 'Pesan. AI Bereskan.' : 'Pesan Sekarang →';
       console.error(err);
     }
   }
@@ -2193,21 +2192,21 @@
     if (status === 'pending') {
       text.textContent = 'Menunggu konfirmasi owner...';
     } else if (status === 'paid') {
-      pill.innerHTML = '<span style="font-size:14px;">✅</span> <span>Terkonfirmasi</span>';
+      pill.innerHTML = '<span style="font-size:14px;">✓</span> <span>Terkonfirmasi</span>';
       
       // Link langsung ke tema file (no router redirect = lebih cepat untuk tamu)
       const liveUrl = buildLiveUrl(currentOrderId, selectedTheme);
       
       detail.innerHTML =
-        '<strong style="color:var(--success);">🎉 Pembayaran terkonfirmasi!</strong><br><br>' +
+        '<strong style="color:var(--success);">Pembayaran terkonfirmasi!</strong><br><br>' +
         'Link undangan kamu sudah aktif tanpa watermark:<br>' +
         '<a href="' + liveUrl + '" target="_blank" style="color:var(--accent);word-break:break-all;display:inline-block;margin-top:8px;">' + liveUrl + '</a><br><br>' +
         '<button class="copy-mini" style="margin-top:8px;" onclick="copyLiveUrl(this)">SALIN LINK</button>';
       // Simpan link untuk tombol copy (hindari escape issue di onclick string)
       window._liveUrlForCopy = liveUrl;
-      showToast('🎉 Undangan aktif!', 'success');
+      showToast('Undangan aktif!', 'success');
     } else if (status === 'rejected') {
-      pill.innerHTML = '<span style="font-size:14px;">❌</span> <span>Ditolak</span>';
+      pill.innerHTML = '<span style="font-size:14px;">✕</span> <span>Ditolak</span>';
       detail.innerHTML = 'Pembayaran ditolak. Silakan hubungi owner via Instagram di bawah untuk klarifikasi.<br><br><button onclick="location.reload()" style="margin-top:8px;padding:10px 20px;background:rgba(212,175,108,0.1);border:1px solid rgba(212,175,108,0.4);color:var(--accent);border-radius:8px;cursor:pointer;font-size:13px;">Mulai Ulang</button>';
     }
   }

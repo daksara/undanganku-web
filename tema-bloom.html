@@ -195,7 +195,6 @@ img { max-width: 100%; display: block; }
   transform: translateY(-2px);
   box-shadow: 0 12px 36px rgba(212, 175, 108, 0.45);
 }
-#openBtn .icon { font-size: 14px; transform: translateY(-1px); }
 
 /* ===========================
    PREVIEW BANNER (watermark mode)
@@ -800,7 +799,7 @@ body.preview-mode [data-preview-only] { display: block; }
 <body>
 
 <!-- Preview banner (only shown in preview mode) -->
-<div id="previewBanner">⚠ MODE PREVIEW — Pembayaran belum dikonfirmasi</div>
+<div id="previewBanner">MODE PREVIEW — Pembayaran belum dikonfirmasi</div>
 
 <!-- ===== COVER SCREEN ===== -->
 <section id="cover">
@@ -829,7 +828,6 @@ body.preview-mode [data-preview-only] { display: block; }
     </div>
 
     <button id="openBtn" type="button" aria-label="Buka Undangan">
-      <span class="icon">✉</span>
       <span>Buka Undangan</span>
     </button>
 
@@ -962,21 +960,21 @@ body.preview-mode [data-preview-only] { display: block; }
 
     <div class="acara-grid">
       <div class="acara-card">
-        <div class="acara-icon">🕌</div>
+        <div class="acara-icon">✿</div>
         <div class="acara-name">Akad Nikah</div>
         <div class="acara-date">{{weddingDateLong}}</div>
         <div class="acara-time">{{akadStart}} – {{akadEnd}} WIB</div>
         <div class="acara-venue">{{akadVenue}}</div>
-        <a href="{{akadMaps}}" target="_blank" rel="noopener" class="acara-map" data-map-akad>📍 Lihat Lokasi</a>
+        <a href="{{akadMaps}}" target="_blank" rel="noopener" class="acara-map" data-map-akad>Lihat Lokasi →</a>
       </div>
 
       <div class="acara-card">
-        <div class="acara-icon">💐</div>
+        <div class="acara-icon">✿</div>
         <div class="acara-name">Resepsi</div>
         <div class="acara-date">{{weddingDateLong}}</div>
         <div class="acara-time">{{resepsiStart}} – {{resepsiEnd}} WIB</div>
         <div class="acara-venue">{{resepsiVenue}}</div>
-        <a href="{{resepsiMaps}}" target="_blank" rel="noopener" class="acara-map" data-map-resepsi>📍 Lihat Lokasi</a>
+        <a href="{{resepsiMaps}}" target="_blank" rel="noopener" class="acara-map" data-map-resepsi>Lihat Lokasi →</a>
       </div>
     </div>
   </section>
@@ -1032,7 +1030,7 @@ body.preview-mode [data-preview-only] { display: block; }
         <button type="button" data-attend="0" class="tidak">✕ Tidak Hadir</button>
       </div>
       <textarea id="rsvpMsg" placeholder="Ucapan &amp; doa (opsional)" maxlength="300"></textarea>
-      <button type="submit" id="rsvpSubmit">Kirim RSVP ✉</button>
+      <button type="submit" id="rsvpSubmit">Kirim RSVP</button>
       <div id="rsvpStatus"></div>
     </form>
 
@@ -1497,22 +1495,14 @@ body.preview-mode [data-preview-only] { display: block; }
     if (banks.length === 0) {
       giftSection.style.display = 'none';
     } else {
-      var ICONS = {
-        'GoPay': '💚', 'OVO': '💜', 'Dana': '🔵',
-        'ShopeePay': '🟠', 'LinkAja': '❤️',
-        'BCA': '🏦', 'BRI': '🏦', 'BNI': '🏦',
-        'Mandiri': '🏦', 'BSI': '🏦', 'CIMB Niaga': '🏦',
-        'SeaBank': '🏦', 'Jenius': '🏦', 'Jago': '🏦',
-      };
       var EWALLET = ['GoPay', 'OVO', 'Dana', 'ShopeePay', 'LinkAja'];
       var bHtml = '';
       for (var k = 0; k < banks.length; k++) {
         var b = banks[k];
-        var icon = ICONS[b.name] || '💳';
         var isEwallet = EWALLET.indexOf(b.name) !== -1;
         var numLabel = isEwallet ? 'No. HP / Akun' : 'No. Rekening';
         bHtml += '<div class="bank-card">' +
-          '<div class="bank-name">' + icon + ' ' + esc(b.name) + '</div>' +
+          '<div class="bank-name">' + esc(b.name) + '</div>' +
           '<div style="font-size:11px;letter-spacing:0.15em;color:var(--gold-soft);opacity:0.7;margin-bottom:4px;">' + numLabel + '</div>' +
           '<div class="bank-num">' + esc(b.num) + '</div>' +
           '<div class="bank-holder">a.n. ' + esc(b.holder) + '</div>' +
@@ -1648,7 +1638,7 @@ body.preview-mode [data-preview-only] { display: block; }
         .then(function(r) { return r.json(); })
         .then(function(res) {
           if (res.ok) {
-            showRsvpStatus('🌹 Terima kasih, ucapanmu telah tersampaikan');
+            showRsvpStatus('Terima kasih, ucapanmu telah tersampaikan');
             form.reset();
             attendBtns.forEach(function(b) { b.classList.remove('active'); });
             attending = null;
@@ -1660,7 +1650,7 @@ body.preview-mode [data-preview-only] { display: block; }
         .catch(function() { showRsvpStatus('Gagal terhubung ke server', true); })
         .finally(function() {
           btn.disabled = false;
-          btn.textContent = 'Kirim RSVP ✉';
+          btn.textContent = 'Kirim RSVP';
         });
     });
 
@@ -1685,7 +1675,7 @@ body.preview-mode [data-preview-only] { display: block; }
       if (attending === null) { showRsvpStatus('Pilih Hadir / Tidak Hadir', true); return; }
       demoList.push({ name: name, attending: attending, message: msg });
       renderRsvpList(demoList);
-      showRsvpStatus('🌹 Terima kasih, ucapanmu telah tersampaikan');
+      showRsvpStatus('Terima kasih, ucapanmu telah tersampaikan');
       form.reset();
       attendBtns.forEach(function(b) { b.classList.remove('active'); });
       attending = null;
