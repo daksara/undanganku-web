@@ -1927,10 +1927,11 @@
       if (result.ok && result.orderId) {
         currentOrderId = result.orderId;
         // Simpan order ID + theme (theme dibutuhkan saat restore polling utk build link benar)
-        // FIX: Simpan hanya hash Order ID di sessionStorage (bukan localStorage)
-        // agar tidak persisten antar sesi & tidak mudah dibaca/dimanipulasi
+        // localStorage (bukan sessionStorage) agar status order tetap terpantau
+        // walau halaman di-refresh atau tab ditutup; hash mencegah manipulasi via URL
         const _oHash = await _hashOrderId(result.orderId);
-        sessionStorage.setItem('_uk_sess', JSON.stringify({ h: _oHash, t: selectedTheme, id: result.orderId }));
+        const _sessPayload = JSON.stringify({ h: _oHash, t: selectedTheme, id: result.orderId, ts: Date.now() });
+        try { localStorage.setItem('_uk_sess', _sessPayload); } catch(e) { sessionStorage.setItem('_uk_sess', _sessPayload); }
         track('order_submitted', { paket: selectedPaket, sumber: sumberPembelian });
         showToast('Pesanan terkirim ke owner!', 'success');
         try { localStorage.removeItem(DRAFT_KEY); sessionStorage.removeItem(DRAFT_KEY); } catch(e) {}
@@ -1959,27 +1960,55 @@
   }
   
   // ============ POLLING STATUS ============
-  function startPolling(orderId) {
-    if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
-    pollingInterval = setInterval(async () => {
-      try {
-        const response = await fetch(BOT_API_URL + '/orders/status/' + orderId, {
-          headers: { 'X-Builder-Token': _CSRF_TOKEN },
-        });
-        const result = await response.json();
-        
-        if (result.ok) {
-          updateStatusUI(result.status);
-          if (result.status === 'paid' || result.status === 'rejected') {
-            clearInterval(pollingInterval);
-            sessionStorage.removeItem('_uk_sess');
-          }
-        }
-      } catch (err) {
-        console.error('Polling error:', err);
-      }
-    }, 5000);
+  function _clearOrderSession() {
+    try { localStorage.removeItem('_uk_sess'); } catch(e) {}
+    try { sessionStorage.removeItem('_uk_sess'); } catch(e) {}
   }
+
+  let _statusCheckBusy = false;
+  async function checkOrderStatus(orderId) {
+    if (_statusCheckBusy) return;
+    _statusCheckBusy = true;
+    try {
+      // cache: 'no-store' + cache-buster: jangan sampai browser/CDN balas status lama
+      const response = await fetch(BOT_API_URL + '/orders/status/' + orderId + '?_=' + Date.now(), {
+        headers: { 'X-Builder-Token': _CSRF_TOKEN },
+        cache: 'no-store',
+      });
+      const result = await response.json();
+
+      if (result.ok) {
+        updateStatusUI(result.status);
+        if (result.status === 'paid' || result.status === 'rejected') {
+          stopPolling();
+          _clearOrderSession();
+        }
+      }
+    } catch (err) {
+      console.error('Polling error:', err);
+    } finally {
+      _statusCheckBusy = false;
+    }
+  }
+
+  function stopPolling() {
+    if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
+  }
+
+  function startPolling(orderId) {
+    stopPolling();
+    checkOrderStatus(orderId); // cek langsung, tidak menunggu tick pertama
+    pollingInterval = setInterval(function() { checkOrderStatus(orderId); }, 3000);
+  }
+
+  // Browser membekukan setInterval saat tab di background (terutama di HP).
+  // Begitu pembeli kembali ke tab atau koneksi pulih, langsung cek status.
+  function _recheckStatusNow() {
+    if (pollingInterval && currentOrderId) checkOrderStatus(currentOrderId);
+  }
+  document.addEventListener('visibilitychange', function() { if (!document.hidden) _recheckStatusNow(); });
+  window.addEventListener('focus', _recheckStatusNow);
+  window.addEventListener('online', _recheckStatusNow);
   
   function updateStatusUI(status) {
     const pill = document.getElementById('statusPill');
@@ -2067,11 +2096,17 @@
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('').slice(0, 16);
   }
 
-  // ============ RESTORE SESSION (hanya sessionStorage — tidak pakai localStorage) ============
+  // ============ RESTORE SESSION (localStorage, fallback sessionStorage utk sesi lama) ============
   // ?order= di URL hanya diterima jika hash-nya cocok dengan yang tersimpan di sesi ini
-  const _rawSess = sessionStorage.getItem('_uk_sess');
+  const _rawSess = localStorage.getItem('_uk_sess') || sessionStorage.getItem('_uk_sess');
   let _sess = null;
   try { _sess = _rawSess ? JSON.parse(_rawSess) : null; } catch(e) {}
+  // Kedaluwarsa 7 hari — jangan restore order yang sudah terlalu lama
+  const _SESS_TTL = 7 * 24 * 60 * 60 * 1000;
+  if (_sess && _sess.ts && (Date.now() - _sess.ts) > _SESS_TTL) {
+    _clearOrderSession();
+    _sess = null;
+  }
 
   const paramOrder = urlParams.get('order');
   // Verifikasi: jika ada ?order= di URL, pastikan cocok dengan sesi yang tersimpan
@@ -2094,17 +2129,17 @@
       selectedTheme = savedTheme;
     }
 
-    fetch(BOT_API_URL + '/orders/status/' + orderId, { headers: { 'X-Builder-Token': _CSRF_TOKEN } })
+    fetch(BOT_API_URL + '/orders/status/' + orderId + '?_=' + Date.now(), { headers: { 'X-Builder-Token': _CSRF_TOKEN }, cache: 'no-store' })
       .then(r => r.json())
       .then(async (r) => {
         if (!r.ok) {
-          sessionStorage.removeItem('_uk_sess');
+          _clearOrderSession();
           return;
         }
 
         if (!savedTheme || !THEME_FILE_MAP[savedTheme]) {
           try {
-            const dataRes = await fetch(BOT_API_URL + '/orders/data/' + orderId, { headers: { 'X-Builder-Token': _CSRF_TOKEN } });
+            const dataRes = await fetch(BOT_API_URL + '/orders/data/' + orderId, { headers: { 'X-Builder-Token': _CSRF_TOKEN }, cache: 'no-store' });
             const dataJson = await dataRes.json();
             if (dataJson.ok && dataJson.data && dataJson.data.theme) {
               selectedTheme = dataJson.data.theme;
@@ -2121,7 +2156,7 @@
         if (r.status === 'pending') {
           startPolling(orderId);
         } else {
-          sessionStorage.removeItem('_uk_sess');
+          _clearOrderSession();
         }
       })
       .catch(() => {});
