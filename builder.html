@@ -1522,6 +1522,9 @@
   }
 
   function changeStep(n) {
+    // Guard: step tidak dikenal (mis. sesi/draft dari versi lama) — jangan sembunyikan layar
+    if (!document.getElementById('step-' + n)) return;
+
     // Stop music preview if leaving step 2
     if (currentStep === 2 && n !== 2 && musicPlaying) {
       const audio = document.getElementById('musicPreviewAudio');
@@ -2109,7 +2112,7 @@
           } catch (e) {}
         }
 
-        changeStep(5);
+        changeStep(3);
         document.getElementById('orderStatusCard').classList.add('show');
         document.getElementById('orderIdDisplay').textContent = orderId;
         document.getElementById('nextBtn').style.display = 'none';
