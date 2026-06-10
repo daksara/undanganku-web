@@ -1218,6 +1218,7 @@
           <div class="paket-feature-item"><span class="check">✓</span><span>Countdown hari H</span></div>
           <div class="paket-feature-item"><span class="check">✓</span><span>Amplop digital (2 rekening)</span></div>
           <div class="paket-feature-item"><span class="check">✓</span><span>Musik auto-play</span></div>
+          <div class="paket-feature-item"><span class="check">✓</span><span>Tampilan polos &amp; elegan (tanpa foto)</span></div>
         </div>
         <div class="paket-select-indicator">
           <div class="radio"></div>
@@ -2050,7 +2051,7 @@
     const v = (id) => document.getElementById(id)?.value || '';
     
     var mcEl = document.getElementById('musicChoice');
-    return {
+    var data = {
       musicUrl: getMusicUrl(),
       musicChoice: mcEl ? mcEl.value : 'piano-elegant',
       brideName: v('brideName'),
@@ -2113,6 +2114,16 @@
         return result;
       })(),
     };
+
+    // Paket standard: kosongkan data fitur premium agar undangan tampil polos
+    // (misal user sempat isi data premium lalu ganti ke standard)
+    if (selectedPaket === 'standard') {
+      data.couplePhotoUrl = '';
+      data.galleryPhotos = [];
+      data.loveStory = [];
+    }
+
+    return data;
   }
   
   // ============ PREVIEW ============

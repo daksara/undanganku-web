@@ -54,6 +54,7 @@
       const page = THEME_PAGES[theme] || './tema-royal.html';
       const payload = encodeURIComponent(JSON.stringify({
         theme: theme,
+        paket: r.data?.paket || '',
         isPreview: r.watermark || false,
         watermark: r.watermark || false,
         data: r.data,
