@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#070d1c">
 <title>{{titlePrefix}}{{brideShort}} & {{groomShort}} | Wedding Invitation</title>
 <meta property="og:title" content="The Wedding of {{brideShort}} & {{groomShort}}">
 <meta property="og:description" content="{{weddingDateLong}} — Hadirilah pernikahan kami">
@@ -16,16 +16,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Allura&display=swap" rel="stylesheet">
 
 <style>
+/* Palet "Midnight Sapphire & Platinum" — biru malam + aksen platinum.
+   Catatan: nama variabel --gold/--cream dipertahankan agar selector lama
+   tetap kompatibel; nilainya kini platinum/ice white. */
 :root {
-  --bg: #0a0a0a;
-  --bg-2: #14110d;
-  --gold: #d4af6c;
-  --gold-soft: #b8956a;
-  --gold-deep: #8b6f3a;
-  --cream: #f0e0c0;
-  --cream-soft: #e8d8b8;
-  --ink: #1a1612;
-  --line: rgba(212, 175, 108, 0.22);
+  --bg: #070d1c;
+  --bg-2: #0e1730;
+  --gold: #c3d3ee;
+  --gold-soft: #94abd4;
+  --gold-deep: #5573a6;
+  --cream: #eef3fb;
+  --cream-soft: #dbe5f4;
+  --ink: #0a1020;
+  --line: rgba(195, 211, 238, 0.22);
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
 }
 
@@ -60,8 +63,15 @@ img { max-width: 100%; display: block; }
   justify-content: center;
   padding: 32px 24px;
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(212, 175, 108, 0.12), transparent 60%),
-    radial-gradient(ellipse at 50% 90%, rgba(212, 175, 108, 0.08), transparent 60%),
+    /* Taburan bintang halus — kesan langit malam kerajaan */
+    radial-gradient(1px 1px at 18% 22%, rgba(238, 243, 251, 0.8), transparent 100%),
+    radial-gradient(1.5px 1.5px at 78% 16%, rgba(195, 211, 238, 0.7), transparent 100%),
+    radial-gradient(1px 1px at 64% 38%, rgba(238, 243, 251, 0.5), transparent 100%),
+    radial-gradient(1px 1px at 32% 64%, rgba(195, 211, 238, 0.45), transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 58%, rgba(238, 243, 251, 0.55), transparent 100%),
+    radial-gradient(1px 1px at 12% 82%, rgba(195, 211, 238, 0.5), transparent 100%),
+    radial-gradient(ellipse at 50% 30%, rgba(195, 211, 238, 0.12), transparent 60%),
+    radial-gradient(ellipse at 50% 90%, rgba(195, 211, 238, 0.08), transparent 60%),
     var(--bg);
   text-align: center;
   transition: opacity 0.9s ease, transform 0.9s ease;
@@ -192,11 +202,11 @@ img { max-width: 100%; display: block; }
   border-radius: 999px;
   margin-top: 16px;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
-  box-shadow: 0 8px 28px rgba(212, 175, 108, 0.3);
+  box-shadow: 0 8px 28px rgba(195, 211, 238, 0.3);
 }
 #openBtn:hover, #openBtn:active {
   transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(212, 175, 108, 0.45);
+  box-shadow: 0 12px 36px rgba(195, 211, 238, 0.45);
 }
 
 /* ===========================
@@ -295,7 +305,7 @@ body.preview-mode { padding-top: 32px; }
 .couple-card {
   border: 1px solid var(--line);
   padding: 28px 24px;
-  background: linear-gradient(180deg, rgba(212, 175, 108, 0.04), transparent);
+  background: linear-gradient(180deg, rgba(195, 211, 238, 0.04), transparent);
   position: relative;
 }
 .couple-label {
@@ -337,7 +347,7 @@ body.preview-mode { padding-top: 32px; }
 .countdown-cell {
   border: 1px solid var(--line);
   padding: 14px 4px;
-  background: rgba(212, 175, 108, 0.04);
+  background: rgba(195, 211, 238, 0.04);
 }
 .countdown-num {
   font-family: 'Cinzel', serif;
@@ -365,7 +375,7 @@ body.preview-mode { padding-top: 32px; }
 .acara-card {
   border: 1px solid var(--line);
   padding: 28px 22px;
-  background: linear-gradient(180deg, rgba(212, 175, 108, 0.05), rgba(20, 17, 13, 0.4));
+  background: linear-gradient(180deg, rgba(195, 211, 238, 0.05), rgba(13, 21, 41, 0.4));
   text-align: center;
 }
 .acara-icon {
@@ -515,7 +525,7 @@ body.preview-mode { padding-top: 32px; }
 .bank-card {
   border: 1px solid var(--line);
   padding: 22px;
-  background: rgba(212, 175, 108, 0.03);
+  background: rgba(195, 211, 238, 0.03);
   text-align: center;
 }
 .bank-name {
@@ -568,7 +578,7 @@ body.preview-mode { padding-top: 32px; }
 .rsvp-form input,
 .rsvp-form textarea {
   width: 100%;
-  background: rgba(212, 175, 108, 0.05);
+  background: rgba(195, 211, 238, 0.05);
   border: 1px solid var(--line);
   color: var(--cream);
   padding: 14px 16px;
@@ -600,7 +610,7 @@ body.preview-mode { padding-top: 32px; }
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.rsvp-attend button.active.hadir { border-color: var(--gold); background: rgba(212, 175, 108, 0.15); color: var(--gold); }
+.rsvp-attend button.active.hadir { border-color: var(--gold); background: rgba(195, 211, 238, 0.15); color: var(--gold); }
 .rsvp-attend button.active.tidak { border-color: #b85a5a; background: rgba(184, 90, 90, 0.15); color: #d48484; }
 
 #rsvpSubmit {
@@ -617,7 +627,7 @@ body.preview-mode { padding-top: 32px; }
   margin-top: 6px;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
-#rsvpSubmit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(212, 175, 108, 0.3); }
+#rsvpSubmit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(195, 211, 238, 0.3); }
 #rsvpSubmit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 #rsvpStatus {
@@ -640,7 +650,7 @@ body.preview-mode { padding-top: 32px; }
 }
 .rsvp-item {
   border: 1px solid var(--line);
-  background: rgba(212, 175, 108, 0.04);
+  background: rgba(195, 211, 238, 0.04);
   padding: 12px 14px;
 }
 .rsvp-item-name {
@@ -765,8 +775,8 @@ body.preview-mode [data-preview-only] { display: block; }
   border-radius: 50% / 50%;
   overflow: hidden;
   border: 3px solid var(--gold);
-  box-shadow: 0 0 0 6px rgba(212,175,108,0.12), 0 8px 32px rgba(0,0,0,0.3);
-  background: rgba(212,175,108,0.06);
+  box-shadow: 0 0 0 6px rgba(195,211,238,0.12), 0 8px 32px rgba(0,0,0,0.3);
+  background: rgba(195,211,238,0.06);
 }
 .cover-photo-oval img {
   width: 100%;
@@ -785,9 +795,9 @@ body.preview-mode [data-preview-only] { display: block; }
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid var(--gold);
-  box-shadow: 0 0 0 4px rgba(212,175,108,0.12);
+  box-shadow: 0 0 0 4px rgba(195,211,238,0.12);
   margin: 0 auto 14px;
-  background: rgba(212,175,108,0.06);
+  background: rgba(195,211,238,0.06);
 }
 .couple-photo-wrap svg,
 .couple-photo-wrap img {
@@ -802,7 +812,7 @@ body.preview-mode [data-preview-only] { display: block; }
 * { -webkit-tap-highlight-color: transparent; }
 button { touch-action: manipulation; -webkit-user-select: none; user-select: none; }
 :focus { outline: none; }
-:focus-visible { outline: 2px solid rgba(212,175,108,0.55); outline-offset: 2px; border-radius: 6px; }
+:focus-visible { outline: 2px solid rgba(195,211,238,0.55); outline-offset: 2px; border-radius: 6px; }
 button { transition: transform 0.16s ease, opacity 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
 button:active { transform: scale(0.96); }
 
@@ -871,12 +881,12 @@ button:active { transform: scale(0.96); }
         <div class="couple-label">The Bride</div>
         <div class="couple-photo-wrap">
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="50" fill="#faf3ea"/>
+            <circle cx="50" cy="50" r="50" fill="#e9eef8"/>
             <!-- Dress -->
-            <path d="M10,100 Q24,68 50,62 Q76,68 90,100Z" fill="#f5ead8"/>
+            <path d="M10,100 Q24,68 50,62 Q76,68 90,100Z" fill="#f1f2f4"/>
             <path d="M26,100 Q33,72 50,62 Q53,64 56,68 Q44,70 34,100Z" fill="white" opacity="0.28"/>
             <!-- Waist sash -->
-            <path d="M35,62 Q50,67 65,62 L63,68 Q50,72 37,68Z" fill="#d4af6c"/>
+            <path d="M35,62 Q50,67 65,62 L63,68 Q50,72 37,68Z" fill="#c3d3ee"/>
             <!-- Neck -->
             <rect x="45" y="52" width="10" height="13" rx="5" fill="#fce6c8"/>
             <!-- Head -->
@@ -901,12 +911,12 @@ button:active { transform: scale(0.96); }
             <!-- Smile -->
             <path d="M42,47.5 Q50,54 58,47.5" stroke="#d07058" stroke-width="2.3" fill="none" stroke-linecap="round"/>
             <!-- Tiara/Crown -->
-            <path d="M38,20 L42,10 L46,20 L50,8 L54,20 L58,10 L62,20" stroke="#d4af6c" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-            <circle cx="50" cy="8" r="3.5" fill="#d4af6c"/>
-            <circle cx="42" cy="10" r="2.5" fill="#d4af6c"/>
-            <circle cx="58" cy="10" r="2.5" fill="#d4af6c"/>
-            <circle cx="46" cy="20" r="2" fill="#d4af6c" opacity="0.8"/>
-            <circle cx="54" cy="20" r="2" fill="#d4af6c" opacity="0.8"/>
+            <path d="M38,20 L42,10 L46,20 L50,8 L54,20 L58,10 L62,20" stroke="#c3d3ee" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+            <circle cx="50" cy="8" r="3.5" fill="#c3d3ee"/>
+            <circle cx="42" cy="10" r="2.5" fill="#c3d3ee"/>
+            <circle cx="58" cy="10" r="2.5" fill="#c3d3ee"/>
+            <circle cx="46" cy="20" r="2" fill="#c3d3ee" opacity="0.8"/>
+            <circle cx="54" cy="20" r="2" fill="#c3d3ee" opacity="0.8"/>
           </svg>
         </div>
         <div class="couple-name">{{brideName}}</div>
@@ -919,18 +929,18 @@ button:active { transform: scale(0.96); }
         <div class="couple-label">The Groom</div>
         <div class="couple-photo-wrap">
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="50" fill="#f0e8d8"/>
+            <circle cx="50" cy="50" r="50" fill="#e2e9f5"/>
             <!-- Suit body -->
-            <path d="M10,100 Q22,72 38,62 Q50,70 62,62 Q78,72 90,100Z" fill="#28200c"/>
+            <path d="M10,100 Q22,72 38,62 Q50,70 62,62 Q78,72 90,100Z" fill="#15203a"/>
             <!-- Shirt -->
-            <path d="M41,62 L50,68 L59,62 L57,90 Q50,93 43,90Z" fill="#f5ead8"/>
+            <path d="M41,62 L50,68 L59,62 L57,90 Q50,93 43,90Z" fill="#f1f2f4"/>
             <!-- Left lapel -->
-            <path d="M38,62 L41,62 L38,88 Q22,84 18,74Z" fill="#18100a"/>
+            <path d="M38,62 L41,62 L38,88 Q22,84 18,74Z" fill="#0d1322"/>
             <!-- Right lapel -->
-            <path d="M62,62 L59,62 L62,88 Q78,84 82,74Z" fill="#18100a"/>
+            <path d="M62,62 L59,62 L62,88 Q78,84 82,74Z" fill="#0d1322"/>
             <!-- Gold bow tie -->
-            <path d="M46,65 Q50,62.5 54,65 Q50,68 54,70.5 Q50,68 46,70.5 Q50,68 46,65Z" fill="#d4af6c"/>
-            <circle cx="50" cy="67.8" r="2.3" fill="#a8800a"/>
+            <path d="M46,65 Q50,62.5 54,65 Q50,68 54,70.5 Q50,68 46,70.5 Q50,68 46,65Z" fill="#c3d3ee"/>
+            <circle cx="50" cy="67.8" r="2.3" fill="#46639a"/>
             <!-- Neck -->
             <rect x="45" y="52" width="10" height="13" rx="5" fill="#fce6c8"/>
             <!-- Head -->
@@ -1148,7 +1158,7 @@ button:active { transform: scale(0.96); }
   }
 
   function _royalCoverSvg() {
-    var b = '#0d0b09', g = '#d4af6c', c = '#fce6c8', dr = '#3a2010';
+    var b = '#0a101e', g = '#c3d3ee', c = '#fce6c8', dr = '#3a2010';
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260" style="width:100%;height:100%;display:block;">' +
       '<rect width="200" height="260" fill="' + b + '"/>' +
       '<ellipse cx="100" cy="210" rx="78" ry="46" fill="' + g + '" opacity="0.05"/>' +
@@ -1157,7 +1167,7 @@ button:active { transform: scale(0.96); }
       '<circle cx="100" cy="5" r="3.5" fill="' + g + '" opacity="0.85"/>' +
       // BRIDE (left)
       // dress
-      '<path d="M24,262 Q33,222 48,197 Q56,191 64,197 Q77,222 82,262Z" fill="#f5ead8"/>' +
+      '<path d="M24,262 Q33,222 48,197 Q56,191 64,197 Q77,222 82,262Z" fill="#f1f2f4"/>' +
       '<path d="M31,262 Q37,225 48,197 Q51,199 53,203 Q42,210 38,262Z" fill="rgba(255,255,255,0.2)"/>' +
       // sash
       '<path d="M46,197 Q56,202 66,197 L64,205 Q56,209 48,205Z" fill="' + g + '"/>' +
@@ -1185,21 +1195,21 @@ button:active { transform: scale(0.96); }
       // smile
       '<path d="M50,182 Q56.5,189 63,182" stroke="#c87060" stroke-width="2.1" fill="none" stroke-linecap="round"/>' +
       // bouquet
-      '<circle cx="72" cy="206" r="7.5" fill="#8b3a3a"/>' +
-      '<circle cx="78" cy="199" r="6.5" fill="#9a4040"/>' +
-      '<circle cx="66" cy="199" r="6" fill="#7a2e2e"/>' +
+      '<circle cx="72" cy="206" r="7.5" fill="#3c548f"/>' +
+      '<circle cx="78" cy="199" r="6.5" fill="#46639a"/>' +
+      '<circle cx="66" cy="199" r="6" fill="#314a7e"/>' +
       '<circle cx="74" cy="197" r="4" fill="' + g + '" opacity="0.9"/>' +
       // GROOM (right)
       // suit
-      '<path d="M118,262 Q124,227 132,203 Q138,195 144,203 Q152,227 158,262Z" fill="#18100a"/>' +
+      '<path d="M118,262 Q124,227 132,203 Q138,195 144,203 Q152,227 158,262Z" fill="#0d1322"/>' +
       // shirt
-      '<path d="M131,203 L139,213 L147,203 L145,252 Q139,255 133,252Z" fill="#f0e6d2"/>' +
+      '<path d="M131,203 L139,213 L147,203 L145,252 Q139,255 133,252Z" fill="#eef0f4"/>' +
       // lapels
-      '<path d="M132,203 L131,203 L128,252 Q122,248 120,241Z" fill="#0e0a07"/>' +
-      '<path d="M147,203 L148,203 L151,252 Q157,248 159,241Z" fill="#0e0a07"/>' +
+      '<path d="M132,203 L131,203 L128,252 Q122,248 120,241Z" fill="#0a0f1d"/>' +
+      '<path d="M147,203 L148,203 L151,252 Q157,248 159,241Z" fill="#0a0f1d"/>' +
       // bow tie
       '<path d="M135,207 Q139,205 143,207 Q139,209.5 143,212 Q139,210 135,212 Q139,210 135,207Z" fill="' + g + '"/>' +
-      '<circle cx="139" cy="209.5" r="1.8" fill="#a0780a"/>' +
+      '<circle cx="139" cy="209.5" r="1.8" fill="#46639a"/>' +
       // neck
       '<rect x="135" y="192" width="7" height="13" rx="3.5" fill="' + c + '"/>' +
       // head
@@ -1225,7 +1235,7 @@ button:active { transform: scale(0.96); }
   }
 
   function _royalGallerySvgs() {
-    var b = '#0d0b09', g = '#d4af6c', ga = '#b8956a', c = '#f0e0c0';
+    var b = '#0a101e', g = '#c3d3ee', ga = '#94abd4', c = '#eef3fb';
     var lbl = function(text) {
       return '<text x="150" y="340" text-anchor="middle" fill="' + g + '" font-family="Georgia,serif" font-size="19" font-style="italic">' + text + '</text>' +
              '<line x1="88" y1="356" x2="212" y2="356" stroke="' + g + '" stroke-width="0.8" opacity="0.35"/>' +
@@ -1252,18 +1262,18 @@ button:active { transform: scale(0.96); }
       '<rect width="300" height="400" fill="' + b + '"/>' + border +
       '<text x="150" y="58" text-anchor="middle" fill="' + g + '" font-family="serif" font-size="11" letter-spacing="4" opacity="0.55">✦ BUNGA ✦</text>' +
       // stems
-      '<line x1="150" y1="300" x2="150" y2="238" stroke="#2a5018" stroke-width="4"/>' +
-      '<line x1="150" y1="280" x2="118" y2="250" stroke="#2a5018" stroke-width="3"/>' +
-      '<line x1="150" y1="268" x2="182" y2="248" stroke="#2a5018" stroke-width="3"/>' +
+      '<line x1="150" y1="300" x2="150" y2="238" stroke="#1f4a42" stroke-width="4"/>' +
+      '<line x1="150" y1="280" x2="118" y2="250" stroke="#1f4a42" stroke-width="3"/>' +
+      '<line x1="150" y1="268" x2="182" y2="248" stroke="#1f4a42" stroke-width="3"/>' +
       // leaves
-      '<ellipse cx="112" cy="246" rx="14" ry="7" fill="#2a5018" transform="rotate(-35,112,246)"/>' +
-      '<ellipse cx="188" cy="244" rx="14" ry="7" fill="#2a5018" transform="rotate(35,188,244)"/>' +
+      '<ellipse cx="112" cy="246" rx="14" ry="7" fill="#1f4a42" transform="rotate(-35,112,246)"/>' +
+      '<ellipse cx="188" cy="244" rx="14" ry="7" fill="#1f4a42" transform="rotate(35,188,244)"/>' +
       // flowers
-      '<circle cx="150" cy="178" r="40" fill="#8b3535"/><circle cx="150" cy="178" r="22" fill="' + g + '"/>' +
-      '<circle cx="102" cy="200" r="30" fill="#7a2e2e"/><circle cx="102" cy="200" r="16" fill="' + ga + '"/>' +
-      '<circle cx="198" cy="200" r="30" fill="#7a2e2e"/><circle cx="198" cy="200" r="16" fill="' + ga + '"/>' +
-      '<circle cx="122" cy="155" r="24" fill="#9a3a3a"/><circle cx="122" cy="155" r="13" fill="' + g + '"/>' +
-      '<circle cx="178" cy="155" r="24" fill="#9a3a3a"/><circle cx="178" cy="155" r="13" fill="' + g + '"/>' +
+      '<circle cx="150" cy="178" r="40" fill="#3c548f"/><circle cx="150" cy="178" r="22" fill="' + g + '"/>' +
+      '<circle cx="102" cy="200" r="30" fill="#314a7e"/><circle cx="102" cy="200" r="16" fill="' + ga + '"/>' +
+      '<circle cx="198" cy="200" r="30" fill="#314a7e"/><circle cx="198" cy="200" r="16" fill="' + ga + '"/>' +
+      '<circle cx="122" cy="155" r="24" fill="#46639a"/><circle cx="122" cy="155" r="13" fill="' + g + '"/>' +
+      '<circle cx="178" cy="155" r="24" fill="#46639a"/><circle cx="178" cy="155" r="13" fill="' + g + '"/>' +
       // ribbon
       '<path d="M128,238 Q150,250 172,238" stroke="' + g + '" stroke-width="3" fill="none" stroke-linecap="round"/>' +
       '<path d="M134,247 Q150,257 166,247" stroke="' + ga + '" stroke-width="2" fill="none" stroke-linecap="round"/>' +
@@ -1281,16 +1291,16 @@ button:active { transform: scale(0.96); }
       // arch curve
       '<path d="M64,128 Q76,52 150,40 Q224,52 236,128" fill="none" stroke="' + g + '" stroke-width="11" stroke-linecap="round"/>' +
       // arch flowers
-      '<circle cx="80" cy="96" r="11" fill="#8b3535"/><circle cx="80" cy="96" r="6" fill="' + g + '"/>' +
-      '<circle cx="108" cy="62" r="11" fill="#7a2e2e"/><circle cx="108" cy="62" r="6" fill="' + ga + '"/>' +
-      '<circle cx="150" cy="46" r="12" fill="#8b3535"/><circle cx="150" cy="46" r="7" fill="' + g + '"/>' +
-      '<circle cx="192" cy="62" r="11" fill="#7a2e2e"/><circle cx="192" cy="62" r="6" fill="' + ga + '"/>' +
-      '<circle cx="220" cy="96" r="11" fill="#8b3535"/><circle cx="220" cy="96" r="6" fill="' + g + '"/>' +
+      '<circle cx="80" cy="96" r="11" fill="#3c548f"/><circle cx="80" cy="96" r="6" fill="' + g + '"/>' +
+      '<circle cx="108" cy="62" r="11" fill="#314a7e"/><circle cx="108" cy="62" r="6" fill="' + ga + '"/>' +
+      '<circle cx="150" cy="46" r="12" fill="#3c548f"/><circle cx="150" cy="46" r="7" fill="' + g + '"/>' +
+      '<circle cx="192" cy="62" r="11" fill="#314a7e"/><circle cx="192" cy="62" r="6" fill="' + ga + '"/>' +
+      '<circle cx="220" cy="96" r="11" fill="#3c548f"/><circle cx="220" cy="96" r="6" fill="' + g + '"/>' +
       // small couple silhouettes
       '<ellipse cx="130" cy="264" rx="9" ry="9" fill="' + c + '"/>' +
       '<rect x="124" y="273" width="14" height="24" fill="' + g + '" rx="3"/>' +
       '<ellipse cx="170" cy="264" rx="9" ry="9" fill="' + c + '"/>' +
-      '<rect x="164" y="273" width="14" height="24" fill="#1a1410" rx="3"/>' +
+      '<rect x="164" y="273" width="14" height="24" fill="#0d1322" rx="3"/>' +
       lbl('Momen Sakral') + '</svg>';
 
     var candles =
@@ -1305,9 +1315,9 @@ button:active { transform: scale(0.96); }
       '<circle cx="168" cy="76" r="1.5" fill="' + g + '" opacity="0.4"/>' +
       '<circle cx="132" cy="92" r="1.5" fill="' + g + '" opacity="0.4"/>' +
       // candle bodies
-      '<rect x="110" y="168" width="28" height="128" fill="#f5ead8" rx="4"/>' +
-      '<rect x="84" y="194" width="24" height="104" fill="#f5ead8" rx="4"/>' +
-      '<rect x="192" y="194" width="24" height="104" fill="#f5ead8" rx="4"/>' +
+      '<rect x="110" y="168" width="28" height="128" fill="#f1f2f4" rx="4"/>' +
+      '<rect x="84" y="194" width="24" height="104" fill="#f1f2f4" rx="4"/>' +
+      '<rect x="192" y="194" width="24" height="104" fill="#f1f2f4" rx="4"/>' +
       // plates
       '<ellipse cx="124" cy="296" rx="19" ry="5" fill="' + g + '" opacity="0.7"/>' +
       '<ellipse cx="96" cy="298" rx="15" ry="4.5" fill="' + g + '" opacity="0.7"/>' +
@@ -1834,7 +1844,7 @@ button:active { transform: scale(0.96); }
           '<h1 style="font-family:Allura,cursive;font-size:48px;color:var(--gold);margin-bottom:16px;">Wedding Invitation</h1>' +
           '<p style="margin-bottom:18px;line-height:1.7;font-size:15px;">Preview tidak dapat dimuat.<br>Browser ini tidak bisa membaca data preview.</p>' +
           '<p style="font-size:13px;opacity:0.7;margin-bottom:20px;">Salin link dan buka di <strong style="color:var(--gold);">Chrome</strong> atau <strong style="color:var(--gold);">Safari</strong> untuk melihat preview.</p>' +
-          '<button id="_cpBtn" style="background:linear-gradient(135deg,#d4af6c,#8b6f3a);color:#0a0a0a;border:none;padding:12px 28px;font-family:Cinzel,serif;font-size:11px;letter-spacing:0.25em;border-radius:999px;cursor:pointer;margin-top:4px;">SALIN LINK PREVIEW</button>' +
+          '<button id="_cpBtn" style="background:linear-gradient(135deg,#c3d3ee,#5573a6);color:#070d1c;border:none;padding:12px 28px;font-family:Cinzel,serif;font-size:11px;letter-spacing:0.25em;border-radius:999px;cursor:pointer;margin-top:4px;">SALIN LINK PREVIEW</button>' +
           '</div>';
         var _cpBtn = document.getElementById('_cpBtn');
         if (_cpBtn && navigator.clipboard) {

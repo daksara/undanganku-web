@@ -21,7 +21,7 @@ undanganku-web/
 ├── index.html          # Landing page / homepage
 ├── builder.html        # Builder form (5 steps)
 ├── undangan-render.html # Router — redirect ke tema berdasarkan data
-├── tema-royal.html     # Tema: Royal Classic (dark, gold, mewah)
+├── tema-royal.html     # Tema: Royal Classic (midnight sapphire, platinum, mewah)
 ├── tema-bloom.html     # Tema: Sunset Bloom (warm, peach, romantic)
 ├── tema-jawa.html      # Tema: Adat Jawa (maroon, klasik, tradisional)
 ├── favicon.svg         # SVG favicon
