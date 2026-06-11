@@ -175,25 +175,37 @@
     overflow: hidden;
   }
   
-  /* Royal Classic thumb — midnight sapphire & platinum */
+  /* Royal Classic thumb — imperial gold & midnight velvet */
   .theme-thumb.royal-classic {
-    background: linear-gradient(135deg, #0a1126, #1c2b52);
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(217, 184, 115, 0.16), transparent 60%),
+      linear-gradient(160deg, #0d1226, #090d1d);
   }
   .theme-thumb.royal-classic::before {
     content: '';
     position: absolute;
     inset: 14px;
-    border: 1px solid rgba(195, 211, 238, 0.45);
+    border: 1px solid rgba(217, 184, 115, 0.5);
+  }
+  .theme-thumb.royal-classic::after {
+    content: '♛';
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    color: #d9b873;
+    text-shadow: 0 0 10px rgba(217, 184, 115, 0.6);
   }
   .theme-thumb.royal-classic .thumb-content {
     text-align: center;
-    color: #eef3fb;
+    color: #f6efdd;
   }
   .theme-thumb.royal-classic .thumb-label {
     font-family: 'Inter', sans-serif;
     font-size: 9px;
     letter-spacing: 4px;
-    color: #c3d3ee;
+    color: #d9b873;
     margin-bottom: 6px;
   }
   .theme-thumb.royal-classic .thumb-names {
@@ -201,9 +213,13 @@
     font-style: italic;
     font-size: 28px;
     line-height: 1;
+    background: linear-gradient(115deg, #b69a5e, #f4e3b2, #b69a5e);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   .theme-thumb.royal-classic .thumb-amp {
-    color: #c3d3ee;
+    color: #d9b873;
     font-size: 16px;
     margin: 4px 0;
   }
