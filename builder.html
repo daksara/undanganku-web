@@ -1266,8 +1266,18 @@
           Pembayaran sudah selesai di marketplace. Langsung klik <strong style="color:var(--accent);">Pesan. AI Bereskan.</strong> di bawah — undanganmu aktif dalam hitungan detik, dikonfirmasi otomatis oleh AI.
         </div>
       </div>
+
+      <!-- Nomor pesanan wajib diisi agar pembayaran bisa diverifikasi -->
+      <div style="margin-bottom:16px;">
+        <label>Nomor Pesanan <span id="ecomPlatformLabel" style="color:var(--text-dim);font-weight:400;">(Shopee/Tokopedia)</span> <span class="req">✦</span></label>
+        <input type="text" id="shopeeOrderNumber" placeholder="Contoh: 250611ABCXYZ123"
+          maxlength="60" inputmode="text" style="letter-spacing:0.5px;"
+          oninput="clearErr(this)">
+        <div class="input-hint">Buka aplikasi → Pesanan Saya → detail pesanan. Digunakan untuk verifikasi pembayaran.</div>
+      </div>
+
       <div class="preview-cta">
-        <strong>Cara pesan:</strong> (1) Bayar di Shopee/Tokopedia ✓ sudah selesai, (2) Isi data undangan di langkah 1 &amp; 2, (3) Klik <strong>Pesan. AI Bereskan.</strong> di bawah, (4) Link undangan langsung aktif — dikonfirmasi otomatis tanpa tunggu manual.
+        <strong>Cara pesan:</strong> (1) Bayar di Shopee/Tokopedia ✓ sudah selesai, (2) Isi data undangan di langkah 1 &amp; 2, (3) Isi nomor pesanan di atas, (4) Klik <strong>Pesan. AI Bereskan.</strong> di bawah, (5) Link undangan langsung aktif — dikonfirmasi otomatis tanpa tunggu manual.
       </div>
     </div>
     
@@ -1897,7 +1907,19 @@
       changeStep(2);
       return;
     }
-    
+
+    // Validasi nomor pesanan wajib untuk order e-commerce
+    if (sumberPembelian === 'ecommerce') {
+      const orderNumEl = document.getElementById('shopeeOrderNumber');
+      const orderNum = orderNumEl?.value.trim() || '';
+      if (!orderNum) {
+        orderNumEl?.classList.add('error');
+        orderNumEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showToast('Isi nomor pesanan Shopee/Tokopedia dulu ya', 'error');
+        return;
+      }
+    }
+
     const btn = document.getElementById('nextBtn');
     btn.disabled = true;
     btn.textContent = 'Mengirim...';
@@ -1918,6 +1940,11 @@
           buyerContact: buyerContact,
           buyerInstagram: buyerInstagram,
           sumber: sumberPembelian,
+          ...(sumberPembelian === 'ecommerce' && {
+            marketplaceOrderNumber: document.getElementById('shopeeOrderNumber')?.value.trim() || '',
+            marketplaceSrc: paramSrc || '',
+            shopeeRef: _shopeeRef,
+          }),
           ...data,
         }),
       });
@@ -2061,6 +2088,8 @@
   // ===== OPSI 4: Kontrol sumber via ?src= =====
   const paramSrc = urlParams.get('src');
   const isMarketplace = paramSrc === 'shopee' || paramSrc === 'tokped';
+  // Token unik per-buyer dari link chat marketplace (untuk validasi backend)
+  const _shopeeRef = urlParams.get('ref') || '';
   const btnTransferEl = document.getElementById('srcTransfer');
   const btnEcomEl = document.getElementById('srcEcommerce');
   const toggleWrap = document.getElementById('sumberToggleWrap');
@@ -2070,6 +2099,16 @@
     btnTransferEl.style.display = 'none';
     toggleWrap.style.gridTemplateColumns = '1fr';
     setSumber('ecommerce');
+    // Update label platform agar lebih spesifik
+    const platformLabel = document.getElementById('ecomPlatformLabel');
+    if (platformLabel) {
+      platformLabel.textContent = paramSrc === 'tokped' ? '(Tokopedia)' : '(Shopee)';
+    }
+    // Update placeholder nomor pesanan sesuai platform
+    const orderInput = document.getElementById('shopeeOrderNumber');
+    if (orderInput && paramSrc === 'tokped') {
+      orderInput.placeholder = 'Contoh: INV/20250611/MPL/XXXX';
+    }
   } else {
     // URL biasa (IG, WA, dll) — sembunyikan E-Commerce, hanya Transfer
     btnEcomEl.style.display = 'none';
