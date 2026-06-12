@@ -10,9 +10,9 @@
 --> 
 <meta name="x-api-base" content="https://telegram-bot.daksara-dev.workers.dev">
 <title>Builder Undangan — UndanganKu</title>
-<meta name="description" content="Buat undangan pernikahan digital elegan dalam 5 langkah — cuma $1, harga live ikut kurs dolar.">
-<meta property="og:title" content="Buat Undangan Pernikahan Digital — $1">
-<meta property="og:description" content="5 langkah, preview gratis, bayar kalau suka. Harga live mengikuti kurs dolar.">
+<meta name="description" content="Buat undangan pernikahan digital elegan dalam 3 langkah — Rp 99.000 semua fitur, foto couple di cover, preview gratis.">
+<meta property="og:title" content="Buat Undangan Pernikahan Digital — Rp 99.000">
+<meta property="og:description" content="Preview gratis, bayar kalau suka. Semua fitur: foto cover, RSVP, countdown, musik, amplop digital.">
 <meta property="og:image" content="https://undanganku-web.vercel.app/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://undanganku-web.vercel.app/og-image.png">
@@ -495,20 +495,6 @@
     letter-spacing: 0;
   }
   
-  /* ============ LIVE PRICE DOT ============ */
-  .live-dot {
-    display: inline-block;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #ff4d4d;
-    margin-right: 6px;
-    vertical-align: middle;
-    animation: livePulse 1.2s ease-in-out infinite;
-  }
-  @keyframes livePulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.35; transform: scale(0.7); }
-  }
   /* ============ PREVIEW ============ */
   .preview-frame {
     border-radius: 14px;
@@ -929,6 +915,49 @@
       </div>
     </div>
 
+    <!-- Foto Sampul — tampil di halaman depan undangan (semua paket) -->
+    <div class="form-section">
+      <div class="section-head">
+        <span class="section-head-text">Foto Sampul</span>
+        <span style="font-size:10px; color:var(--text-mute); margin-left:6px; font-style:italic; text-transform:none; letter-spacing:0;">(opsional — tampil di halaman depan)</span>
+      </div>
+
+      <input type="file" id="coverPhotoInput" accept="image/*" style="display:none;" onchange="handleCoverPhoto(this)">
+
+      <button type="button" id="coverPhotoDrop" onclick="document.getElementById('coverPhotoInput').click()" style="
+        width:100%; padding:26px 16px;
+        background:rgba(212,175,108,0.04);
+        border:1.5px dashed rgba(212,175,108,0.4);
+        border-radius:12px; cursor:pointer;
+        color:var(--text-dim); font-family:'Inter',sans-serif;
+        display:flex; flex-direction:column; align-items:center; gap:8px;
+        transition:all 0.2s;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d4af6c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span style="font-size:13px; color:var(--text);">Tambahkan foto couple kalian</span>
+        <span style="font-size:11px; color:var(--text-mute);">Tap untuk pilih dari galeri — JPG/PNG, otomatis dikompres</span>
+      </button>
+
+      <div id="coverPhotoPreview" style="display:none; align-items:center; gap:14px;
+        background:var(--bg-card); border:1px solid rgba(212,175,108,0.4);
+        border-radius:12px; padding:12px 14px;">
+        <img id="coverPhotoThumb" alt="Foto sampul" style="
+          width:64px; height:64px; object-fit:cover; border-radius:50%;
+          border:2px solid var(--accent); flex-shrink:0;">
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:13px; color:var(--success); font-weight:500;">✓ Foto siap dipasang di cover</div>
+          <div class="input-hint" id="coverPhotoMeta" style="margin-top:2px;"></div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px; flex-shrink:0;">
+          <button type="button" class="copy-mini" onclick="document.getElementById('coverPhotoInput').click()">GANTI</button>
+          <button type="button" class="copy-mini" style="color:var(--danger); border-color:rgba(232,122,122,0.4);" onclick="removeCoverPhoto()">HAPUS</button>
+        </div>
+      </div>
+
+      <div class="input-hint" style="margin-top:8px;">
+        Pakai foto prewedding atau foto favorit kalian — tampil elegan di halaman depan undangan, bukan cuma nama mempelai. Kalau dikosongkan, cover tampil polos dengan nama saja.
+      </div>
+    </div>
+
     <!-- Instagram Mempelai (jarang diisi — dilipat agar form utama ringkas) -->
     <div class="collapsible-section" id="colIG">
       <button type="button" class="collapsible-toggle" onclick="toggleSection('colIG')">
@@ -1142,7 +1171,7 @@
     <div class="step-head">
       <div class="step-counter">step 3 of 3</div>
       <div class="step-title">Preview &amp; Pesan</div>
-      <div class="step-subtitle">Cek hasilnya — suka? Kunci harga hari ini juga</div>
+      <div class="step-subtitle">Cek hasilnya — suka? Amankan harga perilisannya</div>
     </div>
 
     <div class="summary-card" id="previewSummary" style="margin-bottom:16px;">
@@ -1179,6 +1208,10 @@
         <span class="value" id="prevMusik">—</span>
       </div>
       <div class="summary-row">
+        <span class="label">Foto Sampul</span>
+        <span class="value" id="prevFoto">—</span>
+      </div>
+      <div class="summary-row">
         <span class="label">No. WhatsApp</span>
         <span class="value" id="prevBuyer">—</span>
       </div>
@@ -1193,23 +1226,23 @@
       Preview akan terbuka di tab baru. Kembali ke sini untuk lanjut memesan.
     </p>
 
-    <!-- Harga compact — tepat di samping keputusan memesan -->
+    <!-- Harga — tepat di samping keputusan memesan -->
     <div style="border:1px solid rgba(212,175,108,0.45); border-radius:12px; padding:14px 16px; margin:20px 0 4px;
       background:linear-gradient(160deg, rgba(212,175,108,0.10), rgba(212,175,108,0.02));
       display:flex; align-items:center; justify-content:space-between; gap:14px;">
       <div style="min-width:0;">
         <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:1.5px; color:var(--accent);">
-          <span class="live-dot"></span>HARGA LIVE — IKUT KURS DOLAR
+          PAKET LENGKAP — SEMUA FITUR
         </div>
         <div style="font-size:11px; color:var(--text-mute); margin-top:7px; line-height:1.6;">
-          Kurs USD/IDR: <strong id="kursVal" style="color:var(--text);">—</strong> · aktif 3 bulan<br>
-          <span style="color:var(--accent);">Kunci harga hari ini — kurs besok bisa naik.</span>
+          Sekali bayar · aktif 3 bulan · foto cover termasuk<br>
+          <span style="color:var(--accent);">Harga perilisan — normal kembali Rp 249.000.</span>
         </div>
       </div>
       <div style="text-align:right; flex-shrink:0;">
-        <div style="font-size:12px; color:var(--text-mute); text-decoration:line-through;">Rp 99.000</div>
-        <div style="font-family:'DM Serif Display',serif; font-style:italic; font-size:32px; line-height:1.1; color:var(--accent-bright);">$1</div>
-        <div style="font-size:12px; color:var(--text-dim);">≈ <strong id="paketPriceIdr" style="color:var(--accent);">Rp —</strong></div>
+        <div style="font-size:12px; color:var(--text-mute); text-decoration:line-through; text-decoration-color:rgba(232,122,122,0.7);">Rp 249.000</div>
+        <div style="font-family:'DM Serif Display',serif; font-style:italic; font-size:28px; line-height:1.1; color:var(--accent-bright);">Rp 99.000</div>
+        <div style="font-size:10px; letter-spacing:1px; color:#f3b8b8; margin-top:2px;">HEMAT 60%</div>
       </div>
     </div>
 
@@ -1419,52 +1452,13 @@
     return [1, 2, 3];
   }
 
-  // ============ HARGA LIVE $1 (ikut kurs USD/IDR) ============
+  // ============ HARGA ============
   // selectedPaket tetap 'standard' untuk kompatibilitas dengan tema & bot;
-  // label yang ditampilkan ke user adalah "Original".
-  const USD_PRICE = 1;
-  const FALLBACK_RATE = 16500; // dipakai jika API kurs tidak bisa diakses
-  const RATE_CACHE_KEY = '_uk_usd_rate';
-  const RATE_CACHE_TTL = 30 * 60 * 1000; // 30 menit
-  var usdRate = FALLBACK_RATE;
+  // label yang ditampilkan ke user adalah "Lengkap".
+  const PRICE_IDR = 99000;         // harga perilisan, flat
+  const PRICE_ANCHOR_IDR = 249000; // harga normal (anchor, dicoret di UI)
 
-  // Charm pricing: bulatkan ke ribuan lalu mundur 100 (mis. kurs 16.534 -> Rp 16.900)
-  function charmRp(n) { return Math.max(9900, Math.ceil(n / 1000) * 1000 - 100); }
-  function getLivePrice() { return charmRp(USD_PRICE * usdRate); }
-  function formatRp(n) { return 'Rp ' + Math.round(n).toLocaleString('id-ID'); }
-
-  function refreshPriceUI() {
-    var p = document.getElementById('paketPriceIdr');
-    if (p) p.textContent = formatRp(getLivePrice());
-    var k = document.getElementById('kursVal');
-    if (k) k.textContent = formatRp(usdRate);
-  }
-
-  function initLiveRate() {
-    try {
-      var cached = JSON.parse(sessionStorage.getItem(RATE_CACHE_KEY) || 'null');
-      if (cached && cached.rate > 0 && (Date.now() - cached.t) < RATE_CACHE_TTL) {
-        usdRate = cached.rate;
-        refreshPriceUI();
-        return;
-      }
-    } catch (e) {}
-    fetch('https://open.er-api.com/v6/latest/USD')
-      .then(function(r) { return r.json(); })
-      .then(function(j) {
-        var rate = j && j.rates && j.rates.IDR;
-        if (rate > 0) {
-          usdRate = rate;
-          try { sessionStorage.setItem(RATE_CACHE_KEY, JSON.stringify({ rate: rate, t: Date.now() })); } catch (e) {}
-          refreshPriceUI();
-        }
-      })
-      .catch(function() {});
-  }
-  refreshPriceUI();
-  initLiveRate();
-
-  const PAKET_LABEL = { standard: 'Original ✦' };
+  const PAKET_LABEL = { standard: 'Lengkap ✦' };
   const TEMA_LABEL = {
     'royal-classic': 'Royal Classic',
     'sunset-bloom': 'Sunset Bloom',
@@ -1730,6 +1724,80 @@
     }
   }
 
+  // ============ FOTO SAMPUL ============
+  // Foto dikompres di browser (canvas → JPEG) lalu dikirim sebagai data URL.
+  // Maks sisi terpanjang 1080px; kalau hasil masih >1.4MB, turunkan kualitas.
+  var coverPhotoDataUrl = '';
+
+  function compressImage(file) {
+    return new Promise(function(resolve, reject) {
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function() {
+        URL.revokeObjectURL(url);
+        var MAX = 1080;
+        var w = img.naturalWidth, h = img.naturalHeight;
+        if (!w || !h) return reject(new Error('Gambar tidak valid'));
+        var scale = Math.min(1, MAX / Math.max(w, h));
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(w * scale);
+        canvas.height = Math.round(h * scale);
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        var quality = 0.82;
+        var out = canvas.toDataURL('image/jpeg', quality);
+        // Batas aman payload (server menolak data URL > ~2M karakter)
+        while (out.length > 1400000 && quality > 0.4) {
+          quality -= 0.12;
+          out = canvas.toDataURL('image/jpeg', quality);
+        }
+        if (out.length > 1400000) return reject(new Error('Foto terlalu besar, coba foto lain'));
+        resolve(out);
+      };
+      img.onerror = function() { URL.revokeObjectURL(url); reject(new Error('Gagal membaca gambar')); };
+      img.src = url;
+    });
+  }
+
+  function handleCoverPhoto(input) {
+    var file = input.files && input.files[0];
+    if (!file) return;
+    if (!/^image\//.test(file.type)) {
+      showToast('File harus berupa gambar (JPG/PNG)', 'error');
+      input.value = '';
+      return;
+    }
+    var drop = document.getElementById('coverPhotoDrop');
+    if (drop) drop.style.opacity = '0.5';
+    compressImage(file).then(function(dataUrl) {
+      coverPhotoDataUrl = dataUrl;
+      var thumb = document.getElementById('coverPhotoThumb');
+      if (thumb) thumb.src = dataUrl;
+      var meta = document.getElementById('coverPhotoMeta');
+      if (meta) meta.textContent = file.name + ' · ' + Math.round(dataUrl.length * 0.75 / 1024) + ' KB setelah kompres';
+      if (drop) { drop.style.display = 'none'; drop.style.opacity = ''; }
+      var prev = document.getElementById('coverPhotoPreview');
+      if (prev) prev.style.display = 'flex';
+      showToast('Foto sampul terpasang ✓', 'success');
+      track('cover_photo_added');
+      updatePreview();
+    }).catch(function(err) {
+      if (drop) drop.style.opacity = '';
+      showToast(err.message || 'Gagal memproses foto', 'error');
+    }).finally(function() {
+      input.value = ''; // biar pilih file sama 2x tetap memicu change
+    });
+  }
+
+  function removeCoverPhoto() {
+    coverPhotoDataUrl = '';
+    var prev = document.getElementById('coverPhotoPreview');
+    if (prev) prev.style.display = 'none';
+    var drop = document.getElementById('coverPhotoDrop');
+    if (drop) drop.style.display = 'flex';
+    updatePreview();
+  }
+
   // ============ DEBOUNCE PREVIEW ============
   var _previewTimer = null;
   function updatePreview() {
@@ -1783,8 +1851,9 @@
       bank2Num: v('bank2Num'),
       bank2Holder: v('bank2Holder'),
 
-      // Paket Original tampil polos — foto, galeri & love story tidak dijual
-      couplePhotoUrl: '',
+      // Foto sampul — tampil di halaman depan undangan (semua tema)
+      couplePhotoUrl: coverPhotoDataUrl || '',
+      // Galeri & love story tidak dijual di paket ini
       galleryPhotos: [],
       loveStory: [],
     };
@@ -1812,6 +1881,10 @@
     if (el('prevMusik')) {
       var mOpt = MUSIC_OPTIONS[data.musicChoice || 'piano-elegant'];
       el('prevMusik').textContent = mOpt ? mOpt.label : '—';
+    }
+    if (el('prevFoto')) {
+      el('prevFoto').textContent = coverPhotoDataUrl ? 'Terpasang ✓' : 'Tanpa foto (polos)';
+      el('prevFoto').style.color = coverPhotoDataUrl ? 'var(--success)' : '';
     }
     // Buyer contact (diisi di step 5 tapi ditampilkan di preview step 4)
     var buyerContactVal = (document.getElementById('buyerContact') || {}).value || '';
@@ -1934,9 +2007,7 @@
         body: JSON.stringify({
           theme: selectedTheme,
           paket: selectedPaket,
-          priceUsd: USD_PRICE,
-          priceIdr: getLivePrice(),
-          usdRate: usdRate,
+          priceIdr: PRICE_IDR,
           buyerContact: buyerContact,
           buyerInstagram: buyerInstagram,
           sumber: sumberPembelian,

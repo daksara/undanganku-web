@@ -2,12 +2,12 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>UndanganKu — Undangan Digital Pernikahan</title>
-<meta name="description" content="Undangan digital pernikahan elegan cuma $1 — harga live mengikuti kurs dolar. RSVP, countdown, amplop digital, musik, nama tamu personal.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UndanganKu — Undangan Digital Pernikahan Premium</title>
+<meta name="description" content="Undangan digital pernikahan premium cuma Rp 99.000 — 3 tema elegan, foto couple di cover, RSVP, countdown, amplop digital, musik. Preview gratis, bayar kalau suka.">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-<meta property="og:title" content="UndanganKu — Undangan Digital Pernikahan Elegan">
-<meta property="og:description" content="3 tema elegan, RSVP online, countdown, amplop digital. Cuma $1 — harga live ikut kurs dolar.">
+<meta property="og:title" content="UndanganKu — Undangan Digital Pernikahan Premium">
+<meta property="og:description" content="3 tema elegan, foto couple di cover, RSVP online, countdown, amplop digital. Cuma Rp 99.000 — preview gratis, bayar kalau suka.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://undanganku-web.vercel.app/">
 <meta property="og:image" content="https://undanganku-web.vercel.app/og-image.png">
@@ -15,373 +15,676 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://undanganku-web.vercel.app/og-image.png">
-<meta name="theme-color" content="#0d0a07">
+<meta name="theme-color" content="#0b0805">
 <link rel="canonical" href="https://undanganku-web.vercel.app/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Cinzel:wght@400;500&family=DM+Sans:wght@300;400;500&family=Allura&family=Caveat:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=Allura&family=Caveat:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg: #0d0a07;
+    --bg: #0b0805;
+    --bg-soft: #14100b;
+    --bg-card: #181208;
     --gold: #c8a96e;
-    --gold-light: #e0c88a;
+    --gold-light: #e8cf96;
+    --gold-deep: #9c7c3c;
     --cream: #f5ead8;
-    --cream-dim: rgba(245,234,216,0.55);
-    --cream-mute: rgba(245,234,216,0.3);
-    --line: rgba(200,169,110,0.15);
+    --cream-dim: rgba(245,234,216,0.6);
+    --cream-mute: rgba(245,234,216,0.34);
+    --line: rgba(200,169,110,0.16);
+    --line-strong: rgba(200,169,110,0.4);
+    --danger: #e87a7a;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
+  html { scroll-behavior: smooth; }
   html, body {
-    height: 100%;
-    overflow: hidden;
     background: var(--bg);
     color: var(--cream);
     font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
   }
 
+  ::selection { background: rgba(200,169,110,0.35); color: #fff; }
+
+  /* Film grain */
   body::before {
     content: '';
     position: fixed; inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 0; opacity: 0.35;
+    pointer-events: none; z-index: 2; opacity: 0.4;
   }
 
-  body::after {
-    content: '';
-    position: fixed;
-    top: -5%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 280px; height: 280px;
-    background: radial-gradient(ellipse, rgba(200,169,110,0.11), transparent 70%);
-    pointer-events: none; z-index: 0;
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 22px; position: relative; }
+
+  /* ════════ SCROLL PROGRESS ════════ */
+  #scrollProgress {
+    position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+    background: linear-gradient(90deg, var(--gold-deep), var(--gold-light));
+    z-index: 1000;
+    box-shadow: 0 0 12px rgba(200,169,110,0.6);
   }
 
-  .page {
-    position: relative;
-    z-index: 1;
-    height: 100dvh;
-    max-width: 480px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 0 20px 16px;
-  }
-
-  /* ── NAV ── */
+  /* ════════ NAV ════════ */
   .nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 0 0;
-    flex-shrink: 0;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+    transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s;
+    border-bottom: 1px solid transparent;
+  }
+  .nav.scrolled {
+    background: rgba(11,8,5,0.82);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom-color: var(--line);
+  }
+  .nav-inner {
+    max-width: 1060px; margin: 0 auto; padding: 14px 22px;
+    display: flex; align-items: center; justify-content: space-between;
   }
   .nav-logo {
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 21px;
+    font-style: italic; font-size: 23px;
     color: var(--cream); letter-spacing: 0.5px;
+    text-decoration: none;
   }
   .nav-logo span { color: var(--gold); }
-  .nav-tag {
+  .nav-cta {
     font-family: 'Cinzel', serif;
-    font-size: 8px; letter-spacing: 2px;
-    color: var(--cream-mute);
-    border: 1px solid var(--line);
-    padding: 5px 10px;
+    font-size: 9.5px; letter-spacing: 2.5px;
+    color: var(--bg);
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    padding: 9px 18px;
+    text-decoration: none;
+    transition: transform 0.2s var(--ease-out), box-shadow 0.3s;
+    box-shadow: 0 4px 16px rgba(200,169,110,0.25);
   }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(200,169,110,0.4); }
+  .nav-cta:active { transform: scale(0.97); }
 
-  /* ── HERO ── */
+  /* ════════ HERO ════════ */
   .hero {
-    padding: 0;
+    position: relative;
+    min-height: 100svh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 110px 22px 70px;
+    overflow: hidden;
   }
+  #particles {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-glow {
+    position: absolute;
+    top: -10%; left: 50%; transform: translateX(-50%);
+    width: 620px; height: 620px;
+    background: radial-gradient(ellipse, rgba(200,169,110,0.13), transparent 65%);
+    pointer-events: none; z-index: 0;
+    animation: glowPulse 7s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.12); }
+  }
+  .hero > * { position: relative; z-index: 1; }
+
   .hero-eyebrow {
     font-family: 'Cinzel', serif;
-    font-size: 7.5px; letter-spacing: 3.5px;
-    color: var(--gold); opacity: 0.9;
-    margin-bottom: 10px;
-    animation: fadeUp 0.6s ease both;
+    font-size: 10px; letter-spacing: 5px;
+    color: var(--gold);
+    display: inline-flex; align-items: center; gap: 14px;
+    margin-bottom: 26px;
+    animation: fadeUp 0.9s 0.1s var(--ease-out) both;
   }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; width: 36px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+  }
+  .hero-eyebrow::after { background: linear-gradient(to left, transparent, var(--gold)); }
+
   .hero-title {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300; font-style: italic;
-    font-size: clamp(32px, 9.5vw, 48px);
-    line-height: 1.05;
-    margin-bottom: 8px;
-    animation: fadeUp 0.6s 0.08s ease both;
+    font-size: clamp(44px, 9vw, 96px);
+    line-height: 1.04;
+    max-width: 800px;
+    animation: fadeUp 0.9s 0.22s var(--ease-out) both;
   }
   .hero-title em {
-    font-style: normal;
-    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    font-style: italic;
+    background: linear-gradient(110deg, var(--gold-deep) 10%, var(--gold-light) 38%, #fff3d6 50%, var(--gold-light) 62%, var(--gold-deep) 90%);
+    background-size: 220% auto;
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 5.5s linear infinite;
   }
-  .deco-line {
-    width: 24px; height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold), transparent);
-    margin: 0 0 8px;
-    animation: fadeUp 0.6s 0.12s ease both;
+  @keyframes shimmer {
+    to { background-position: -220% center; }
   }
+
   .hero-sub {
-    font-size: 12px; color: var(--cream-dim);
-    letter-spacing: 0.3px;
-    animation: fadeUp 0.6s 0.16s ease both;
+    margin-top: 22px;
+    font-size: clamp(14px, 2vw, 16.5px);
+    font-weight: 300;
+    color: var(--cream-dim);
+    letter-spacing: 0.4px;
+    max-width: 520px;
+    line-height: 1.75;
+    animation: fadeUp 0.9s 0.34s var(--ease-out) both;
   }
+  .hero-sub strong { color: var(--gold-light); font-weight: 500; }
 
-  /* ── TEMA DEMO ROW ── */
-  .tema-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex-shrink: 0;
-    animation: fadeUp 0.6s 0.22s ease both;
+  .hero-ctas {
+    margin-top: 36px;
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.9s 0.46s var(--ease-out) both;
   }
-
-  .tema-card {
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    position: relative;
-    height: 62px;
-    transition: border-color 0.25s, transform 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .tema-card:active { transform: scale(0.98); }
-
-  /* Full-width background per theme */
-  .tema-card.royal  { background: linear-gradient(135deg, #0a1126, #1c2b52); border-color: rgba(195,211,238,0.3); }
-  .tema-card.bloom  { background: linear-gradient(135deg, #fef5ed, #f4a574); border-color: rgba(217,124,108,0.35); }
-  .tema-card.jawa   { background: linear-gradient(160deg, #2c1f0e, #4a3520); border-color: rgba(196,164,100,0.25); }
-
-  /* Decorative border inset */
-  .tema-card.royal::before,
-  .tema-card.jawa::before {
-    content: '';
-    position: absolute; inset: 6px;
-    border: 1px solid rgba(212,175,108,0.2);
-    pointer-events: none; z-index: 1;
-  }
-  .tema-card.royal::before { border-color: rgba(195,211,238,0.25); }
-  .tema-card.bloom::before {
-    content: '✿  ✿  ✿';
-    position: absolute; top: 6px; right: 10px;
-    font-size: 8px; color: rgba(217,124,108,0.5);
-    letter-spacing: 3px;
-    pointer-events: none; z-index: 1;
-  }
-
-  /* Center content */
-  .tema-center {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    gap: 1px;
-  }
-
-  /* Bottom-left: theme name */
-  .tema-name {
-    position: absolute;
-    bottom: 8px; left: 12px;
-    font-family: 'Cinzel', serif;
-    font-size: 7.5px; letter-spacing: 2px;
-    z-index: 2;
-    text-transform: uppercase;
-  }
-  .tema-card.royal .tema-name  { color: rgba(195,211,238,0.75); }
-  .tema-card.bloom .tema-name  { color: rgba(93,58,46,0.65); }
-  .tema-card.jawa .tema-name   { color: rgba(196,164,100,0.7); }
-
-  /* Bottom-right: demo tag */
-  .tema-demo-tag {
-    position: absolute;
-    bottom: 8px; right: 12px;
-    font-family: 'Cinzel', serif;
-    font-size: 7px; letter-spacing: 1.5px;
-    z-index: 2;
-  }
-  .tema-card.royal .tema-demo-tag { color: #c3d3ee; }
-  .tema-card.bloom .tema-demo-tag { color: #d97c6c; }
-  .tema-card.jawa .tema-demo-tag  { color: #c4a464; }
-
-  /* ── PRICE ROW (compact) ── */
-  .price-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    flex-shrink: 0;
-    animation: fadeUp 0.6s 0.28s ease both;
-  }
-  .price-card {
-    border: 1px solid var(--line);
-    padding: 8px 10px;
-    text-align: center;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    background: rgba(200,169,110,0.03);
-    position: relative;
-    transition: border-color 0.25s, transform 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .price-card:active { transform: scale(0.98); }
-  .price-card.featured {
-    background: linear-gradient(160deg, rgba(200,169,110,0.11), rgba(200,169,110,0.03));
-    border-color: rgba(200,169,110,0.4);
-  }
-  .price-badge {
-    position: absolute;
-    top: -8px; left: 50%; transform: translateX(-50%);
-    background: linear-gradient(135deg, var(--gold), #a8892e);
+  .btn-gold {
+    position: relative; overflow: hidden;
+    display: inline-block;
+    padding: 17px 38px;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-deep));
     color: var(--bg);
     font-family: 'Cinzel', serif;
-    font-size: 6.5px; letter-spacing: 1.5px;
-    padding: 2px 8px; white-space: nowrap;
+    font-size: 11px; letter-spacing: 3px;
+    text-decoration: none; text-align: center;
+    border: none; cursor: pointer;
+    transition: transform 0.2s var(--ease-out), box-shadow 0.3s;
+    box-shadow: 0 8px 32px rgba(200,169,110,0.28);
+    -webkit-tap-highlight-color: transparent;
   }
-  .price-label {
-    font-family: 'Cinzel', serif;
-    font-size: 7.5px; letter-spacing: 2px;
-    color: var(--gold); margin-bottom: 4px;
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 14px 44px rgba(200,169,110,0.45); }
+  .btn-gold:active { transform: scale(0.97); }
+  .btn-gold::after {
+    content: ''; position: absolute; top: 0; bottom: 0; left: -90%; width: 55%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: skewX(-20deg); pointer-events: none;
+    animation: btnShine 3.8s ease-in-out infinite;
   }
-  .price-strike {
-    font-size: 10px; color: var(--cream-mute);
-    text-decoration: line-through;
-    margin-bottom: 1px; letter-spacing: 0.3px;
-  }
-  .price-amount {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 16px;
-    font-weight: 500; color: var(--gold-light);
-    line-height: 1;
-  }
-  .price-period {
-    font-size: 9px; color: var(--cream-mute);
-    margin-top: 1px; letter-spacing: 0.3px;
-  }
-  .price-divider {
-    height: 1px; background: var(--line); margin: 5px 0;
-  }
-  .price-features {
-    list-style: none;
-    display: flex; flex-direction: column; gap: 2px;
-    text-align: left;
-  }
-  .price-features li {
-    font-size: 9.5px; color: var(--cream-dim);
-    display: flex; align-items: flex-start; gap: 5px;
-    line-height: 1.35;
-  }
-  .price-features li::before {
-    content: '✓'; color: var(--gold);
-    font-size: 8px; flex-shrink: 0; margin-top: 1px;
-  }
+  @keyframes btnShine { 0%, 55% { left: -90%; } 85%, 100% { left: 145%; } }
 
-  .live-dot {
+  .btn-ghost {
     display: inline-block;
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: #d92626;
-    margin-right: 5px;
-    vertical-align: middle;
-    animation: livePulse 1.2s ease-in-out infinite;
+    padding: 16px 34px;
+    background: transparent;
+    color: var(--gold-light);
+    border: 1px solid var(--line-strong);
+    font-family: 'Cinzel', serif;
+    font-size: 11px; letter-spacing: 3px;
+    text-decoration: none; text-align: center;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s, transform 0.2s var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
   }
-  @keyframes livePulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.35; transform: scale(0.7); }
+  .btn-ghost:hover { border-color: var(--gold); background: rgba(200,169,110,0.07); }
+  .btn-ghost:active { transform: scale(0.97); }
+
+  .hero-trust {
+    margin-top: 30px;
+    font-family: 'Cinzel', serif;
+    font-size: 9px; letter-spacing: 2.4px;
+    color: var(--cream-mute);
+    display: flex; gap: 18px; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.9s 0.58s var(--ease-out) both;
+  }
+  .hero-trust span { display: inline-flex; align-items: center; gap: 7px; }
+  .hero-trust i { font-style: normal; color: var(--gold); font-size: 11px; }
+
+  .hero-scroll {
+    position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+    width: 1px; height: 52px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollHint 2.2s ease-in-out infinite;
+    z-index: 1;
+  }
+  @keyframes scrollHint {
+    0% { transform: translateX(-50%) scaleY(0); transform-origin: top; }
+    45% { transform: translateX(-50%) scaleY(1); transform-origin: top; }
+    55% { transform: translateX(-50%) scaleY(1); transform-origin: bottom; }
+    100% { transform: translateX(-50%) scaleY(0); transform-origin: bottom; }
   }
 
-  /* ── MARQUEE ── */
+  /* ════════ SECTION BASICS ════════ */
+  section { position: relative; padding: 90px 0; }
+  .sec-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 9.5px; letter-spacing: 4px;
+    color: var(--gold);
+    text-align: center; margin-bottom: 14px;
+  }
+  .sec-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300; font-style: italic;
+    font-size: clamp(30px, 5.4vw, 48px);
+    line-height: 1.12;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .sec-title em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .sec-sub {
+    text-align: center;
+    color: var(--cream-dim);
+    font-size: 14px; font-weight: 300;
+    max-width: 480px; margin: 0 auto 52px;
+    line-height: 1.7;
+  }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal-d1 { transition-delay: 0.08s; }
+  .reveal-d2 { transition-delay: 0.16s; }
+  .reveal-d3 { transition-delay: 0.24s; }
+
+  /* ════════ TEMA SHOWCASE ════════ */
+  .tema-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 760px) { .tema-grid { grid-template-columns: 1fr; } }
+
+  .tema-card {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    transition: border-color 0.3s, transform 0.45s var(--ease-out), box-shadow 0.45s;
+    transform-style: preserve-3d;
+    -webkit-tap-highlight-color: transparent;
+    will-change: transform;
+  }
+  .tema-card:hover { border-color: var(--line-strong); box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+  @media (max-width: 760px) { .tema-card { aspect-ratio: 4/3.4; } }
+
+  .tema-bg { position: absolute; inset: 0; transition: transform 0.6s var(--ease-out); }
+  .tema-card:hover .tema-bg { transform: scale(1.05); }
+  .tema-card.royal .tema-bg { background: linear-gradient(150deg, #0a1126, #1c2b52 60%, #0a1126); }
+  .tema-card.bloom .tema-bg { background: linear-gradient(150deg, #fef5ed, #fad9c0 50%, #f4a574); }
+  .tema-card.jawa .tema-bg  { background: linear-gradient(160deg, #241806, #4a3520 55%, #241806); }
+
+  .tema-frame {
+    position: absolute; inset: 12px;
+    border: 1px solid rgba(255,255,255,0.18);
+    pointer-events: none;
+  }
+  .tema-card.royal .tema-frame { border-color: rgba(195,211,238,0.3); }
+  .tema-card.bloom .tema-frame { border-color: rgba(217,124,108,0.35); }
+  .tema-card.jawa .tema-frame  { border-color: rgba(196,164,100,0.32); }
+
+  .tema-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 24px;
+  }
+  .tema-overline { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 4px; margin-bottom: 14px; }
+  .tema-names { line-height: 1.05; }
+  .tema-card.royal .tema-overline { color: #c3d3ee; }
+  .tema-card.royal .tema-names { font-family: 'Allura', cursive; font-size: clamp(34px, 4vw, 44px); color: #eef3fb; }
+  .tema-card.royal .tema-amp { color: #c3d3ee; font-size: 0.55em; }
+  .tema-card.bloom .tema-overline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; letter-spacing: 1px; text-transform: none; color: #d97c6c; }
+  .tema-card.bloom .tema-names { font-family: 'Caveat', cursive; font-size: clamp(36px, 4.2vw, 46px); color: #5d3a2e; }
+  .tema-card.bloom .tema-amp { color: #ec8772; font-size: 0.6em; }
+  .tema-card.jawa .tema-overline { color: #c4a464; }
+  .tema-card.jawa .tema-names { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(26px, 3.2vw, 34px); color: #f0e0c0; }
+  .tema-card.jawa .tema-amp { color: #c4a464; font-size: 0.6em; }
+
+  .tema-deco { font-size: 10px; letter-spacing: 6px; margin-top: 16px; opacity: 0.65; }
+  .tema-card.royal .tema-deco { color: #c3d3ee; }
+  .tema-card.bloom .tema-deco { color: #d97c6c; }
+  .tema-card.jawa .tema-deco  { color: #c4a464; }
+
+  .tema-foot {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px;
+    background: linear-gradient(to top, rgba(0,0,0,0.45), transparent);
+  }
+  .tema-card.bloom .tema-foot { background: linear-gradient(to top, rgba(93,58,46,0.25), transparent); }
+  .tema-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2.5px; }
+  .tema-open {
+    font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2px;
+    padding: 6px 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: background 0.25s, transform 0.25s;
+  }
+  .tema-card:hover .tema-open { background: rgba(255,255,255,0.12); transform: translateX(2px); }
+  .tema-card.royal .tema-label, .tema-card.royal .tema-open { color: #dfe9f8; border-color: rgba(195,211,238,0.4); }
+  .tema-card.bloom .tema-label, .tema-card.bloom .tema-open { color: #5d3a2e; border-color: rgba(93,58,46,0.4); }
+  .tema-card.jawa .tema-label,  .tema-card.jawa .tema-open  { color: #f0e0c0; border-color: rgba(196,164,100,0.45); }
+
+  /* ════════ FITUR ════════ */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 860px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .feature-grid { grid-template-columns: 1fr; } }
+
+  .feature {
+    position: relative;
+    border: 1px solid var(--line);
+    background: linear-gradient(165deg, rgba(200,169,110,0.05), rgba(200,169,110,0.01));
+    padding: 26px 22px;
+    transition: border-color 0.3s, transform 0.35s var(--ease-out), background 0.3s;
+  }
+  .feature:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-4px);
+    background: linear-gradient(165deg, rgba(200,169,110,0.1), rgba(200,169,110,0.02));
+  }
+  .feature-ico {
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--line-strong);
+    color: var(--gold-light);
+    margin-bottom: 16px;
+    font-size: 16px;
+    border-radius: 50%;
+  }
+  .feature-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 19px;
+    color: var(--cream); margin-bottom: 7px;
+  }
+  .feature-desc { font-size: 12.5px; font-weight: 300; color: var(--cream-dim); line-height: 1.65; }
+  .feature-new {
+    position: absolute; top: 14px; right: 14px;
+    font-family: 'Cinzel', serif; font-size: 7.5px; letter-spacing: 2px;
+    color: var(--bg);
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    padding: 4px 9px;
+    animation: newPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes newPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(200,169,110,0.5); }
+    55% { box-shadow: 0 0 0 7px rgba(200,169,110,0); }
+  }
+
+  /* ════════ CARA PESAN ════════ */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    counter-reset: step;
+  }
+  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+  .step-item {
+    position: relative;
+    border-top: 1px solid var(--line);
+    padding: 26px 6px 0;
+  }
+  .step-item::before {
+    counter-increment: step;
+    content: '0' counter(step);
+    position: absolute; top: -15px; left: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 26px;
+    color: var(--gold);
+    background: var(--bg);
+    padding-right: 14px;
+  }
+  .step-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 21px;
+    margin-bottom: 8px;
+  }
+  .step-desc { font-size: 13px; font-weight: 300; color: var(--cream-dim); line-height: 1.7; }
+  .step-desc strong { color: var(--gold-light); font-weight: 500; }
+
+  /* ════════ HARGA ════════ */
+  .price-stage {
+    position: relative;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .price-card {
+    position: relative;
+    border: 1px solid var(--line-strong);
+    background:
+      radial-gradient(120% 90% at 50% 0%, rgba(200,169,110,0.14), transparent 55%),
+      linear-gradient(170deg, var(--bg-card), #100b06);
+    padding: 48px 34px 38px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .price-card::before, .price-card::after {
+    content: '';
+    position: absolute; width: 56px; height: 56px;
+    border: 1px solid var(--line-strong);
+    pointer-events: none;
+  }
+  .price-card::before { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+  .price-card::after { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+  .price-flag {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2.5px;
+    color: var(--bg);
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-deep));
+    padding: 7px 18px;
+  }
+  .price-paket {
+    font-family: 'Cinzel', serif;
+    font-size: 10px; letter-spacing: 3.5px;
+    color: var(--gold); margin: 14px 0 22px;
+  }
+  .price-anchor {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-bottom: 4px;
+  }
+  .price-was {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px; font-style: italic;
+    color: var(--cream-mute);
+    text-decoration: line-through;
+    text-decoration-color: rgba(232,122,122,0.75);
+    text-decoration-thickness: 1.5px;
+  }
+  .price-save {
+    font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 1.5px;
+    color: #f3b8b8;
+    border: 1px solid rgba(232,122,122,0.45);
+    padding: 4px 9px;
+  }
+  .price-now {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(56px, 11vw, 78px);
+    line-height: 1;
+    background: linear-gradient(120deg, var(--gold-deep) 5%, var(--gold-light) 40%, #fff3d6 50%, var(--gold-light) 60%, var(--gold-deep) 95%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 6s linear infinite;
+  }
+  .price-now sup { font-size: 0.34em; vertical-align: 30%; }
+  .price-once {
+    font-size: 12px; color: var(--cream-dim);
+    letter-spacing: 0.6px; margin-top: 10px;
+  }
+  .price-once strong { color: var(--gold-light); font-weight: 500; }
+  .price-compare {
+    margin: 18px auto 0;
+    max-width: 360px;
+    font-size: 12px; font-weight: 300;
+    color: var(--cream-mute);
+    font-style: italic;
+    line-height: 1.7;
+  }
+
+  .price-divider {
+    height: 1px; margin: 26px 0;
+    background: linear-gradient(to right, transparent, var(--line-strong), transparent);
+  }
+  .price-feats {
+    list-style: none;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 9px 18px;
+    text-align: left;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 480px) { .price-feats { grid-template-columns: 1fr; } }
+  .price-feats li {
+    font-size: 12.5px; font-weight: 300;
+    color: var(--cream-dim);
+    display: flex; align-items: flex-start; gap: 9px;
+    line-height: 1.5;
+  }
+  .price-feats li::before {
+    content: '✓';
+    color: var(--gold); font-size: 11px;
+    margin-top: 1px; flex-shrink: 0;
+  }
+  .price-feats li.hot { color: var(--gold-light); }
+  .price-feats li.hot::before { content: '✦'; }
+
+  .price-guarantee {
+    margin-top: 16px;
+    font-size: 11.5px; font-weight: 300;
+    color: var(--cream-mute);
+    line-height: 1.7;
+  }
+  .price-guarantee b { color: var(--gold-light); font-weight: 500; }
+
+  /* ════════ MARQUEE ════════ */
+  .marquee-section { padding: 40px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .marquee-wrap {
     overflow: hidden;
-    margin: 0 -20px;
-    flex-shrink: 0;
-    mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
   }
-  .marquee-track {
-    display: flex;
-    width: max-content;
-    animation: marquee 28s linear infinite;
-  }
+  .marquee-track { display: flex; width: max-content; animation: marquee 32s linear infinite; }
+  .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
   .marquee-item {
-    display: flex; align-items: center; gap: 8px;
-    padding: 7px 14px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 26px;
     border-right: 1px solid var(--line);
     white-space: nowrap; flex-shrink: 0;
   }
-  .marquee-stars { color: var(--gold); font-size: 8px; letter-spacing: 1px; }
-  .marquee-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 12px; color: var(--cream-dim);
-  }
-  .marquee-author {
-    font-family: 'Cinzel', serif; font-size: 7.5px;
-    letter-spacing: 1.5px; color: var(--gold); opacity: 0.75;
-  }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
+  .marquee-stars { color: var(--gold); font-size: 9px; letter-spacing: 1.5px; }
+  .marquee-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14.5px; color: var(--cream-dim); }
+  .marquee-author { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1.8px; color: var(--gold); opacity: 0.8; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  /* ── CTA ── */
-  .cta-row {
-    display: flex; flex-direction: column; gap: 8px;
-    flex-shrink: 0;
-    animation: fadeUp 0.6s 0.34s ease both;
-  }
-  .btn-primary {
-    display: block; width: 100%; padding: 13px;
-    background: linear-gradient(135deg, var(--gold), #a8892e);
-    color: var(--bg);
-    font-family: 'Cinzel', serif;
-    font-size: 10.5px; letter-spacing: 3px;
-    border: none; cursor: pointer;
-    text-decoration: none; text-align: center;
-    transition: opacity 0.2s, transform 0.2s;
-    box-shadow: 0 6px 24px rgba(200,169,110,0.2);
+  /* ════════ FAQ ════════ */
+  .faq-list { max-width: 640px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--line); }
+  .faq-q {
+    width: 100%;
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 20px 4px;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 19px;
+    text-align: left;
+    transition: color 0.25s;
     -webkit-tap-highlight-color: transparent;
   }
-  .btn-primary:active { opacity: 0.85; transform: scale(0.99); }
+  .faq-q:hover { color: var(--gold-light); }
+  .faq-q i {
+    font-style: normal;
+    color: var(--gold); font-size: 18px; font-family: 'DM Sans', sans-serif; font-weight: 300;
+    transition: transform 0.35s var(--ease-out);
+    flex-shrink: 0;
+  }
+  .faq-item.open .faq-q i { transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.45s var(--ease-out);
+  }
+  .faq-a-inner {
+    padding: 0 4px 22px;
+    font-size: 13.5px; font-weight: 300;
+    color: var(--cream-dim); line-height: 1.8;
+  }
+  .faq-a-inner strong { color: var(--gold-light); font-weight: 500; }
 
-  .cta-note {
+  /* ════════ FINAL CTA ════════ */
+  .final {
     text-align: center;
+    padding: 110px 0 100px;
+    position: relative;
+    overflow: hidden;
+  }
+  .final::before {
+    content: '';
+    position: absolute; bottom: -45%; left: 50%; transform: translateX(-50%);
+    width: 720px; height: 520px;
+    background: radial-gradient(ellipse, rgba(200,169,110,0.14), transparent 65%);
+    pointer-events: none;
+  }
+  .final-ornament { color: var(--gold); font-size: 13px; letter-spacing: 10px; margin-bottom: 26px; opacity: 0.8; }
+
+  /* ════════ FOOTER ════════ */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 34px 0 42px;
+  }
+  .foot-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 18px; flex-wrap: wrap;
+  }
+  .foot-logo { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 19px; }
+  .foot-logo span { color: var(--gold); }
+  .foot-links { display: flex; gap: 22px; flex-wrap: wrap; }
+  .foot-links a {
     font-family: 'Cinzel', serif;
     font-size: 8.5px; letter-spacing: 2px;
     color: var(--cream-mute);
+    text-decoration: none;
+    transition: color 0.25s;
   }
-  .cta-note span { color: var(--gold); }
+  .foot-links a:hover { color: var(--gold); }
+  .foot-copy { font-size: 11px; color: var(--cream-mute); font-weight: 300; }
+
+  /* ════════ STICKY MOBILE CTA ════════ */
+  .sticky-cta {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 800;
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(to top, rgba(11,8,5,0.96) 70%, transparent);
+    transform: translateY(110%);
+    transition: transform 0.45s var(--ease-out);
+    display: none;
+  }
+  .sticky-cta.show { transform: none; }
+  @media (max-width: 760px) { .sticky-cta { display: block; } }
+  .sticky-cta a {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-deep));
+    color: var(--bg);
+    font-family: 'Cinzel', serif; font-size: 10.5px; letter-spacing: 2.5px;
+    text-decoration: none;
+    box-shadow: 0 -4px 30px rgba(200,169,110,0.2);
+  }
+  .sticky-cta a s { opacity: 0.55; font-weight: 400; }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(22px); }
+    to { opacity: 1; transform: none; }
   }
 
-  /* ── PREMIUM INTERACTIONS ── */
-  * { -webkit-tap-highlight-color: transparent; }
-  a, button { touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  a, button { touch-action: manipulation; }
   :focus { outline: none; }
-  :focus-visible { outline: 2px solid rgba(200,169,110,0.55); outline-offset: 2px; border-radius: 4px; }
-
-  .tema-card:hover, .price-card:hover { border-color: rgba(200,169,110,0.55); }
-  .btn-primary { position: relative; overflow: hidden; transition: transform 0.16s ease, box-shadow 0.25s ease; }
-  .btn-primary:hover { box-shadow: 0 6px 24px rgba(200,169,110,0.35); }
-  .btn-primary:active { transform: scale(0.97); opacity: 1; }
-  .btn-primary::after {
-    content: ''; position: absolute; top: 0; bottom: 0; left: -90%; width: 60%;
-    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.3), transparent);
-    transform: skewX(-20deg); pointer-events: none;
-    animation: btnShine 3.6s ease-in-out infinite;
-  }
-  @keyframes btnShine { 0%, 60% { left: -90%; } 85%, 100% { left: 140%; } }
+  :focus-visible { outline: 2px solid rgba(200,169,110,0.55); outline-offset: 3px; }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -389,6 +692,8 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; }
   }
 </style>
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
@@ -396,168 +701,415 @@
 </head>
 <body>
 
-<div class="page">
+<div id="scrollProgress"></div>
 
-  <!-- NAV -->
-  <div class="nav">
-    <div class="nav-logo">Undangan<span>Ku</span></div>
-    <div class="nav-tag">DIBANTU AI</div>
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Undangan<span>Ku</span></a>
+    <a href="./builder.html" class="nav-cta">BUAT UNDANGAN</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <canvas id="particles"></canvas>
+  <div class="hero-glow"></div>
+
+  <div class="hero-eyebrow">UNDANGAN DIGITAL PREMIUM</div>
+  <h1 class="hero-title">Hari Spesialmu,<br><em>Diabadikan Indah</em></h1>
+  <p class="hero-sub">
+    Undangan pernikahan digital dengan <strong>foto kalian berdua di halaman depan</strong> —
+    bukan sekadar nama. Lengkap dengan RSVP, countdown, musik, dan amplop digital.
+    Jadi dalam 5 menit.
+  </p>
+  <div class="hero-ctas">
+    <a href="./builder.html" class="btn-gold">MULAI — Rp 99.000</a>
+    <a href="#tema" class="btn-ghost">LIHAT TEMA</a>
+  </div>
+  <div class="hero-trust">
+    <span><i>✦</i> PREVIEW GRATIS</span>
+    <span><i>✦</i> BAYAR KALAU SUKA</span>
+    <span><i>✦</i> AKTIF &lt; 1 MENIT</span>
   </div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-eyebrow">UNDANGAN DIGITAL · DIBANTU AI</div>
-    <h1 class="hero-title">Hari Spesialmu,<br><em>Tampil Sempurna</em></h1>
-    <div class="deco-line"></div>
-    <p class="hero-sub">Berkelas. Otomatis. Siap dibagikan.</p>
+  <div class="hero-scroll"></div>
+</header>
+
+<!-- TEMA -->
+<section id="tema">
+  <div class="wrap">
+    <div class="sec-eyebrow reveal">KOLEKSI TEMA</div>
+    <h2 class="sec-title reveal">Tiga Karakter, <em>Satu Kelas</em></h2>
+    <p class="sec-sub reveal">Setiap tema dirancang seperti undangan butik — ketuk untuk membuka demo utuh lengkap dengan musik dan animasinya.</p>
+
+    <div class="tema-grid">
+      <a href="./demo.html?tema=royal-classic&paket=premium" class="tema-card royal reveal" target="_blank" data-tilt>
+        <div class="tema-bg"></div>
+        <div class="tema-frame"></div>
+        <div class="tema-inner">
+          <div class="tema-overline">THE WEDDING OF</div>
+          <div class="tema-names">Aulia <span class="tema-amp">&amp;</span> Rizky</div>
+          <div class="tema-deco">✦ ✦ ✦</div>
+        </div>
+        <div class="tema-foot">
+          <span class="tema-label">ROYAL CLASSIC</span>
+          <span class="tema-open">BUKA DEMO →</span>
+        </div>
+      </a>
+
+      <a href="./demo.html?tema=sunset-bloom&paket=premium" class="tema-card bloom reveal reveal-d1" target="_blank" data-tilt>
+        <div class="tema-bg"></div>
+        <div class="tema-frame"></div>
+        <div class="tema-inner">
+          <div class="tema-overline">The Wedding of</div>
+          <div class="tema-names">Andini <span class="tema-amp">&amp;</span> Reza</div>
+          <div class="tema-deco">✿ ✿ ✿</div>
+        </div>
+        <div class="tema-foot">
+          <span class="tema-label">SUNSET BLOOM</span>
+          <span class="tema-open">BUKA DEMO →</span>
+        </div>
+      </a>
+
+      <a href="./demo.html?tema=adat-jawa&paket=premium" class="tema-card jawa reveal reveal-d2" target="_blank" data-tilt>
+        <div class="tema-bg"></div>
+        <div class="tema-frame"></div>
+        <div class="tema-inner">
+          <div class="tema-overline">IJAB QABUL</div>
+          <div class="tema-names">Sari <span class="tema-amp">❧</span> Bagas</div>
+          <div class="tema-deco">✦ ✦ ✦</div>
+        </div>
+        <div class="tema-foot">
+          <span class="tema-label">ADAT JAWA</span>
+          <span class="tema-open">BUKA DEMO →</span>
+        </div>
+      </a>
+    </div>
   </div>
+</section>
 
-  <!-- TEMA DEMO -->
-  <div class="tema-row">
-    <a href="./demo.html?tema=royal-classic&paket=standard" class="tema-card royal" target="_blank">
-      <div class="tema-center">
-        <div style="font-family:'Cinzel',serif;font-size:5px;letter-spacing:3px;color:#c3d3ee;margin-bottom:4px;">THE WEDDING OF</div>
-        <div style="font-family:'Allura',cursive;font-size:22px;color:#eef3fb;line-height:1;">Aulia <span style="font-size:14px;color:#c3d3ee;">&amp;</span> Rizky</div>
-      </div>
-      <div class="tema-name">Royal Classic</div>
-      <div class="tema-demo-tag">DEMO →</div>
-    </a>
+<!-- FITUR -->
+<section style="background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="wrap">
+    <div class="sec-eyebrow reveal">SEMUA SUDAH TERMASUK</div>
+    <h2 class="sec-title reveal">Satu Harga, <em>Fitur Lengkap</em></h2>
+    <p class="sec-sub reveal">Tidak ada paket bertingkat, tidak ada biaya tersembunyi. Semua fitur di bawah kamu dapatkan.</p>
 
-    <a href="./demo.html?tema=sunset-bloom&paket=standard" class="tema-card bloom" target="_blank">
-      <div class="tema-center">
-        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:7px;color:#d97c6c;margin-bottom:4px;">The Wedding of</div>
-        <div style="font-family:'Caveat',cursive;font-size:22px;color:#5d3a2e;line-height:1;">Andini <span style="font-size:16px;color:#ec8772;">&amp;</span> Reza</div>
+    <div class="feature-grid">
+      <div class="feature reveal">
+        <span class="feature-new">BARU ✦</span>
+        <div class="feature-ico">📷</div>
+        <div class="feature-name">Foto Couple di Cover</div>
+        <div class="feature-desc">Unggah foto prewedding kalian dan tampil elegan di halaman depan undangan — bukan hanya nama mempelai.</div>
       </div>
-      <div class="tema-name">Sunset Bloom</div>
-      <div class="tema-demo-tag">DEMO →</div>
-    </a>
-
-    <a href="./demo.html?tema=adat-jawa&paket=standard" class="tema-card jawa" target="_blank">
-      <div class="tema-center">
-        <div style="font-family:'Cinzel',serif;font-size:5px;letter-spacing:3px;color:#c4a464;margin-bottom:4px;">THE WEDDING OF</div>
-        <div style="font-family:'Playfair Display',serif;font-size:20px;color:#f0e0c0;line-height:1;">Sari <span style="font-size:14px;color:#c4a464;">❧</span> Bagas</div>
+      <div class="feature reveal reveal-d1">
+        <div class="feature-ico">✉</div>
+        <div class="feature-name">Nama Tamu Personal</div>
+        <div class="feature-desc">Setiap tamu disapa dengan namanya sendiri saat membuka undangan. Terasa eksklusif, bukan broadcast massal.</div>
       </div>
-      <div class="tema-name">Adat Jawa</div>
-      <div class="tema-demo-tag">DEMO →</div>
-    </a>
-  </div>
-
-  <!-- HARGA — satu paket, live $1 -->
-  <div class="price-row" style="grid-template-columns:1fr;">
-    <a href="./builder.html" class="price-card featured" style="padding:12px 14px 10px;">
-      <div class="price-badge"><span class="live-dot"></span>HARGA LIVE — IKUT KURS DOLAR</div>
-      <div class="price-label">PAKET ORIGINAL — SEMUA FITUR</div>
-      <div class="price-strike">Rp 99.000</div>
-      <div class="price-amount" style="font-size:26px;">$1 <span style="font-size:12px; font-style:normal; opacity:0.85;">≈ <span id="livePriceIdr">Rp —</span></span></div>
-      <div class="price-period">Aktif 3 bulan · kurs USD/IDR hari ini: <span id="liveRateVal">—</span></div>
-      <div class="price-divider"></div>
-      <ul class="price-features" style="display:grid; grid-template-columns:1fr 1fr; gap:2px 10px;">
-        <li>3 tema elegan</li>
-        <li>Nama tamu personal</li>
-        <li>RSVP &amp; ucapan</li>
-        <li>Countdown &amp; musik</li>
-        <li>Amplop digital</li>
-        <li>Polos &amp; elegan, tanpa foto</li>
-      </ul>
-      <div style="margin-top:7px; font-size:9px; letter-spacing:0.5px; color:var(--gold-light); text-align:center;">
-        Kunci harga hari ini — kurs besok bisa naik · Preview gratis, bayar kalau suka
+      <div class="feature reveal reveal-d2">
+        <div class="feature-ico">✓</div>
+        <div class="feature-name">RSVP &amp; Ucapan</div>
+        <div class="feature-desc">Tamu konfirmasi kehadiran dan menulis doa langsung di undangan. Kamu pantau semuanya real-time.</div>
       </div>
-    </a>
-  </div>
-
-  <!-- MARQUEE -->
-  <div class="marquee-wrap">
-    <div class="marquee-track">
-      <div class="marquee-item">
-        <span class="marquee-stars">★★★★★</span>
-        <span class="marquee-text">"Gampang banget, isi form langsung jadi"</span>
-        <span class="marquee-author">— SARI &amp; BAGAS</span>
+      <div class="feature reveal">
+        <div class="feature-ico">⏳</div>
+        <div class="feature-name">Countdown Hari H</div>
+        <div class="feature-desc">Hitung mundur otomatis menuju momen akad — membuat tamu ikut menantikan harinya.</div>
       </div>
-      <div class="marquee-item">
-        <span class="marquee-stars">★★★★★</span>
-        <span class="marquee-text">"Link aktif cepet, nggak perlu nunggu lama"</span>
-        <span class="marquee-author">— DINA &amp; FARHAN</span>
+      <div class="feature reveal reveal-d1">
+        <div class="feature-ico">♫</div>
+        <div class="feature-name">Musik Latar</div>
+        <div class="feature-desc">Piano elegan, akustik romantis, atau gamelan Jawa — mengalun begitu undangan dibuka.</div>
       </div>
-      <div class="marquee-item">
-        <span class="marquee-stars">★★★★★</span>
-        <span class="marquee-text">"Undangannya cantik, tamu pada suka"</span>
-        <span class="marquee-author">— AULIA &amp; RIZKY</span>
-      </div>
-      <div class="marquee-item">
-        <span class="marquee-stars">★★★★★</span>
-        <span class="marquee-text">"Praktis, tinggal share ke WhatsApp"</span>
-        <span class="marquee-author">— MAYA &amp; ALDI</span>
-      </div>
-      <div class="marquee-item">
-        <span class="marquee-stars">★★★★★</span>
-        <span class="marquee-text">"Gampang banget, isi form langsung jadi"</span>
-        <span class="marquee-author">— SARI &amp; BAGAS</span>
-      </div>
-      <div class="marquee-item">
-        <span class="marquee-stars">★★★★★</span>
-        <span class="marquee-text">"Link aktif cepet, nggak perlu nunggu lama"</span>
-        <span class="marquee-author">— DINA &amp; FARHAN</span>
-      </div>
-      <div class="marquee-item">
-        <span class="marquee-stars">★★★★★</span>
-        <span class="marquee-text">"Undangannya cantik, tamu pada suka"</span>
-        <span class="marquee-author">— AULIA &amp; RIZKY</span>
-      </div>
-      <div class="marquee-item">
-        <span class="marquee-stars">★★★★★</span>
-        <span class="marquee-text">"Praktis, tinggal share ke WhatsApp"</span>
-        <span class="marquee-author">— MAYA &amp; ALDI</span>
+      <div class="feature reveal reveal-d2">
+        <div class="feature-ico">🎁</div>
+        <div class="feature-name">Amplop Digital</div>
+        <div class="feature-desc">Nomor rekening dan e-wallet tampil rapi dengan tombol salin — tamu kirim hadiah tanpa repot.</div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- CTA -->
-  <div class="cta-row">
-    <a href="./builder.html" class="btn-primary">KUNCI HARGA $1 SEKARANG</a>
-    <div class="cta-note">Cuma <span>$1</span> (≈ <span class="js-live-idr">Rp 16.400</span>) · Sekali bayar · Preview gratis · <a href="./tamu.html" style="color:var(--gold); text-decoration:none;">Link per tamu</a></div>
+<!-- CARA PESAN -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow reveal">SEMUDAH ITU</div>
+    <h2 class="sec-title reveal">Tiga Langkah, <em>Langsung Jadi</em></h2>
+    <p class="sec-sub reveal">Tanpa desain manual, tanpa menunggu berhari-hari. Semuanya otomatis.</p>
+
+    <div class="steps">
+      <div class="step-item reveal">
+        <div class="step-name">Pilih &amp; Isi</div>
+        <div class="step-desc">Pilih tema favoritmu, isi data mempelai dan acara, lalu <strong>unggah foto couple</strong> untuk halaman depan.</div>
+      </div>
+      <div class="step-item reveal reveal-d1">
+        <div class="step-name">Preview Gratis</div>
+        <div class="step-desc">Lihat undanganmu utuh persis seperti yang akan diterima tamu — <strong>sebelum membayar sepeser pun</strong>.</div>
+      </div>
+      <div class="step-item reveal reveal-d2">
+        <div class="step-name">Bayar &amp; Sebarkan</div>
+        <div class="step-desc">Suka? Bayar <strong>Rp 99.000</strong>, link aktif dalam hitungan detik, langsung bagikan ke WhatsApp semua tamu.</div>
+      </div>
+    </div>
   </div>
+</section>
 
+<!-- HARGA -->
+<section id="harga" style="background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="wrap">
+    <div class="sec-eyebrow reveal">INVESTASI SEKALI</div>
+    <h2 class="sec-title reveal">Lebih Murah dari <em>Selembar Cetak</em></h2>
+    <p class="sec-sub reveal">Undangan cetak: ribuan rupiah per lembar, dikali ratusan tamu, dan berakhir di laci. Yang ini — satu link untuk semua tamu, hidup dengan musik dan foto kalian.</p>
+
+    <div class="price-stage reveal">
+      <div class="price-card">
+        <div class="price-flag">PENAWARAN PERILISAN FITUR FOTO</div>
+        <div class="price-paket">PAKET LENGKAP — SEMUA FITUR</div>
+
+        <div class="price-anchor">
+          <span class="price-was">Rp 249.000</span>
+          <span class="price-save">HEMAT 60%</span>
+        </div>
+        <div class="price-now" id="priceCounter">Rp 99.000</div>
+        <div class="price-once">Sekali bayar · <strong>aktif 3 bulan penuh</strong> · tanpa biaya lain</div>
+        <div class="price-compare">≈ Rp 330 per tamu untuk 300 undangan — lebih murah dari sebutir permen di kondangan.</div>
+
+        <div class="price-divider"></div>
+
+        <ul class="price-feats">
+          <li class="hot">Foto couple di cover — BARU</li>
+          <li>3 tema premium, bebas pilih</li>
+          <li>Nama tamu personal di tiap link</li>
+          <li>RSVP &amp; ucapan tamu real-time</li>
+          <li>Countdown otomatis ke hari H</li>
+          <li>Musik latar pilihan</li>
+          <li>Amplop digital + tombol salin</li>
+          <li>Link Google Maps akad &amp; resepsi</li>
+        </ul>
+
+        <a href="./builder.html" class="btn-gold" style="width:100%;">AMANKAN HARGA Rp 99.000</a>
+
+        <div class="price-guarantee">
+          <b>Tanpa risiko:</b> preview dulu sepuasnya, bayar hanya kalau hasilnya bikin kamu jatuh cinta.
+          Harga normal Rp 249.000 berlaku kembali setelah masa perilisan berakhir.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONI -->
+<div class="marquee-section">
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marqueeTrack">
+      <div class="marquee-item"><span class="marquee-stars">★★★★★</span><span class="marquee-text">"Gampang banget, isi form langsung jadi"</span><span class="marquee-author">— SARI &amp; BAGAS</span></div>
+      <div class="marquee-item"><span class="marquee-stars">★★★★★</span><span class="marquee-text">"Link aktif cepet, nggak perlu nunggu lama"</span><span class="marquee-author">— DINA &amp; FARHAN</span></div>
+      <div class="marquee-item"><span class="marquee-stars">★★★★★</span><span class="marquee-text">"Undangannya cantik, tamu pada suka"</span><span class="marquee-author">— AULIA &amp; RIZKY</span></div>
+      <div class="marquee-item"><span class="marquee-stars">★★★★★</span><span class="marquee-text">"Praktis, tinggal share ke WhatsApp"</span><span class="marquee-author">— MAYA &amp; ALDI</span></div>
+      <div class="marquee-item"><span class="marquee-stars">★★★★★</span><span class="marquee-text">"Foto prewed kami tampil di cover, elegan!"</span><span class="marquee-author">— ANDINI &amp; REZA</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow reveal">SERING DITANYAKAN</div>
+    <h2 class="sec-title reveal">Masih <em>Ragu?</em></h2>
+    <p class="sec-sub reveal">Pertanyaan yang paling sering masuk, kami jawab di sini.</p>
+
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q">Benar cuma Rp 99.000? Tidak ada biaya lain?<i>+</i></button>
+        <div class="faq-a"><div class="faq-a-inner">Benar — <strong>sekali bayar Rp 99.000</strong>, semua fitur terbuka, undangan aktif 3 bulan penuh. Tidak ada paket bertingkat, biaya admin, atau biaya perpanjangan tersembunyi.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Bagaimana cara menambahkan foto kami di cover?<i>+</i></button>
+        <div class="faq-a"><div class="faq-a-inner">Di builder ada bagian <strong>Foto Sampul</strong> — tinggal unggah foto prewedding atau foto favorit kalian dari galeri HP. Foto otomatis dirapikan dan tampil elegan di halaman depan undangan. Kalau tidak diunggah, undangan tampil polos dengan nama mempelai saja — dua-duanya cantik.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Bisa lihat hasilnya dulu sebelum bayar?<i>+</i></button>
+        <div class="faq-a"><div class="faq-a-inner">Bisa, dan memang begitu alurnya: isi data → <strong>preview gratis tanpa batas</strong> → bayar hanya kalau sudah suka. Kamu tidak pernah membayar untuk sesuatu yang belum kamu lihat.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Berapa lama undangan aktif setelah bayar?<i>+</i></button>
+        <div class="faq-a"><div class="faq-a-inner">Setelah pembayaran dikonfirmasi, link aktif <strong>dalam hitungan detik</strong> — otomatis, tanpa menunggu. Undangan online selama 3 bulan, lebih dari cukup sampai hari H dan sesudahnya.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Bagaimana tamu menerima undangannya?<i>+</i></button>
+        <div class="faq-a"><div class="faq-a-inner">Kamu cukup membagikan satu link via WhatsApp. Mau lebih personal? Pakai <strong>generator link per tamu</strong> — setiap tamu dapat link dengan namanya sendiri tersapa di undangan.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final">
+  <div class="wrap">
+    <div class="final-ornament reveal">✦ ✦ ✦</div>
+    <h2 class="sec-title reveal">Momen Sekali Seumur Hidup,<br><em>Layak Tampil Sempurna</em></h2>
+    <p class="sec-sub reveal" style="margin-bottom: 36px;">Mulai sekarang, selesai sebelum tehmu dingin. Preview gratis — kamu tidak rugi apa-apa.</p>
+    <div class="reveal reveal-d1">
+      <a href="./builder.html" class="btn-gold" style="padding: 19px 52px;">BUAT UNDANGANKU — Rp 99.000</a>
+    </div>
+    <div class="hero-trust reveal reveal-d2" style="margin-top: 26px; justify-content: center;">
+      <span><i>✦</i> SEKALI BAYAR</span>
+      <span><i>✦</i> SEMUA FITUR</span>
+      <span><i>✦</i> AKTIF 3 BULAN</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot-inner">
+    <div class="foot-logo">Undangan<span>Ku</span></div>
+    <div class="foot-links">
+      <a href="./builder.html">BUAT UNDANGAN</a>
+      <a href="./tamu.html">LINK PER TAMU</a>
+      <a href="https://www.instagram.com/willyanugrh" target="_blank" rel="noopener">INSTAGRAM</a>
+    </div>
+    <div class="foot-copy">© UndanganKu · Dibuat dengan ♥ di Indonesia</div>
+  </div>
+</footer>
+
+<!-- STICKY CTA (mobile) -->
+<div class="sticky-cta" id="stickyCta">
+  <a href="./builder.html">BUAT UNDANGAN — <s>Rp 249.000</s>&nbsp;Rp 99.000</a>
 </div>
 
 <script>
 (function() {
-  // Harga live $1 — konversi ke Rupiah mengikuti kurs USD/IDR
-  var FALLBACK_RATE = 16500;
-  var CACHE_KEY = '_uk_usd_rate';
-  var CACHE_TTL = 30 * 60 * 1000;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function charmRp(n) { return Math.max(9900, Math.ceil(n / 1000) * 1000 - 100); }
-  function formatRp(n) { return 'Rp ' + Math.round(n).toLocaleString('id-ID'); }
+  // ── Scroll progress + nav state + sticky CTA ──
+  var nav = document.getElementById('nav');
+  var bar = document.getElementById('scrollProgress');
+  var sticky = document.getElementById('stickyCta');
+  var heroH = window.innerHeight;
+  var ticking = false;
 
-  function render(rate) {
-    var price = formatRp(charmRp(rate));
-    var el = document.getElementById('livePriceIdr');
-    if (el) el.textContent = price;
-    var rv = document.getElementById('liveRateVal');
-    if (rv) rv.textContent = formatRp(rate);
-    document.querySelectorAll('.js-live-idr').forEach(function(e) { e.textContent = price; });
+  function onScroll() {
+    var y = window.scrollY;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+    nav.classList.toggle('scrolled', y > 30);
+    // Sticky CTA muncul setelah lewat hero, sembunyi lagi di dekat footer
+    var nearEnd = max - y < 600;
+    sticky.classList.toggle('show', y > heroH * 0.85 && !nearEnd);
+    ticking = false;
+  }
+  window.addEventListener('scroll', function() {
+    if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
+  }, { passive: true });
+  onScroll();
+
+  // ── Reveal on scroll ──
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
+  document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+  // ── FAQ accordion ──
+  document.querySelectorAll('.faq-item').forEach(function(item) {
+    var q = item.querySelector('.faq-q');
+    var a = item.querySelector('.faq-a');
+    q.addEventListener('click', function() {
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(other) {
+        other.classList.remove('open');
+        other.querySelector('.faq-a').style.maxHeight = '0px';
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        a.style.maxHeight = a.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // ── Marquee: duplikasi track agar loop mulus ──
+  var track = document.getElementById('marqueeTrack');
+  track.innerHTML += track.innerHTML;
+
+  // ── Tilt 3D pada kartu tema (pointer device saja) ──
+  if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('[data-tilt]').forEach(function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var r = card.getBoundingClientRect();
+        var rx = ((e.clientY - r.top) / r.height - 0.5) * -7;
+        var ry = ((e.clientX - r.left) / r.width - 0.5) * 7;
+        card.style.transform = 'perspective(800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateY(-4px)';
+      });
+      card.addEventListener('mouseleave', function() {
+        card.style.transform = '';
+      });
+    });
   }
 
-  render(FALLBACK_RATE);
+  // ── Partikel emas di hero ──
+  var canvas = document.getElementById('particles');
+  if (canvas && !reduceMotion) {
+    var ctx = canvas.getContext('2d');
+    var parts = [];
+    var W, H, raf;
 
-  try {
-    var cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
-    if (cached && cached.rate > 0 && (Date.now() - cached.t) < CACHE_TTL) {
-      render(cached.rate);
-      return;
+    function resize() {
+      var hero = canvas.parentElement;
+      W = canvas.width = hero.offsetWidth;
+      H = canvas.height = hero.offsetHeight;
     }
-  } catch (e) {}
+    resize();
+    window.addEventListener('resize', resize);
 
-  fetch('https://open.er-api.com/v6/latest/USD')
-    .then(function(r) { return r.json(); })
-    .then(function(j) {
-      var rate = j && j.rates && j.rates.IDR;
-      if (rate > 0) {
-        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ rate: rate, t: Date.now() })); } catch (e) {}
-        render(rate);
+    var COUNT = Math.min(46, Math.floor(window.innerWidth / 24));
+    for (var i = 0; i < COUNT; i++) {
+      parts.push({
+        x: Math.random(), y: Math.random(),
+        r: 0.6 + Math.random() * 1.7,
+        vy: 0.00018 + Math.random() * 0.00038,
+        vx: (Math.random() - 0.5) * 0.00012,
+        tw: Math.random() * Math.PI * 2,
+        ts: 0.008 + Math.random() * 0.02,
+      });
+    }
+
+    function frame() {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        p.y -= p.vy; p.x += p.vx; p.tw += p.ts;
+        if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
+        if (p.x < -0.02) p.x = 1.02;
+        if (p.x > 1.02) p.x = -0.02;
+        var a = 0.14 + Math.abs(Math.sin(p.tw)) * 0.5;
+        ctx.beginPath();
+        ctx.arc(p.x * W, p.y * H, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(224, 200, 138,' + a.toFixed(3) + ')';
+        ctx.fill();
       }
-    })
-    .catch(function() {});
+      raf = requestAnimationFrame(frame);
+    }
+
+    // Hemat baterai: berhenti animasi saat hero tidak terlihat / tab hidden
+    var heroVisible = true;
+    new IntersectionObserver(function(entries) {
+      heroVisible = entries[0].isIntersecting;
+      if (heroVisible && !document.hidden) { cancelAnimationFrame(raf); frame(); }
+      else cancelAnimationFrame(raf);
+    }).observe(canvas.parentElement);
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) cancelAnimationFrame(raf);
+      else if (heroVisible) { cancelAnimationFrame(raf); frame(); }
+    });
+    frame();
+  }
 })();
 </script>
 

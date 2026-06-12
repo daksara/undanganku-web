@@ -1482,19 +1482,18 @@ button:active { transform: scale(0.96); }
       document.querySelectorAll('.couple-photo-wrap').forEach(function(el) { el.style.display = 'none'; });
     }
 
-    // Cover photo (premium only)
+    // Cover photo — tampil kalau pembeli melampirkan foto (semua paket).
+    // Demo/preview premium tanpa foto tetap pakai ilustrasi.
     var coverWrap = document.getElementById('coverPhotoWrap');
-    if (isStandard) {
-      if (coverWrap) coverWrap.style.display = 'none';
-    } else {
-      var couplePhotoUrl = d.couplePhotoUrl || '';
-      var coverOval = document.getElementById('coverPhotoOval');
-      var coverImg = document.getElementById('coverPhotoImg');
-      if (coverOval && coverImg) {
-        coverImg.src = couplePhotoUrl ? couplePhotoUrl : _demoSvgUri(_jawaCoverSvg());
-        coverOval.classList.remove('no-photo');
-        coverOval.classList.add('has-photo');
-      }
+    var couplePhotoUrl = d.couplePhotoUrl || '';
+    var coverOval = document.getElementById('coverPhotoOval');
+    var coverImg = document.getElementById('coverPhotoImg');
+    if (coverOval && coverImg && (couplePhotoUrl || !isStandard)) {
+      coverImg.src = couplePhotoUrl ? couplePhotoUrl : _demoSvgUri(_jawaCoverSvg());
+      coverOval.classList.remove('no-photo');
+      coverOval.classList.add('has-photo');
+    } else if (coverWrap) {
+      coverWrap.style.display = 'none';
     }
 
     // Story (premium only)
