@@ -5,7 +5,8 @@ Platform undangan digital pernikahan elegan dengan 3 tema premium, builder inter
 ## Fitur
 
 - **3 Tema Premium** — Royal Classic, Sunset Bloom, Adat Jawa
-- **Builder Interaktif** — Form 5 langkah untuk buat undangan tanpa coding
+- **Foto Couple di Cover** — Pembeli bisa unggah foto untuk halaman depan undangan (dikompres otomatis di browser)
+- **Builder Interaktif** — Form 3 langkah untuk buat undangan tanpa coding
 - **RSVP & Ucapan** — Tamu konfirmasi kehadiran + kirim ucapan langsung
 - **Countdown** — Hitung mundur otomatis ke hari H
 - **Amplop Digital** — Nomor rekening tampil rapi + tombol salin
@@ -50,12 +51,13 @@ Endpoint yang digunakan:
 - `POST /rsvp` — Kirim RSVP
 - `GET /rsvp/:orderId` — Ambil daftar RSVP
 
-## Paket Harga
+## Harga
 
-| Paket | Harga | Durasi | Fitur Tambahan |
-|-------|-------|--------|----------------|
-| Standard | Rp 29.000 | 3 bulan | Semua fitur dasar |
-| Premium | Rp 49.000 | 6 bulan | + Galeri foto, Love Story, revisi 1x |
+| Paket | Harga | Durasi | Fitur |
+|-------|-------|--------|-------|
+| Lengkap | Rp 99.000 (harga perilisan, anchor Rp 249.000) | 3 bulan | Semua fitur, termasuk foto couple di cover |
+
+Harga flat dalam Rupiah — tidak ada lagi harga live mengikuti kurs dolar.
 
 ## Tech Stack
 
