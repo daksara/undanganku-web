@@ -106,11 +106,12 @@
   /* ════════ HERO ════════ */
   .hero {
     position: relative;
+    min-height: 100vh;   /* fallback browser lama / in-app browser */
     min-height: 100svh;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     text-align: center;
-    padding: 110px 22px 70px;
+    padding: 90px 22px 64px;
     overflow: hidden;
   }
   #particles {
@@ -121,7 +122,7 @@
   .hero-glow {
     position: absolute;
     top: -10%; left: 50%; transform: translateX(-50%);
-    width: 620px; height: 620px;
+    width: min(620px, 150vw); height: 620px;
     background: radial-gradient(ellipse, rgba(200,169,110,0.13), transparent 65%);
     pointer-events: none; z-index: 0;
     animation: glowPulse 7s ease-in-out infinite;
@@ -130,7 +131,9 @@
     0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); }
     50% { opacity: 1; transform: translateX(-50%) scale(1.12); }
   }
-  .hero > * { position: relative; z-index: 1; }
+  /* PENTING: jangan pakai .hero > * — itu menimpa position:absolute
+     milik .hero-glow/#particles dan mendorong konten ke bawah (layar kosong di HP) */
+  .hero > *:not(#particles):not(.hero-glow) { position: relative; z-index: 1; }
 
   .hero-eyebrow {
     font-family: 'Cinzel', serif;
@@ -251,6 +254,10 @@
 
   /* ════════ SECTION BASICS ════════ */
   section { position: relative; padding: 90px 0; }
+  @media (max-width: 600px) {
+    section { padding: 60px 0; }
+    .hero { padding: 84px 18px 56px; }
+  }
   .sec-eyebrow {
     font-family: 'Cinzel', serif;
     font-size: 9.5px; letter-spacing: 4px;

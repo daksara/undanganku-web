@@ -1229,112 +1229,6 @@ button:active { transform: scale(0.96); }
       '</svg>';
   }
 
-  function _jawaGallerySvgs() {
-    var b = '#2a0e0e', g = '#c9a961', ga = '#a88448', cr = '#f5e8c7', deep = '#3d1818';
-    var lbl = function(text) {
-      return '<text x="150" y="340" text-anchor="middle" fill="' + g + '" font-family="Georgia,serif" font-size="19" font-style="italic">' + text + '</text>' +
-             '<line x1="88" y1="356" x2="212" y2="356" stroke="' + ga + '" stroke-width="0.8" opacity="0.35"/>' +
-             '<circle cx="150" cy="356" r="2" fill="' + g + '" opacity="0.5"/>';
-    };
-    var border = '<rect x="1" y="1" width="298" height="398" fill="none" stroke="' + ga + '" stroke-width="1" opacity="0.3"/>';
-    var batikLine = function(y) {
-      return '<path d="M20,' + y + ' Q35,' + (y-5) + ' 50,' + y + ' Q65,' + (y+5) + ' 80,' + y + ' Q95,' + (y-5) + ' 110,' + y + ' Q125,' + (y+5) + ' 140,' + y + ' Q155,' + (y-5) + ' 170,' + y + ' Q185,' + (y+5) + ' 200,' + y + ' Q215,' + (y-5) + ' 230,' + y + ' Q245,' + (y+5) + ' 260,' + y + '" stroke="' + g + '" stroke-width="1.2" fill="none" opacity="0.3"/>';
-    };
-
-    var rings =
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">' +
-      '<rect width="300" height="400" fill="' + b + '"/>' + border +
-      batikLine(370) + batikLine(380) +
-      '<text x="150" y="72" text-anchor="middle" fill="' + g + '" font-family="serif" font-size="11" letter-spacing="4" opacity="0.6">✦ CINCIN ✦</text>' +
-      '<circle cx="178" cy="188" r="56" fill="none" stroke="' + g + '" stroke-width="15"/>' +
-      '<path d="M150,140 A56,56 0 0,0 150,236" fill="none" stroke="' + b + '" stroke-width="18"/>' +
-      '<circle cx="122" cy="188" r="56" fill="none" stroke="' + g + '" stroke-width="15"/>' +
-      '<polygon points="122,130 133,145 122,160 111,145" fill="' + cr + '" opacity="0.85"/>' +
-      '<polygon points="122,130 133,145 122,150" fill="white" opacity="0.7"/>' +
-      lbl('Cincin Kami') + '</svg>';
-
-    var bouquet =
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">' +
-      '<rect width="300" height="400" fill="' + b + '"/>' + border +
-      batikLine(370) + batikLine(380) +
-      '<text x="150" y="58" text-anchor="middle" fill="' + g + '" font-family="serif" font-size="11" letter-spacing="4" opacity="0.6">✦ MELATI ✦</text>' +
-      // stems
-      '<line x1="150" y1="300" x2="150" y2="238" stroke="#3a5818" stroke-width="4"/>' +
-      '<line x1="150" y1="280" x2="118" y2="250" stroke="#3a5818" stroke-width="3"/>' +
-      '<line x1="150" y1="268" x2="182" y2="248" stroke="#3a5818" stroke-width="3"/>' +
-      '<ellipse cx="112" cy="246" rx="14" ry="7" fill="#3a5818" transform="rotate(-35,112,246)"/>' +
-      '<ellipse cx="188" cy="244" rx="14" ry="7" fill="#3a5818" transform="rotate(35,188,244)"/>' +
-      // flowers (melati/jasmine — white small clusters)
-      '<circle cx="150" cy="178" r="40" fill="#7a2a08"/><circle cx="150" cy="178" r="20" fill="' + g + '"/>' +
-      '<circle cx="102" cy="200" r="30" fill="#8a3818"/><circle cx="102" cy="200" r="15" fill="' + ga + '"/>' +
-      '<circle cx="198" cy="200" r="30" fill="#8a3818"/><circle cx="198" cy="200" r="15" fill="' + ga + '"/>' +
-      '<circle cx="122" cy="155" r="24" fill="#7a2a08"/><circle cx="122" cy="155" r="12" fill="' + g + '"/>' +
-      '<circle cx="178" cy="155" r="24" fill="#7a2a08"/><circle cx="178" cy="155" r="12" fill="' + g + '"/>' +
-      // melati (jasmine) accent
-      '<circle cx="150" cy="143" r="6" fill="white" opacity="0.9"/>' +
-      '<circle cx="138" cy="148" r="5" fill="white" opacity="0.85"/>' +
-      '<circle cx="162" cy="148" r="5" fill="white" opacity="0.85"/>' +
-      '<path d="M128,238 Q150,250 172,238" stroke="' + g + '" stroke-width="3" fill="none" stroke-linecap="round"/>' +
-      '<path d="M134,247 Q150,257 166,247" stroke="' + ga + '" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-      lbl('Rangkaian Melati') + '</svg>';
-
-    var arch =
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">' +
-      '<rect width="300" height="400" fill="' + b + '"/>' + border +
-      batikLine(370) + batikLine(380) +
-      '<text x="150" y="44" text-anchor="middle" fill="' + g + '" font-family="serif" font-size="11" letter-spacing="4" opacity="0.6">✦ IJAB QABUL ✦</text>' +
-      '<line x1="55" y1="302" x2="245" y2="302" stroke="' + ga + '" stroke-width="1.2" opacity="0.4"/>' +
-      '<rect x="64" y="128" width="16" height="174" fill="' + g + '" opacity="0.8" rx="3"/>' +
-      '<rect x="220" y="128" width="16" height="174" fill="' + g + '" opacity="0.8" rx="3"/>' +
-      '<path d="M64,128 Q76,52 150,40 Q224,52 236,128" fill="none" stroke="' + g + '" stroke-width="11" stroke-linecap="round"/>' +
-      // flowers on arch (jasmine/melati)
-      '<circle cx="80" cy="96" r="9" fill="white" opacity="0.85"/>' +
-      '<circle cx="80" cy="96" r="4" fill="' + g + '"/>' +
-      '<circle cx="108" cy="62" r="9" fill="white" opacity="0.85"/>' +
-      '<circle cx="108" cy="62" r="4" fill="' + ga + '"/>' +
-      '<circle cx="150" cy="46" r="10" fill="white" opacity="0.9"/>' +
-      '<circle cx="150" cy="46" r="5" fill="' + g + '"/>' +
-      '<circle cx="192" cy="62" r="9" fill="white" opacity="0.85"/>' +
-      '<circle cx="192" cy="62" r="4" fill="' + ga + '"/>' +
-      '<circle cx="220" cy="96" r="9" fill="white" opacity="0.85"/>' +
-      '<circle cx="220" cy="96" r="4" fill="' + g + '"/>' +
-      // couple
-      '<ellipse cx="130" cy="264" rx="9" ry="9" fill="#fce6c8"/>' +
-      '<rect x="124" y="273" width="14" height="24" fill="#8a3020" rx="3"/>' +
-      '<ellipse cx="170" cy="264" rx="9" ry="9" fill="#fce6c8"/>' +
-      '<rect x="164" y="273" width="14" height="24" fill="#3d1818" rx="3"/>' +
-      lbl('Momen Sakral') + '</svg>';
-
-    var candles =
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">' +
-      '<rect width="300" height="400" fill="' + b + '"/>' + border +
-      batikLine(370) + batikLine(380) +
-      '<text x="150" y="44" text-anchor="middle" fill="' + g + '" font-family="serif" font-size="11" letter-spacing="4" opacity="0.6">✦ CINTA ✦</text>' +
-      '<path d="M150,120 Q150,107 163,107 Q176,107 176,120 Q176,133 150,150 Q124,133 124,120 Q124,107 137,107 Q150,107 150,120Z" fill="' + g + '" opacity="0.8"/>' +
-      '<circle cx="158" cy="88" r="2" fill="' + g + '" opacity="0.6"/>' +
-      '<circle cx="142" cy="80" r="1.5" fill="' + ga + '" opacity="0.5"/>' +
-      '<circle cx="168" cy="76" r="1.5" fill="' + g + '" opacity="0.4"/>' +
-      '<circle cx="132" cy="92" r="1.5" fill="' + g + '" opacity="0.4"/>' +
-      '<rect x="110" y="168" width="28" height="128" fill="#f5e8c7" rx="4"/>' +
-      '<rect x="84" y="194" width="24" height="104" fill="#f5e8c7" rx="4"/>' +
-      '<rect x="192" y="194" width="24" height="104" fill="#f5e8c7" rx="4"/>' +
-      '<ellipse cx="124" cy="296" rx="19" ry="5" fill="' + g + '" opacity="0.7"/>' +
-      '<ellipse cx="96" cy="298" rx="15" ry="4.5" fill="' + g + '" opacity="0.7"/>' +
-      '<ellipse cx="204" cy="298" rx="15" ry="4.5" fill="' + g + '" opacity="0.7"/>' +
-      '<line x1="124" y1="168" x2="124" y2="156" stroke="#4a3020" stroke-width="2"/>' +
-      '<line x1="96" y1="194" x2="96" y2="182" stroke="#4a3020" stroke-width="2"/>' +
-      '<line x1="204" y1="194" x2="204" y2="182" stroke="#4a3020" stroke-width="2"/>' +
-      '<path d="M124,156 Q131,146 130,138 Q126,130 124,124 Q122,130 118,138 Q117,146 124,156Z" fill="#f5a020"/>' +
-      '<path d="M124,153 Q129,145 128,140 Q125,134 124,130 Q122,135 120,141 Q119,146 124,153Z" fill="#ffd060"/>' +
-      '<path d="M96,182 Q103,172 102,164 Q98,156 96,150 Q94,156 90,164 Q89,172 96,182Z" fill="#f5a020"/>' +
-      '<path d="M96,179 Q101,171 100,166 Q97,160 96,156 Q94,161 92,167 Q91,172 96,179Z" fill="#ffd060"/>' +
-      '<path d="M204,182 Q211,172 210,164 Q206,156 204,150 Q202,156 198,164 Q197,172 204,182Z" fill="#f5a020"/>' +
-      '<path d="M204,179 Q209,171 208,166 Q205,160 204,156 Q202,161 200,167 Q199,172 204,179Z" fill="#ffd060"/>' +
-      lbl('Cinta Abadi') + '</svg>';
-
-    return [rings, bouquet, arch, candles];
-  }
-
   function esc(s) {
     if (s === null || s === undefined) return '';
     return String(s)
@@ -1514,19 +1408,16 @@ button:active { transform: scale(0.96); }
       document.getElementById('storyList').innerHTML = html;
     }
 
-    // Gallery (premium only)
+    // Gallery — hanya tampil kalau ada foto asli; tanpa foto, section disembunyikan
+    // (ilustrasi demo galeri dihapus)
     var gallerySection = document.getElementById('gallerySection');
-    if (isStandard) {
+    var galleryImages = Array.isArray(d.galleryPhotos) ? d.galleryPhotos : [];
+    if (isStandard || galleryImages.length === 0) {
       if (gallerySection) gallerySection.style.display = 'none';
     } else {
-      var images = Array.isArray(d.galleryPhotos) ? d.galleryPhotos : [];
+      var images = galleryImages;
       var galleryEl = document.getElementById('gallery');
-      if (images.length === 0) {
-        var demoSvgs = _jawaGallerySvgs();
-        galleryEl.innerHTML = demoSvgs.map(function(s) {
-          return '<img src="' + _demoSvgUri(s) + '" alt="Ilustrasi">';
-        }).join('');
-      } else {
+      {
         var gHtml = '';
         var isOdd = images.length % 2 === 1;
         for (var j = 0; j < images.length; j++) {
