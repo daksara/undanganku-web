@@ -662,6 +662,82 @@
   .foot-links a:hover { color: var(--gold); }
   .foot-copy { font-size: 11px; color: var(--cream-mute); font-weight: 300; }
 
+  /* ════════ HERO CHIPS ════════ */
+  .hero-chips {
+    margin-top: 22px;
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 560px;
+    animation: fadeUp 0.9s 0.34s var(--ease-out) both;
+  }
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 15px;
+    border: 1px solid var(--line);
+    background: rgba(200,169,110,0.04);
+    font-family: 'Cinzel', serif;
+    font-size: 8.5px;
+    letter-spacing: 1.8px;
+    color: var(--cream-mute);
+    white-space: nowrap;
+    transition: border-color 0.25s, background 0.25s, color 0.25s;
+  }
+  .hero-chip.hot {
+    border-color: rgba(200,169,110,0.3);
+    color: var(--gold-light);
+    background: rgba(200,169,110,0.07);
+  }
+  .hero-chip i { font-style: normal; font-size: 13px; }
+
+  /* ════════ UCAPAN TAMU ════════ */
+  .ucapan-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .ucapan-grid { grid-template-columns: 1fr; } }
+  .ucapan-card {
+    border: 1px solid var(--line);
+    background: linear-gradient(165deg, rgba(200,169,110,0.04), rgba(200,169,110,0.01));
+    padding: 22px 20px;
+    transition: border-color 0.3s;
+  }
+  .ucapan-card:hover { border-color: var(--line-strong); }
+  .ucapan-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .ucapan-name {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+  }
+  .ucapan-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 7.5px;
+    letter-spacing: 1px;
+    padding: 3px 9px;
+    border: 1px solid;
+    flex-shrink: 0;
+  }
+  .ucapan-badge.hadir { color: #95c995; border-color: rgba(149,201,149,0.35); }
+  .ucapan-badge.tidak { color: #d48484; border-color: rgba(212,132,132,0.35); }
+  .ucapan-msg {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14.5px;
+    color: var(--cream-dim);
+    line-height: 1.72;
+  }
+
   /* ════════ STICKY MOBILE CTA ════════ */
   .sticky-cta {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 800;
@@ -725,11 +801,14 @@
 
   <div class="hero-eyebrow">UNDANGAN DIGITAL PREMIUM</div>
   <h1 class="hero-title">Hari Spesialmu,<br><em>Diabadikan Indah</em></h1>
-  <p class="hero-sub">
-    Undangan pernikahan digital dengan <strong>foto kalian berdua di halaman depan</strong> —
-    bukan sekadar nama. Lengkap dengan RSVP, countdown, musik, dan amplop digital.
-    Jadi dalam 5 menit.
-  </p>
+  <div class="hero-chips">
+    <div class="hero-chip hot"><i>📷</i> FOTO DI COVER</div>
+    <div class="hero-chip"><i>✓</i> RSVP &amp; UCAPAN</div>
+    <div class="hero-chip"><i>⏳</i> COUNTDOWN</div>
+    <div class="hero-chip"><i>♫</i> MUSIK LATAR</div>
+    <div class="hero-chip"><i>🎁</i> AMPLOP DIGITAL</div>
+    <div class="hero-chip"><i>✉</i> NAMA TAMU PERSONAL</div>
+  </div>
   <div class="hero-ctas">
     <a href="./builder.html" class="btn-gold">MULAI — Rp 99.000</a>
     <a href="#tema" class="btn-ghost">LIHAT TEMA</a>
@@ -919,6 +998,46 @@
     </div>
   </div>
 </div>
+
+<!-- UCAPAN TAMU -->
+<section style="background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="wrap">
+    <div class="sec-eyebrow reveal">KATA MEREKA</div>
+    <h2 class="sec-title reveal">Ucapan <em>Para Tamu</em></h2>
+    <p class="sec-sub reveal">Setiap tamu menyampaikan kehadiran &amp; doa langsung di undangan — kamu pantau semuanya real-time.</p>
+
+    <div class="ucapan-grid">
+      <div class="ucapan-card reveal">
+        <div class="ucapan-card-head">
+          <span class="ucapan-name">DEWI RAHAYU</span>
+          <span class="ucapan-badge hadir">✓ Hadir</span>
+        </div>
+        <div class="ucapan-msg">"Barakallahu lakuma wa baraka alaikuma. Semoga menjadi keluarga sakinah mawaddah warahmah. Selamat menempuh hidup baru!"</div>
+      </div>
+      <div class="ucapan-card reveal reveal-d1">
+        <div class="ucapan-card-head">
+          <span class="ucapan-name">FAISAL HENDRA</span>
+          <span class="ucapan-badge hadir">✓ Hadir</span>
+        </div>
+        <div class="ucapan-msg">"Congrats! Doa terbaik untuk kalian berdua. Semoga langgeng sampai kakek nenek ya!"</div>
+      </div>
+      <div class="ucapan-card reveal">
+        <div class="ucapan-card-head">
+          <span class="ucapan-name">NADIA PERMATA</span>
+          <span class="ucapan-badge tidak">✕ Berhalangan</span>
+        </div>
+        <div class="ucapan-msg">"Maaf tidak bisa hadir, ada keperluan keluarga. Tapi doa selalu menyertai, semoga pernikahan kalian penuh berkah dan bahagia selalu."</div>
+      </div>
+      <div class="ucapan-card reveal reveal-d1">
+        <div class="ucapan-card-head">
+          <span class="ucapan-name">RINA KUSUMA</span>
+          <span class="ucapan-badge hadir">✓ Hadir</span>
+        </div>
+        <div class="ucapan-msg">"Selamat menempuh hidup baru! Semoga selalu dalam lindungan-Nya dan bahagia dunia akhirat. Peluk sayang untuk pengantin berdua!"</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- FAQ -->
 <section>
