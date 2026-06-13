@@ -1522,6 +1522,13 @@ button:active { transform: scale(0.96); }
   // ===== RSVP =====
   var attending = null;
 
+  // Contoh ucapan untuk mode preview (server RSVP belum aktif sebelum dibayar)
+  var PREVIEW_RSVP_SAMPLE = [
+    { name: 'Dewi Rahayu', attending: true, message: 'Barakallahu lakuma wa baraka alaikuma. Semoga menjadi keluarga sakinah, mawaddah, wa rahmah.' },
+    { name: 'Faisal Hendra', attending: true, message: 'Selamat menempuh hidup baru! Semoga langgeng sampai kakek-nenek dan bahagia selalu.' },
+    { name: 'Nadia Permata', attending: false, message: 'Maaf belum bisa hadir, tapi doa terbaik selalu menyertai kalian berdua.' }
+  ];
+
   function renderRsvpList(list) {
     var el = document.getElementById('rsvpList');
     var cnt = document.getElementById('rsvpCount');
@@ -1549,6 +1556,8 @@ button:active { transform: scale(0.96); }
       if (isPreview) {
         document.getElementById('rsvpSubmit').disabled = true;
         document.getElementById('rsvpStatus').textContent = 'RSVP nonaktif di mode preview';
+        // Tampilkan contoh ucapan agar preview tampil utuh (bukan skeleton loading terus-menerus)
+        renderRsvpList(PREVIEW_RSVP_SAMPLE);
       } else if (Array.isArray(demoRsvp) && demoRsvp.length > 0) {
         renderRsvpList(demoRsvp);
         setupDemoForm(demoRsvp);
