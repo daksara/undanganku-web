@@ -677,6 +677,20 @@ body.preview-mode { padding-top: 32px; }
   opacity: 0.85;
 }
 
+/* Skeleton loading */
+.rsvp-skeleton {
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  animation: skelPulse 1.6s ease-in-out infinite;
+}
+@keyframes skelPulse { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
+.rsvp-skel-row {
+  height: 9px;
+  background: var(--line);
+  border-radius: 2px;
+  margin-bottom: 7px;
+}
+
 /* Footer */
 .footer {
   padding: 80px 24px 48px;
@@ -1069,7 +1083,9 @@ button:active { transform: scale(0.96); }
     <h3 style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.3em;color:var(--gold);margin-bottom:8px;">UCAPAN PARA TAMU</h3>
     <div id="rsvpCount" style="font-size:11px; letter-spacing:0.15em; opacity:0.55; margin-bottom:10px; font-style:italic;"></div>
     <div class="rsvp-list" id="rsvpList">
-      <div style="opacity:0.5;font-style:italic;text-align:center;padding:20px;font-size:13px;">Memuat ucapan...</div>
+      <div class="rsvp-skeleton"><div class="rsvp-skel-row" style="width:38%"></div><div class="rsvp-skel-row" style="width:88%"></div><div class="rsvp-skel-row" style="width:65%"></div></div>
+      <div class="rsvp-skeleton" style="animation-delay:0.2s"><div class="rsvp-skel-row" style="width:44%"></div><div class="rsvp-skel-row" style="width:76%"></div><div class="rsvp-skel-row" style="width:50%"></div></div>
+      <div class="rsvp-skeleton" style="animation-delay:0.4s"><div class="rsvp-skel-row" style="width:35%"></div><div class="rsvp-skel-row" style="width:92%"></div><div class="rsvp-skel-row" style="width:72%"></div></div>
     </div>
   </section>
 
