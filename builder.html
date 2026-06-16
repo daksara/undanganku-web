@@ -1103,12 +1103,19 @@
           
           <div class="form-grid cols-2">
             <div>
-              <label>Bank 2 <span class="opt">(opsional)</span></label>
-              <input type="text" id="bank2Name" placeholder="Mandiri" oninput="updatePreview()">
+              <label>E-Wallet <span class="opt">(opsional)</span></label>
+              <select id="bank2Name" onchange="updatePreview()">
+                <option value="">Pilih E-Wallet</option>
+                <option value="GoPay">GoPay</option>
+                <option value="OVO">OVO</option>
+                <option value="Dana">Dana</option>
+                <option value="ShopeePay">ShopeePay</option>
+                <option value="LinkAja">LinkAja</option>
+              </select>
             </div>
             <div>
-              <label>No. Rekening 2</label>
-              <input type="text" id="bank2Num" placeholder="9876543210" oninput="updatePreview()">
+              <label>No. HP / Akun</label>
+              <input type="text" id="bank2Num" placeholder="081234567890" oninput="updatePreview()">
             </div>
           </div>
           <div>
