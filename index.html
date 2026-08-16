@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UndanganKu — Undangan Digital Pernikahan Premium</title>
-<meta name="description" content="Undangan digital pernikahan premium cuma Rp 99.000 — 3 tema elegan, foto couple di cover, RSVP, countdown, amplop digital, musik. Preview gratis, bayar kalau suka.">
+<meta name="description" content="Undangan digital pernikahan premium cuma Rp 5.000 — 3 tema elegan, foto couple di cover, RSVP, countdown, amplop digital, musik. Preview gratis, bayar kalau suka.">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <meta property="og:title" content="UndanganKu — Undangan Digital Pernikahan Premium">
-<meta property="og:description" content="3 tema elegan, foto couple di cover, RSVP online, countdown, amplop digital. Cuma Rp 99.000 — preview gratis, bayar kalau suka.">
+<meta property="og:description" content="3 tema elegan, foto couple di cover, RSVP online, countdown, amplop digital. Cuma Rp 5.000 — preview gratis, bayar kalau suka.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://undanganku-web.vercel.app/">
 <meta property="og:image" content="https://undanganku-web.vercel.app/og-image.png">
@@ -25,6 +25,7 @@
 
   :root {
     --bg: #0b0805;
+    --bg-deep: #060402;
     --bg-soft: #14100b;
     --bg-card: #181208;
     --gold: #c8a96e;
@@ -37,6 +38,7 @@
     --line-strong: rgba(200,169,110,0.4);
     --danger: #e87a7a;
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   html { scroll-behavior: smooth; }
@@ -80,14 +82,22 @@
     border-bottom-color: var(--line);
   }
   .nav-inner {
-    max-width: 1060px; margin: 0 auto; padding: 14px 22px;
+    max-width: 1060px; margin: 0 auto; padding: 16px 22px;
     display: flex; align-items: center; justify-content: space-between;
   }
   .nav-logo {
+    display: inline-flex; align-items: center; gap: 10px;
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 23px;
-    color: var(--cream); letter-spacing: 0.5px;
+    font-style: italic; font-size: 22px;
+    color: var(--cream); letter-spacing: 0.3px;
     text-decoration: none;
+  }
+  .nav-logo .mark {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Allura', cursive; font-size: 16px; color: var(--gold-light);
+    flex-shrink: 0;
   }
   .nav-logo span { color: var(--gold); }
   .nav-cta {
@@ -95,7 +105,7 @@
     font-size: 9.5px; letter-spacing: 2.5px;
     color: var(--bg);
     background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    padding: 9px 18px;
+    padding: 10px 20px;
     text-decoration: none;
     transition: transform 0.2s var(--ease-out), box-shadow 0.3s;
     box-shadow: 0 4px 16px rgba(200,169,110,0.25);
@@ -134,6 +144,25 @@
   /* PENTING: jangan pakai .hero > * — itu menimpa position:absolute
      milik .hero-glow/#particles dan mendorong konten ke bawah (layar kosong di HP) */
   .hero > *:not(#particles):not(.hero-glow) { position: relative; z-index: 1; }
+
+  .hero-corner {
+    position: absolute; width: 30px; height: 30px;
+    border: 1px solid var(--line-strong);
+    opacity: 0.55; z-index: 1; pointer-events: none;
+  }
+  .hero-corner.tl { top: 28px; left: 24px; border-right: none; border-bottom: none; }
+  .hero-corner.tr { top: 28px; right: 24px; border-left: none; border-bottom: none; }
+  @media (max-width: 640px) { .hero-corner { display: none; } }
+
+  .hero-monogram {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-family: 'Allura', cursive; font-size: 24px; color: var(--gold-light);
+    background: radial-gradient(circle, rgba(200,169,110,0.1), transparent 70%);
+    animation: fadeUp 0.8s 0.02s var(--ease-out) both;
+  }
 
   .hero-eyebrow {
     font-family: 'Cinzel', serif;
@@ -253,16 +282,23 @@
   }
 
   /* ════════ SECTION BASICS ════════ */
-  section { position: relative; padding: 90px 0; }
+  section { position: relative; padding: 96px 0; }
   @media (max-width: 600px) {
-    section { padding: 60px 0; }
+    section { padding: 64px 0; }
     .hero { padding: 84px 18px 56px; }
   }
-  .sec-eyebrow {
-    font-family: 'Cinzel', serif;
-    font-size: 9.5px; letter-spacing: 4px;
-    color: var(--gold);
-    text-align: center; margin-bottom: 14px;
+
+  .sec-kicker {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .sec-kicker .num {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 14px; color: var(--gold-light);
+  }
+  .sec-kicker .rule { width: 26px; height: 1px; background: var(--line-strong); }
+  .sec-kicker .label {
+    font-family: 'Cinzel', serif; font-size: 9.5px; letter-spacing: 4px; color: var(--gold);
   }
   .sec-title {
     font-family: 'Cormorant Garamond', serif;
@@ -282,7 +318,7 @@
     text-align: center;
     color: var(--cream-dim);
     font-size: 14px; font-weight: 300;
-    max-width: 480px; margin: 0 auto 52px;
+    max-width: 480px; margin: 0 auto 56px;
     line-height: 1.7;
   }
 
@@ -293,7 +329,19 @@
   .reveal-d2 { transition-delay: 0.16s; }
   .reveal-d3 { transition-delay: 0.24s; }
 
+  /* Reusable corner-bracket frame motif */
+  .bracket-frame { position: relative; }
+  .bracket-frame::before, .bracket-frame::after {
+    content: ''; position: absolute; width: 30px; height: 30px;
+    border: 1px solid var(--line-strong);
+    pointer-events: none; z-index: 2;
+  }
+  .bracket-frame::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+  .bracket-frame::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
   /* ════════ TEMA SHOWCASE ════════ */
+  .tema-showcase { padding: 30px; border: 1px solid var(--line); }
+  @media (max-width: 600px) { .tema-showcase { padding: 14px; } }
   .tema-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -322,6 +370,17 @@
   .tema-card.royal .tema-bg { background: linear-gradient(150deg, #0a1126, #1c2b52 60%, #0a1126); }
   .tema-card.bloom .tema-bg { background: linear-gradient(150deg, #fef5ed, #fad9c0 50%, #f4a574); }
   .tema-card.jawa .tema-bg  { background: linear-gradient(160deg, #241806, #4a3520 55%, #241806); }
+
+  .tema-pick {
+    position: absolute; top: 12px; left: 12px;
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px;
+    padding: 5px 9px;
+    border: 1px solid rgba(255,255,255,0.28);
+    z-index: 1;
+  }
+  .tema-card.royal .tema-pick { color: #dfe9f8; border-color: rgba(195,211,238,0.4); }
+  .tema-card.bloom .tema-pick { color: #5d3a2e; border-color: rgba(93,58,46,0.4); }
+  .tema-card.jawa .tema-pick  { color: #f0e0c0; border-color: rgba(196,164,100,0.45); }
 
   .tema-frame {
     position: absolute; inset: 12px;
@@ -376,78 +435,127 @@
   .tema-card.jawa .tema-label,  .tema-card.jawa .tema-open  { color: #f0e0c0; border-color: rgba(196,164,100,0.45); }
 
   /* ════════ FITUR ════════ */
-  .feature-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+  .feature-flagship {
+    display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 0;
+    border: 1px solid var(--line-strong);
+    margin-bottom: 46px;
+    background: linear-gradient(165deg, rgba(200,169,110,0.07), transparent 60%);
+    overflow: hidden;
   }
-  @media (max-width: 860px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 560px) { .feature-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 760px) { .feature-flagship { grid-template-columns: 1fr; } }
 
-  .feature {
+  .flagship-visual {
     position: relative;
-    border: 1px solid var(--line);
-    background: linear-gradient(165deg, rgba(200,169,110,0.05), rgba(200,169,110,0.01));
-    padding: 26px 22px;
-    transition: border-color 0.3s, transform 0.35s var(--ease-out), background 0.3s;
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px 30px;
+    border-right: 1px solid var(--line);
+    background: radial-gradient(120% 100% at 50% 0%, rgba(200,169,110,0.1), transparent 60%);
+    min-height: 260px;
   }
-  .feature:hover {
-    border-color: var(--line-strong);
-    transform: translateY(-4px);
-    background: linear-gradient(165deg, rgba(200,169,110,0.1), rgba(200,169,110,0.02));
+  @media (max-width: 760px) { .flagship-visual { border-right: none; border-bottom: 1px solid var(--line); } }
+  .flagship-card {
+    width: 168px; aspect-ratio: 3/4;
+    border: 1px solid var(--line-strong);
+    background: linear-gradient(160deg, #241a0d, #120d06 70%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px; position: relative;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.55);
+    transform: rotate(-3deg);
+    transition: transform 0.5s var(--ease-out);
+  }
+  .feature-flagship:hover .flagship-card { transform: rotate(0deg) scale(1.02); }
+  .flagship-card::before {
+    content: ''; position: absolute; inset: 9px;
+    border: 1px solid rgba(200,169,110,0.35);
+  }
+  .flagship-photo-ico {
+    width: 46px; height: 46px; border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold-light);
+  }
+  .flagship-photo-ico svg { width: 21px; height: 21px; stroke: currentColor; }
+  .flagship-card .fc-names { font-family: 'Allura', cursive; font-size: 26px; color: var(--gold-light); }
+  .flagship-card .fc-date { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2.5px; color: var(--cream-mute); }
+
+  .flagship-body { padding: 40px 38px; display: flex; flex-direction: column; justify-content: center; }
+  @media (max-width: 760px) { .flagship-body { padding: 32px 26px; } }
+  .flagship-badge {
+    display: inline-flex; align-self: flex-start;
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2.5px;
+    color: var(--bg);
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    padding: 5px 11px;
+    margin-bottom: 16px;
+  }
+  .flagship-title {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px, 3vw, 30px);
+    margin-bottom: 12px;
+  }
+  .flagship-desc { font-size: 13.5px; font-weight: 300; color: var(--cream-dim); line-height: 1.75; max-width: 420px; }
+
+  .feature-list { columns: 2; column-gap: 44px; border-top: 1px solid var(--line); }
+  @media (max-width: 700px) { .feature-list { columns: 1; } }
+  .feature-row {
+    break-inside: avoid;
+    display: flex; align-items: flex-start; gap: 18px;
+    padding: 24px 2px; border-bottom: 1px solid var(--line);
+    transition: background 0.3s;
+  }
+  .feature-row:hover { background: rgba(200,169,110,0.045); }
+  .feature-num {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 19px; color: var(--gold);
+    width: 30px; flex-shrink: 0; padding-top: 2px;
   }
   .feature-ico {
-    width: 40px; height: 40px;
+    width: 38px; height: 38px;
     display: flex; align-items: center; justify-content: center;
     border: 1px solid var(--line-strong);
     color: var(--gold-light);
-    margin-bottom: 16px;
-    font-size: 16px;
-    border-radius: 50%;
+    border-radius: 50%; flex-shrink: 0;
   }
-  .feature-ico svg { width: 19px; height: 19px; stroke: currentColor; }
+  .feature-ico svg { width: 17px; height: 17px; stroke: currentColor; }
+  .feature-body { min-width: 0; }
   .feature-name {
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 19px;
-    color: var(--cream); margin-bottom: 7px;
+    font-style: italic; font-size: 18px;
+    color: var(--cream); margin-bottom: 5px;
   }
   .feature-desc { font-size: 12.5px; font-weight: 300; color: var(--cream-dim); line-height: 1.65; }
-  .feature-new {
-    position: absolute; top: 14px; right: 14px;
-    font-family: 'Cinzel', serif; font-size: 7.5px; letter-spacing: 2px;
-    color: var(--bg);
-    background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    padding: 4px 9px;
-    animation: newPulse 2.4s ease-in-out infinite;
-  }
-  @keyframes newPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(200,169,110,0.5); }
-    55% { box-shadow: 0 0 0 7px rgba(200,169,110,0); }
-  }
 
   /* ════════ CARA PESAN ════════ */
   .steps {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 18px;
-    counter-reset: step;
+    padding-top: 4px;
   }
-  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
-  .step-item {
-    position: relative;
-    border-top: 1px solid var(--line);
-    padding: 26px 6px 0;
+  .steps::before {
+    content: '';
+    position: absolute; top: 26px; left: 16.6%; right: 16.6%;
+    height: 1px; background: var(--line-strong); z-index: 0;
   }
-  .step-item::before {
-    counter-increment: step;
-    content: '0' counter(step);
-    position: absolute; top: -15px; left: 0;
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 26px;
-    color: var(--gold);
+  @media (max-width: 760px) {
+    .steps { grid-template-columns: 1fr; gap: 34px; }
+    .steps::before { top: 0; bottom: 0; left: 26px; right: auto; width: 1px; height: auto; }
+  }
+  .step-item { position: relative; text-align: center; z-index: 1; padding: 0 8px; }
+  @media (max-width: 760px) { .step-item { text-align: left; padding-left: 62px; min-height: 52px; } }
+  .step-badge {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1px solid var(--line-strong);
     background: var(--bg);
-    padding-right: 14px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 21px;
+    color: var(--gold-light);
+    position: relative; z-index: 1;
+    transition: border-color 0.3s, box-shadow 0.3s;
   }
+  .step-item:hover .step-badge { border-color: var(--gold); box-shadow: 0 0 0 6px rgba(200,169,110,0.08); }
+  @media (max-width: 760px) { .step-badge { position: absolute; left: 0; top: 0; margin: 0; } }
   .step-name {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic; font-size: 21px;
@@ -468,19 +576,10 @@
     background:
       radial-gradient(120% 90% at 50% 0%, rgba(200,169,110,0.14), transparent 55%),
       linear-gradient(170deg, var(--bg-card), #100b06);
-    padding: 48px 34px 38px;
+    padding: 50px 34px 38px;
     text-align: center;
     overflow: hidden;
   }
-  .price-card::before, .price-card::after {
-    content: '';
-    position: absolute; width: 56px; height: 56px;
-    border: 1px solid var(--line-strong);
-    pointer-events: none;
-  }
-  .price-card::before { top: 10px; left: 10px; border-right: none; border-bottom: none; }
-  .price-card::after { bottom: 10px; right: 10px; border-left: none; border-top: none; }
-
   .price-flag {
     position: absolute; top: 0; left: 50%; transform: translateX(-50%);
     font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2.5px;
@@ -491,30 +590,27 @@
   .price-paket {
     font-family: 'Cinzel', serif;
     font-size: 10px; letter-spacing: 3.5px;
-    color: var(--gold); margin: 14px 0 22px;
+    color: var(--gold); margin: 18px 0 30px;
   }
-  .price-anchor {
-    display: inline-flex; align-items: center; gap: 10px;
-    margin-bottom: 4px;
+
+  .price-row { display: flex; align-items: flex-end; justify-content: center; gap: 30px; }
+  @media (max-width: 420px) { .price-row { gap: 20px; } }
+  .price-col-label {
+    font-family: 'Cinzel', serif; font-size: 7.5px; letter-spacing: 2px;
+    color: var(--cream-mute); margin-bottom: 8px;
   }
   .price-was {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 21px; font-style: italic;
+    font-size: 24px; font-style: italic;
     color: var(--cream-mute);
     text-decoration: line-through;
     text-decoration-color: rgba(232,122,122,0.75);
     text-decoration-thickness: 1.5px;
   }
-  .price-save {
-    font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 1.5px;
-    color: #f3b8b8;
-    border: 1px solid rgba(232,122,122,0.45);
-    padding: 4px 9px;
-  }
   .price-now {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 500;
-    font-size: clamp(56px, 11vw, 78px);
+    font-size: clamp(52px, 10vw, 74px);
     line-height: 1;
     background: linear-gradient(120deg, var(--gold-deep) 5%, var(--gold-light) 40%, #fff3d6 50%, var(--gold-light) 60%, var(--gold-deep) 95%);
     background-size: 200% auto;
@@ -522,10 +618,16 @@
     -webkit-text-fill-color: transparent;
     animation: shimmer 6s linear infinite;
   }
-  .price-now sup { font-size: 0.34em; vertical-align: 30%; }
+  .price-save {
+    display: inline-block; margin-top: 14px;
+    font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 1.5px;
+    color: #f3b8b8;
+    border: 1px solid rgba(232,122,122,0.45);
+    padding: 4px 10px;
+  }
   .price-once {
     font-size: 12px; color: var(--cream-dim);
-    letter-spacing: 0.6px; margin-top: 10px;
+    letter-spacing: 0.6px; margin-top: 16px;
   }
   .price-once strong { color: var(--gold-light); font-weight: 500; }
   .price-compare {
@@ -538,15 +640,15 @@
   }
 
   .price-divider {
-    height: 1px; margin: 26px 0;
+    height: 1px; margin: 30px 0;
     background: linear-gradient(to right, transparent, var(--line-strong), transparent);
   }
   .price-feats {
     list-style: none;
     display: grid; grid-template-columns: 1fr 1fr;
-    gap: 9px 18px;
+    gap: 10px 18px;
     text-align: left;
-    margin-bottom: 28px;
+    margin-bottom: 30px;
   }
   @media (max-width: 480px) { .price-feats { grid-template-columns: 1fr; } }
   .price-feats li {
@@ -564,7 +666,7 @@
   .price-feats li.hot::before { content: '✦'; }
 
   .price-guarantee {
-    margin-top: 16px;
+    margin-top: 18px;
     font-size: 11.5px; font-weight: 300;
     color: var(--cream-mute);
     line-height: 1.7;
@@ -591,78 +693,6 @@
   .marquee-author { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1.8px; color: var(--gold); opacity: 0.8; }
   @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  /* ════════ FAQ ════════ */
-  .faq-list { max-width: 640px; margin: 0 auto; }
-  .faq-item { border-bottom: 1px solid var(--line); }
-  .faq-q {
-    width: 100%;
-    background: none; border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    padding: 20px 4px;
-    color: var(--cream);
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 19px;
-    text-align: left;
-    transition: color 0.25s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .faq-q:hover { color: var(--gold-light); }
-  .faq-q i {
-    font-style: normal;
-    color: var(--gold); font-size: 18px; font-family: 'DM Sans', sans-serif; font-weight: 300;
-    transition: transform 0.35s var(--ease-out);
-    flex-shrink: 0;
-  }
-  .faq-item.open .faq-q i { transform: rotate(45deg); }
-  .faq-a {
-    max-height: 0; overflow: hidden;
-    transition: max-height 0.45s var(--ease-out);
-  }
-  .faq-a-inner {
-    padding: 0 4px 22px;
-    font-size: 13.5px; font-weight: 300;
-    color: var(--cream-dim); line-height: 1.8;
-  }
-  .faq-a-inner strong { color: var(--gold-light); font-weight: 500; }
-
-  /* ════════ FINAL CTA ════════ */
-  .final {
-    text-align: center;
-    padding: 110px 0 100px;
-    position: relative;
-    overflow: hidden;
-  }
-  .final::before {
-    content: '';
-    position: absolute; bottom: -45%; left: 50%; transform: translateX(-50%);
-    width: 720px; height: 520px;
-    background: radial-gradient(ellipse, rgba(200,169,110,0.14), transparent 65%);
-    pointer-events: none;
-  }
-  .final-ornament { color: var(--gold); font-size: 13px; letter-spacing: 10px; margin-bottom: 26px; opacity: 0.8; }
-
-  /* ════════ FOOTER ════════ */
-  footer {
-    border-top: 1px solid var(--line);
-    padding: 34px 0 42px;
-  }
-  .foot-inner {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 18px; flex-wrap: wrap;
-  }
-  .foot-logo { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 19px; }
-  .foot-logo span { color: var(--gold); }
-  .foot-links { display: flex; gap: 22px; flex-wrap: wrap; }
-  .foot-links a {
-    font-family: 'Cinzel', serif;
-    font-size: 8.5px; letter-spacing: 2px;
-    color: var(--cream-mute);
-    text-decoration: none;
-    transition: color 0.25s;
-  }
-  .foot-links a:hover { color: var(--gold); }
-  .foot-copy { font-size: 11px; color: var(--cream-mute); font-weight: 300; }
-
   /* ════════ UCAPAN TAMU ════════ */
   .ucapan-grid {
     display: grid;
@@ -671,12 +701,25 @@
   }
   @media (max-width: 640px) { .ucapan-grid { grid-template-columns: 1fr; } }
   .ucapan-card {
+    position: relative;
     border: 1px solid var(--line);
-    background: linear-gradient(165deg, rgba(200,169,110,0.04), rgba(200,169,110,0.01));
-    padding: 22px 20px;
+    background: linear-gradient(165deg, rgba(200,169,110,0.045), rgba(200,169,110,0.01));
+    padding: 30px 22px 22px;
     transition: border-color 0.3s;
+    overflow: hidden;
   }
   .ucapan-card:hover { border-color: var(--line-strong); }
+  .ucapan-card::after {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 0; height: 0;
+    border-style: solid; border-width: 0 20px 20px 0;
+    border-color: transparent var(--bg-soft) transparent transparent;
+  }
+  .ucapan-quote {
+    position: absolute; top: 2px; left: 16px;
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 46px;
+    color: var(--gold); opacity: 0.28; line-height: 1; pointer-events: none;
+  }
   .ucapan-card-head {
     display: flex;
     align-items: center;
@@ -707,6 +750,92 @@
     color: var(--cream-dim);
     line-height: 1.72;
   }
+
+  /* ════════ FAQ ════════ */
+  .faq-list { max-width: 640px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--line); }
+  .faq-q {
+    width: 100%;
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 4px;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 19px;
+    text-align: left;
+    transition: color 0.25s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .faq-q:hover { color: var(--gold-light); }
+  .faq-num {
+    font-family: 'Cinzel', serif; font-style: normal;
+    font-size: 10px; letter-spacing: 1px; color: var(--gold);
+    flex-shrink: 0; width: 22px;
+  }
+  .faq-q-text { flex: 1; }
+  .faq-q i {
+    font-style: normal;
+    color: var(--gold); font-size: 18px; font-family: 'DM Sans', sans-serif; font-weight: 300;
+    transition: transform 0.35s var(--ease-out);
+    flex-shrink: 0;
+  }
+  .faq-item.open .faq-q i { transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.45s var(--ease-out);
+  }
+  .faq-a-inner {
+    padding: 0 4px 22px 42px;
+    font-size: 13.5px; font-weight: 300;
+    color: var(--cream-dim); line-height: 1.8;
+  }
+  .faq-a-inner strong { color: var(--gold-light); font-weight: 500; }
+
+  /* ════════ FINAL CTA ════════ */
+  .final {
+    text-align: center;
+    padding: 116px 0 106px;
+    position: relative;
+    overflow: hidden;
+  }
+  .final::before {
+    content: '';
+    position: absolute; bottom: -45%; left: 50%; transform: translateX(-50%);
+    width: 720px; height: 520px;
+    background: radial-gradient(ellipse, rgba(200,169,110,0.14), transparent 65%);
+    pointer-events: none;
+  }
+  .final-frame {
+    max-width: 620px; margin: 0 auto;
+    padding: 52px 30px;
+    position: relative;
+  }
+  .final-ornament { color: var(--gold); font-size: 13px; letter-spacing: 10px; margin-bottom: 26px; opacity: 0.8; }
+
+  /* ════════ FOOTER ════════ */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 40px 0 42px;
+  }
+  .foot-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 18px; flex-wrap: wrap;
+  }
+  .foot-brand { display: flex; align-items: center; gap: 12px; }
+  .foot-logo { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 19px; }
+  .foot-logo span { color: var(--gold); }
+  .foot-tagline { font-size: 10.5px; color: var(--cream-mute); font-weight: 300; border-left: 1px solid var(--line); padding-left: 12px; }
+  @media (max-width: 560px) { .foot-tagline { display: none; } }
+  .foot-links { display: flex; gap: 22px; flex-wrap: wrap; }
+  .foot-links a {
+    font-family: 'Cinzel', serif;
+    font-size: 8.5px; letter-spacing: 2px;
+    color: var(--cream-mute);
+    text-decoration: none;
+    transition: color 0.25s;
+  }
+  .foot-links a:hover { color: var(--gold); }
+  .foot-copy { font-size: 11px; color: var(--cream-mute); font-weight: 300; width: 100%; text-align: center; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
 
   /* ════════ STICKY MOBILE CTA ════════ */
   .sticky-cta {
@@ -759,7 +888,7 @@
 <!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-logo">Undangan<span>Ku</span></a>
+    <a href="#" class="nav-logo"><span class="mark">&amp;</span>Undangan<span>Ku</span></a>
     <a href="./builder.html" class="nav-cta">BUAT UNDANGAN</a>
   </div>
 </nav>
@@ -768,14 +897,17 @@
 <header class="hero">
   <canvas id="particles"></canvas>
   <div class="hero-glow"></div>
+  <div class="hero-corner tl"></div>
+  <div class="hero-corner tr"></div>
 
+  <div class="hero-monogram">&amp;</div>
   <div class="hero-eyebrow">UNDANGAN DIGITAL PREMIUM</div>
   <h1 class="hero-title">Hari Spesialmu,<br><em>Diabadikan Indah</em></h1>
   <p class="hero-sub">
     Hidupkan undanganmu dengan <strong>foto di sampul</strong>, <strong>musik latar</strong>, dan <strong>hitung mundur</strong> ke hari H — lengkap dengan <strong>RSVP &amp; ucapan</strong> real-time, <strong>amplop digital</strong>, serta <strong>sapaan personal</strong> untuk tiap tamu.
   </p>
   <div class="hero-ctas">
-    <a href="./builder.html" class="btn-gold">MULAI — Rp 99.000</a>
+    <a href="./builder.html" class="btn-gold">MULAI — Rp 5.000</a>
     <a href="#tema" class="btn-ghost">LIHAT TEMA</a>
   </div>
   <div class="hero-trust">
@@ -790,52 +922,57 @@
 <!-- TEMA -->
 <section id="tema">
   <div class="wrap">
-    <div class="sec-eyebrow reveal">KOLEKSI TEMA</div>
+    <div class="sec-kicker reveal"><span class="num">01</span><span class="rule"></span><span class="label">KOLEKSI TEMA</span><span class="rule"></span></div>
     <h2 class="sec-title reveal">Tiga Karakter, <em>Satu Kelas</em></h2>
     <p class="sec-sub reveal">Setiap tema dirancang seperti undangan butik — ketuk untuk membuka demo utuh lengkap dengan musik dan animasinya.</p>
 
-    <div class="tema-grid">
-      <a href="./demo.html?tema=royal-classic&paket=premium" class="tema-card royal reveal" target="_blank" data-tilt>
-        <div class="tema-bg"></div>
-        <div class="tema-frame"></div>
-        <div class="tema-inner">
-          <div class="tema-overline">THE WEDDING OF</div>
-          <div class="tema-names">Aulia <span class="tema-amp">&amp;</span> Rizky</div>
-          <div class="tema-deco">✦ ✦ ✦</div>
-        </div>
-        <div class="tema-foot">
-          <span class="tema-label">ROYAL CLASSIC</span>
-          <span class="tema-open">BUKA DEMO →</span>
-        </div>
-      </a>
+    <div class="tema-showcase reveal">
+      <div class="tema-grid">
+        <a href="./demo.html?tema=royal-classic&paket=premium" class="tema-card royal" target="_blank" data-tilt>
+          <div class="tema-bg"></div>
+          <span class="tema-pick">PILIHAN 01</span>
+          <div class="tema-frame"></div>
+          <div class="tema-inner">
+            <div class="tema-overline">THE WEDDING OF</div>
+            <div class="tema-names">Aulia <span class="tema-amp">&amp;</span> Rizky</div>
+            <div class="tema-deco">✦ ✦ ✦</div>
+          </div>
+          <div class="tema-foot">
+            <span class="tema-label">ROYAL CLASSIC</span>
+            <span class="tema-open">BUKA DEMO →</span>
+          </div>
+        </a>
 
-      <a href="./demo.html?tema=sunset-bloom&paket=premium" class="tema-card bloom reveal reveal-d1" target="_blank" data-tilt>
-        <div class="tema-bg"></div>
-        <div class="tema-frame"></div>
-        <div class="tema-inner">
-          <div class="tema-overline">The Wedding of</div>
-          <div class="tema-names">Andini <span class="tema-amp">&amp;</span> Reza</div>
-          <div class="tema-deco">✿ ✿ ✿</div>
-        </div>
-        <div class="tema-foot">
-          <span class="tema-label">SUNSET BLOOM</span>
-          <span class="tema-open">BUKA DEMO →</span>
-        </div>
-      </a>
+        <a href="./demo.html?tema=sunset-bloom&paket=premium" class="tema-card bloom" target="_blank" data-tilt>
+          <div class="tema-bg"></div>
+          <span class="tema-pick">PILIHAN 02</span>
+          <div class="tema-frame"></div>
+          <div class="tema-inner">
+            <div class="tema-overline">The Wedding of</div>
+            <div class="tema-names">Andini <span class="tema-amp">&amp;</span> Reza</div>
+            <div class="tema-deco">✿ ✿ ✿</div>
+          </div>
+          <div class="tema-foot">
+            <span class="tema-label">SUNSET BLOOM</span>
+            <span class="tema-open">BUKA DEMO →</span>
+          </div>
+        </a>
 
-      <a href="./demo.html?tema=adat-jawa&paket=premium" class="tema-card jawa reveal reveal-d2" target="_blank" data-tilt>
-        <div class="tema-bg"></div>
-        <div class="tema-frame"></div>
-        <div class="tema-inner">
-          <div class="tema-overline">IJAB QABUL</div>
-          <div class="tema-names">Sari <span class="tema-amp">❧</span> Bagas</div>
-          <div class="tema-deco">✦ ✦ ✦</div>
-        </div>
-        <div class="tema-foot">
-          <span class="tema-label">ADAT JAWA</span>
-          <span class="tema-open">BUKA DEMO →</span>
-        </div>
-      </a>
+        <a href="./demo.html?tema=adat-jawa&paket=premium" class="tema-card jawa" target="_blank" data-tilt>
+          <div class="tema-bg"></div>
+          <span class="tema-pick">PILIHAN 03</span>
+          <div class="tema-frame"></div>
+          <div class="tema-inner">
+            <div class="tema-overline">IJAB QABUL</div>
+            <div class="tema-names">Sari <span class="tema-amp">❧</span> Bagas</div>
+            <div class="tema-deco">✦ ✦ ✦</div>
+          </div>
+          <div class="tema-foot">
+            <span class="tema-label">ADAT JAWA</span>
+            <span class="tema-open">BUKA DEMO →</span>
+          </div>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -843,41 +980,73 @@
 <!-- FITUR -->
 <section style="background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
   <div class="wrap">
-    <div class="sec-eyebrow reveal">SEMUA SUDAH TERMASUK</div>
+    <div class="sec-kicker reveal"><span class="num">02</span><span class="rule"></span><span class="label">SEMUA SUDAH TERMASUK</span><span class="rule"></span></div>
     <h2 class="sec-title reveal">Satu Harga, <em>Fitur Lengkap</em></h2>
     <p class="sec-sub reveal">Tidak ada paket bertingkat, tidak ada biaya tersembunyi. Semua fitur di bawah kamu dapatkan.</p>
 
-    <div class="feature-grid">
-      <div class="feature reveal">
-        <span class="feature-new">BARU ✦</span>
-        <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8.6" width="18" height="10.4" rx="1.6"/><path d="M8.3 8.6l1.2-2.1h5l1.2 2.1"/><circle cx="12" cy="13.8" r="3.1"/></svg></div>
-        <div class="feature-name">Foto Couple di Cover</div>
-        <div class="feature-desc">Unggah foto prewedding kalian dan tampil elegan di halaman depan undangan — bukan hanya nama mempelai.</div>
+    <div class="feature-flagship reveal">
+      <div class="flagship-visual">
+        <div class="flagship-card">
+          <div class="flagship-photo-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8.6" width="18" height="10.4" rx="1.6"/><path d="M8.3 8.6l1.2-2.1h5l1.2 2.1"/><circle cx="12" cy="13.8" r="3.1"/></svg></div>
+          <div class="fc-names">Aulia &amp; Rizky</div>
+          <div class="fc-date">12 · 10 · 2026</div>
+        </div>
       </div>
-      <div class="feature reveal reveal-d1">
+      <div class="flagship-body">
+        <span class="flagship-badge">BARU ✦</span>
+        <h3 class="flagship-title">Foto Couple di Cover</h3>
+        <p class="flagship-desc">Unggah foto prewedding kalian dan tampil elegan di halaman depan undangan — bukan hanya rangkaian nama mempelai. Momen kalian jadi kesan pertama yang dilihat tamu.</p>
+      </div>
+    </div>
+
+    <div class="feature-list">
+      <div class="feature-row reveal">
+        <span class="feature-num">02</span>
         <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.2" r="3.6"/><path d="M5.6 19.4a6.4 6.4 0 0 1 12.8 0"/></svg></div>
-        <div class="feature-name">Nama Tamu Personal</div>
-        <div class="feature-desc">Setiap tamu disapa dengan namanya sendiri saat membuka undangan. Terasa eksklusif, bukan broadcast massal.</div>
+        <div class="feature-body">
+          <div class="feature-name">Nama Tamu Personal</div>
+          <div class="feature-desc">Setiap tamu disapa dengan namanya sendiri saat membuka undangan. Terasa eksklusif, bukan broadcast massal.</div>
+        </div>
       </div>
-      <div class="feature reveal reveal-d2">
+      <div class="feature-row reveal">
+        <span class="feature-num">03</span>
         <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 5h16.8v11H8l-4 3v-3H3.6z"/><path d="M8.4 10.4l2.3 2.3 4.5-4.5"/></svg></div>
-        <div class="feature-name">RSVP &amp; Ucapan</div>
-        <div class="feature-desc">Tamu konfirmasi kehadiran dan menulis doa langsung di undangan. Kamu pantau semuanya real-time.</div>
+        <div class="feature-body">
+          <div class="feature-name">RSVP &amp; Ucapan</div>
+          <div class="feature-desc">Tamu konfirmasi kehadiran dan menulis doa langsung di undangan. Kamu pantau semuanya real-time.</div>
+        </div>
       </div>
-      <div class="feature reveal">
+      <div class="feature-row reveal">
+        <span class="feature-num">04</span>
         <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12.4" r="8.2"/><path d="M12 7.6V12.4l3.2 1.9"/><path d="M9 2.8h6"/></svg></div>
-        <div class="feature-name">Countdown Hari H</div>
-        <div class="feature-desc">Hitung mundur otomatis menuju momen akad — membuat tamu ikut menantikan harinya.</div>
+        <div class="feature-body">
+          <div class="feature-name">Countdown Hari H</div>
+          <div class="feature-desc">Hitung mundur otomatis menuju momen akad — membuat tamu ikut menantikan harinya.</div>
+        </div>
       </div>
-      <div class="feature reveal reveal-d1">
+      <div class="feature-row reveal">
+        <span class="feature-num">05</span>
         <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17.4V6.1l9-1.8v11.2"/><circle cx="6.6" cy="17.4" r="2.4"/><circle cx="15.6" cy="15.5" r="2.4"/></svg></div>
-        <div class="feature-name">Musik Latar</div>
-        <div class="feature-desc">Piano elegan, akustik romantis, atau gamelan Jawa — mengalun begitu undangan dibuka.</div>
+        <div class="feature-body">
+          <div class="feature-name">Musik Latar</div>
+          <div class="feature-desc">Piano elegan, akustik romantis, atau gamelan Jawa — mengalun begitu undangan dibuka.</div>
+        </div>
       </div>
-      <div class="feature reveal reveal-d2">
+      <div class="feature-row reveal">
+        <span class="feature-num">06</span>
         <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9.6" width="16" height="9.6" rx="1.2"/><path d="M3.4 9.6h17.2v3.4H3.4zM12 9.6v9.6"/><path d="M12 9.6C11 6.2 9.2 5.6 8.2 6.4c-1.3 1 .2 3.2 3.8 3.2zM12 9.6c1-3.4 2.8-4 3.8-3.2 1.3 1-.2 3.2-3.8 3.2z"/></svg></div>
-        <div class="feature-name">Amplop Digital</div>
-        <div class="feature-desc">Nomor rekening dan e-wallet tampil rapi dengan tombol salin — tamu kirim hadiah tanpa repot.</div>
+        <div class="feature-body">
+          <div class="feature-name">Amplop Digital</div>
+          <div class="feature-desc">Nomor rekening dan e-wallet tampil rapi dengan tombol salin — tamu kirim hadiah tanpa repot.</div>
+        </div>
+      </div>
+      <div class="feature-row reveal">
+        <span class="feature-num">07</span>
+        <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.2-4.5-9.6-9A5.4 5.4 0 0 1 12 6.5 5.4 5.4 0 0 1 21.6 12c-2.4 4.5-9.6 9-9.6 9z"/></svg></div>
+        <div class="feature-body">
+          <div class="feature-name">Link Google Maps</div>
+          <div class="feature-desc">Lokasi akad &amp; resepsi tampil dengan tombol arah langsung ke Google Maps.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -886,22 +1055,25 @@
 <!-- CARA PESAN -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow reveal">SEMUDAH ITU</div>
+    <div class="sec-kicker reveal"><span class="num">03</span><span class="rule"></span><span class="label">SEMUDAH ITU</span><span class="rule"></span></div>
     <h2 class="sec-title reveal">Tiga Langkah, <em>Langsung Jadi</em></h2>
     <p class="sec-sub reveal">Tanpa desain manual, tanpa menunggu berhari-hari. Semuanya otomatis.</p>
 
     <div class="steps">
       <div class="step-item reveal">
+        <div class="step-badge">01</div>
         <div class="step-name">Pilih &amp; Isi</div>
         <div class="step-desc">Pilih tema favoritmu, isi data mempelai dan acara, lalu <strong>unggah foto couple</strong> untuk halaman depan.</div>
       </div>
       <div class="step-item reveal reveal-d1">
+        <div class="step-badge">02</div>
         <div class="step-name">Preview Gratis</div>
         <div class="step-desc">Lihat undanganmu utuh persis seperti yang akan diterima tamu — <strong>sebelum membayar sepeser pun</strong>.</div>
       </div>
       <div class="step-item reveal reveal-d2">
+        <div class="step-badge">03</div>
         <div class="step-name">Bayar &amp; Sebarkan</div>
-        <div class="step-desc">Suka? Bayar <strong>Rp 99.000</strong>, link aktif dalam hitungan detik, langsung bagikan ke WhatsApp semua tamu.</div>
+        <div class="step-desc">Suka? Bayar <strong>Rp 5.000</strong>, link aktif dalam hitungan detik, langsung bagikan ke WhatsApp semua tamu.</div>
       </div>
     </div>
   </div>
@@ -910,22 +1082,28 @@
 <!-- HARGA -->
 <section id="harga" style="background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
   <div class="wrap">
-    <div class="sec-eyebrow reveal">INVESTASI SEKALI</div>
+    <div class="sec-kicker reveal"><span class="num">04</span><span class="rule"></span><span class="label">INVESTASI SEKALI</span><span class="rule"></span></div>
     <h2 class="sec-title reveal">Lebih Murah dari <em>Selembar Cetak</em></h2>
     <p class="sec-sub reveal">Undangan cetak: ribuan rupiah per lembar, dikali ratusan tamu, dan berakhir di laci. Yang ini — satu link untuk semua tamu, hidup dengan musik dan foto kalian.</p>
 
     <div class="price-stage reveal">
-      <div class="price-card">
+      <div class="price-card bracket-frame">
         <div class="price-flag">PENAWARAN PERILISAN FITUR FOTO</div>
         <div class="price-paket">PAKET LENGKAP — SEMUA FITUR</div>
 
-        <div class="price-anchor">
-          <span class="price-was">Rp 249.000</span>
-          <span class="price-save">HEMAT 60%</span>
+        <div class="price-row">
+          <div>
+            <div class="price-col-label">HARGA NORMAL</div>
+            <div class="price-was">Rp 249.000</div>
+          </div>
+          <div>
+            <div class="price-col-label">HARGA PERILISAN</div>
+            <div class="price-now" id="priceCounter">Rp 5.000</div>
+          </div>
         </div>
-        <div class="price-now" id="priceCounter">Rp 99.000</div>
+        <div class="price-save">HEMAT 98%</div>
         <div class="price-once">Sekali bayar · <strong>aktif 3 bulan penuh</strong> · tanpa biaya lain</div>
-        <div class="price-compare">≈ Rp 330 per tamu untuk 300 undangan — lebih murah dari sebutir permen di kondangan.</div>
+        <div class="price-compare">≈ Rp 17 per tamu untuk 300 undangan — lebih murah dari sebutir permen di kondangan.</div>
 
         <div class="price-divider"></div>
 
@@ -940,7 +1118,7 @@
           <li>Link Google Maps akad &amp; resepsi</li>
         </ul>
 
-        <a href="./builder.html" class="btn-gold" style="width:100%;">AMANKAN HARGA Rp 99.000</a>
+        <a href="./builder.html" class="btn-gold" style="width:100%;">AMANKAN HARGA Rp 5.000</a>
 
         <div class="price-guarantee">
           <b>Tanpa risiko:</b> preview dulu sepuasnya, bayar hanya kalau hasilnya bikin kamu jatuh cinta.
@@ -967,38 +1145,42 @@
 <!-- UCAPAN TAMU -->
 <section style="background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
   <div class="wrap">
-    <div class="sec-eyebrow reveal">KATA MEREKA</div>
+    <div class="sec-kicker reveal"><span class="num">05</span><span class="rule"></span><span class="label">KATA MEREKA</span><span class="rule"></span></div>
     <h2 class="sec-title reveal">Ucapan <em>Para Tamu</em></h2>
     <p class="sec-sub reveal">Setiap tamu menyampaikan kehadiran &amp; doa langsung di undangan — kamu pantau semuanya real-time.</p>
 
     <div class="ucapan-grid">
       <div class="ucapan-card reveal">
+        <span class="ucapan-quote">"</span>
         <div class="ucapan-card-head">
           <span class="ucapan-name">DEWI RAHAYU</span>
           <span class="ucapan-badge hadir">✓ Hadir</span>
         </div>
-        <div class="ucapan-msg">"Barakallahu lakuma wa baraka alaikuma. Semoga menjadi keluarga sakinah mawaddah warahmah. Selamat menempuh hidup baru!"</div>
+        <div class="ucapan-msg">Barakallahu lakuma wa baraka alaikuma. Semoga menjadi keluarga sakinah mawaddah warahmah. Selamat menempuh hidup baru!</div>
       </div>
       <div class="ucapan-card reveal reveal-d1">
+        <span class="ucapan-quote">"</span>
         <div class="ucapan-card-head">
           <span class="ucapan-name">FAISAL HENDRA</span>
           <span class="ucapan-badge hadir">✓ Hadir</span>
         </div>
-        <div class="ucapan-msg">"Congrats! Doa terbaik untuk kalian berdua. Semoga langgeng sampai kakek nenek ya!"</div>
+        <div class="ucapan-msg">Congrats! Doa terbaik untuk kalian berdua. Semoga langgeng sampai kakek nenek ya!</div>
       </div>
       <div class="ucapan-card reveal">
+        <span class="ucapan-quote">"</span>
         <div class="ucapan-card-head">
           <span class="ucapan-name">NADIA PERMATA</span>
           <span class="ucapan-badge tidak">✕ Berhalangan</span>
         </div>
-        <div class="ucapan-msg">"Maaf tidak bisa hadir, ada keperluan keluarga. Tapi doa selalu menyertai, semoga pernikahan kalian penuh berkah dan bahagia selalu."</div>
+        <div class="ucapan-msg">Maaf tidak bisa hadir, ada keperluan keluarga. Tapi doa selalu menyertai, semoga pernikahan kalian penuh berkah dan bahagia selalu.</div>
       </div>
       <div class="ucapan-card reveal reveal-d1">
+        <span class="ucapan-quote">"</span>
         <div class="ucapan-card-head">
           <span class="ucapan-name">RINA KUSUMA</span>
           <span class="ucapan-badge hadir">✓ Hadir</span>
         </div>
-        <div class="ucapan-msg">"Selamat menempuh hidup baru! Semoga selalu dalam lindungan-Nya dan bahagia dunia akhirat. Peluk sayang untuk pengantin berdua!"</div>
+        <div class="ucapan-msg">Selamat menempuh hidup baru! Semoga selalu dalam lindungan-Nya dan bahagia dunia akhirat. Peluk sayang untuk pengantin berdua!</div>
       </div>
     </div>
   </div>
@@ -1007,29 +1189,29 @@
 <!-- FAQ -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow reveal">SERING DITANYAKAN</div>
+    <div class="sec-kicker reveal"><span class="num">06</span><span class="rule"></span><span class="label">SERING DITANYAKAN</span><span class="rule"></span></div>
     <h2 class="sec-title reveal">Masih <em>Ragu?</em></h2>
     <p class="sec-sub reveal">Pertanyaan yang paling sering masuk, kami jawab di sini.</p>
 
     <div class="faq-list reveal">
       <div class="faq-item">
-        <button class="faq-q">Benar cuma Rp 99.000? Tidak ada biaya lain?<i>+</i></button>
-        <div class="faq-a"><div class="faq-a-inner">Benar — <strong>sekali bayar Rp 99.000</strong>, semua fitur terbuka, undangan aktif 3 bulan penuh. Tidak ada paket bertingkat, biaya admin, atau biaya perpanjangan tersembunyi.</div></div>
+        <button class="faq-q"><span class="faq-num">01</span><span class="faq-q-text">Benar cuma Rp 5.000? Tidak ada biaya lain?</span><i>+</i></button>
+        <div class="faq-a"><div class="faq-a-inner">Benar — <strong>sekali bayar Rp 5.000</strong>, semua fitur terbuka, undangan aktif 3 bulan penuh. Tidak ada paket bertingkat, biaya admin, atau biaya perpanjangan tersembunyi.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q">Bagaimana cara menambahkan foto kami di cover?<i>+</i></button>
+        <button class="faq-q"><span class="faq-num">02</span><span class="faq-q-text">Bagaimana cara menambahkan foto kami di cover?</span><i>+</i></button>
         <div class="faq-a"><div class="faq-a-inner">Di builder ada bagian <strong>Foto Sampul</strong> — tinggal unggah foto prewedding atau foto favorit kalian dari galeri HP. Foto otomatis dirapikan dan tampil elegan di halaman depan undangan. Kalau tidak diunggah, undangan tampil polos dengan nama mempelai saja — dua-duanya cantik.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q">Bisa lihat hasilnya dulu sebelum bayar?<i>+</i></button>
+        <button class="faq-q"><span class="faq-num">03</span><span class="faq-q-text">Bisa lihat hasilnya dulu sebelum bayar?</span><i>+</i></button>
         <div class="faq-a"><div class="faq-a-inner">Bisa, dan memang begitu alurnya: isi data → <strong>preview gratis tanpa batas</strong> → bayar hanya kalau sudah suka. Kamu tidak pernah membayar untuk sesuatu yang belum kamu lihat.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q">Berapa lama undangan aktif setelah bayar?<i>+</i></button>
+        <button class="faq-q"><span class="faq-num">04</span><span class="faq-q-text">Berapa lama undangan aktif setelah bayar?</span><i>+</i></button>
         <div class="faq-a"><div class="faq-a-inner">Setelah pembayaran dikonfirmasi, link aktif <strong>dalam hitungan detik</strong> — otomatis, tanpa menunggu. Undangan online selama 3 bulan, lebih dari cukup sampai hari H dan sesudahnya.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q">Bagaimana tamu menerima undangannya?<i>+</i></button>
+        <button class="faq-q"><span class="faq-num">05</span><span class="faq-q-text">Bagaimana tamu menerima undangannya?</span><i>+</i></button>
         <div class="faq-a"><div class="faq-a-inner">Kamu cukup membagikan satu link via WhatsApp. Mau lebih personal? Pakai <strong>generator link per tamu</strong> — setiap tamu dapat link dengan namanya sendiri tersapa di undangan.</div></div>
       </div>
     </div>
@@ -1039,28 +1221,33 @@
 <!-- FINAL CTA -->
 <section class="final">
   <div class="wrap">
-    <div class="final-ornament reveal">✦ ✦ ✦</div>
-    <h2 class="sec-title reveal">Momen Sekali Seumur Hidup,<br><em>Layak Tampil Sempurna</em></h2>
-    <p class="sec-sub reveal" style="margin-bottom: 36px;">Mulai sekarang, selesai sebelum tehmu dingin. Preview gratis — kamu tidak rugi apa-apa.</p>
-    <div class="reveal reveal-d1">
-      <a href="./builder.html" class="btn-gold" style="padding: 19px 52px;">BUAT UNDANGANKU — Rp 99.000</a>
-    </div>
-    <div class="hero-trust reveal reveal-d2" style="margin-top: 26px; justify-content: center;">
-      <span><i>✦</i> SEKALI BAYAR</span>
-      <span><i>✦</i> SEMUA FITUR</span>
-      <span><i>✦</i> AKTIF 3 BULAN</span>
+    <div class="final-frame bracket-frame reveal">
+      <div class="final-ornament">✦ ✦ ✦</div>
+      <h2 class="sec-title">Momen Sekali Seumur Hidup,<br><em>Layak Tampil Sempurna</em></h2>
+      <p class="sec-sub" style="margin-bottom: 36px;">Mulai sekarang, selesai sebelum tehmu dingin. Preview gratis — kamu tidak rugi apa-apa.</p>
+      <a href="./builder.html" class="btn-gold" style="padding: 19px 52px;">BUAT UNDANGANKU — Rp 5.000</a>
+      <div class="hero-trust" style="margin-top: 26px; justify-content: center;">
+        <span><i>✦</i> SEKALI BAYAR</span>
+        <span><i>✦</i> SEMUA FITUR</span>
+        <span><i>✦</i> AKTIF 3 BULAN</span>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="wrap foot-inner">
-    <div class="foot-logo">Undangan<span>Ku</span></div>
-    <div class="foot-links">
-      <a href="./builder.html">BUAT UNDANGAN</a>
-      <a href="./tamu.html">LINK PER TAMU</a>
-      <a href="https://www.instagram.com/willyanugrh" target="_blank" rel="noopener">INSTAGRAM</a>
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <div class="foot-logo">Undangan<span>Ku</span></div>
+        <div class="foot-tagline">Undangan digital, dibuat dalam menit.</div>
+      </div>
+      <div class="foot-links">
+        <a href="./builder.html">BUAT UNDANGAN</a>
+        <a href="./tamu.html">LINK PER TAMU</a>
+        <a href="https://www.instagram.com/willyanugrh" target="_blank" rel="noopener">INSTAGRAM</a>
+      </div>
     </div>
     <div class="foot-copy">© UndanganKu · Dibuat dengan ♥ di Indonesia</div>
   </div>
@@ -1068,7 +1255,7 @@
 
 <!-- STICKY CTA (mobile) -->
 <div class="sticky-cta" id="stickyCta">
-  <a href="./builder.html">BUAT UNDANGAN — <s>Rp 249.000</s>&nbsp;Rp 99.000</a>
+  <a href="./builder.html">BUAT UNDANGAN — <s>Rp 249.000</s>&nbsp;Rp 5.000</a>
 </div>
 
 <script>

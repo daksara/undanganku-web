@@ -307,7 +307,15 @@ body.preview-mode { padding-top: 32px; }
   padding: 28px 24px;
   background: linear-gradient(180deg, rgba(195, 211, 238, 0.04), transparent);
   position: relative;
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s;
 }
+.couple-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.couple-card::before, .couple-card::after {
+  content: ''; position: absolute; width: 20px; height: 20px;
+  border: 1px solid var(--gold); opacity: 0.55; pointer-events: none;
+}
+.couple-card::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.couple-card::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 .couple-label {
   font-family: 'Cinzel', serif;
   font-size: 10px;
@@ -348,7 +356,9 @@ body.preview-mode { padding-top: 32px; }
   border: 1px solid var(--line);
   padding: 14px 4px;
   background: rgba(195, 211, 238, 0.04);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
+.countdown-cell:hover { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(195,211,238,0.08); }
 .countdown-num {
   font-family: 'Cinzel', serif;
   font-size: 22px;
@@ -377,7 +387,16 @@ body.preview-mode { padding-top: 32px; }
   padding: 28px 22px;
   background: linear-gradient(180deg, rgba(195, 211, 238, 0.05), rgba(13, 21, 41, 0.4));
   text-align: center;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s;
 }
+.acara-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.acara-card::before, .acara-card::after {
+  content: ''; position: absolute; width: 20px; height: 20px;
+  border: 1px solid var(--gold); opacity: 0.55; pointer-events: none;
+}
+.acara-card::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.acara-card::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 .acara-icon {
   font-size: 24px;
   margin-bottom: 12px;
@@ -527,7 +546,16 @@ body.preview-mode { padding-top: 32px; }
   padding: 22px;
   background: rgba(195, 211, 238, 0.03);
   text-align: center;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s;
 }
+.bank-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.bank-card::before, .bank-card::after {
+  content: ''; position: absolute; width: 20px; height: 20px;
+  border: 1px solid var(--gold); opacity: 0.55; pointer-events: none;
+}
+.bank-card::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.bank-card::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 .bank-name {
   font-family: 'Cinzel', serif;
   font-size: 12px;
@@ -588,7 +616,7 @@ body.preview-mode { padding-top: 32px; }
   transition: border-color 0.2s ease;
 }
 .rsvp-form input:focus,
-.rsvp-form textarea:focus { border-color: var(--gold); }
+.rsvp-form textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(195,211,238,0.1); }
 .rsvp-form textarea { resize: vertical; min-height: 90px; font-style: italic; }
 .rsvp-form input::placeholder,
 .rsvp-form textarea::placeholder { color: var(--cream-soft); opacity: 0.5; }

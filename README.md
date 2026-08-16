@@ -55,7 +55,7 @@ Endpoint yang digunakan:
 
 | Paket | Harga | Durasi | Fitur |
 |-------|-------|--------|-------|
-| Lengkap | Rp 99.000 (harga perilisan, anchor Rp 249.000) | 3 bulan | Semua fitur, termasuk foto couple di cover |
+| Lengkap | Rp 5.000 (harga perilisan, anchor Rp 249.000) | 3 bulan | Semua fitur, termasuk foto couple di cover |
 
 Harga flat dalam Rupiah — tidak ada lagi harga live mengikuti kurs dolar.
 
