@@ -48,8 +48,8 @@ Endpoint yang digunakan:
 - `GET /orders/status/:id` — Cek status pembayaran
 - `GET /orders/data/:id` — Ambil data undangan
 - `GET /u/:id` — Render undangan langsung (static HTML)
-- `POST /rsvp` — Kirim RSVP
-- `GET /rsvp/:orderId` — Ambil daftar RSVP
+- `POST /orders/rsvp/:id` — Kirim RSVP
+- `GET /orders/rsvp/:id` — Ambil daftar RSVP
 
 ## Harga
 
