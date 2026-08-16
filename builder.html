@@ -10,8 +10,8 @@
 --> 
 <meta name="x-api-base" content="https://telegram-bot.daksara-dev.workers.dev">
 <title>Builder Undangan — UndanganKu</title>
-<meta name="description" content="Buat undangan pernikahan digital elegan dalam 3 langkah — Rp 99.000 semua fitur, foto couple di cover, preview gratis.">
-<meta property="og:title" content="Buat Undangan Pernikahan Digital — Rp 99.000">
+<meta name="description" content="Buat undangan pernikahan digital elegan dalam 3 langkah — Rp 5.000 semua fitur, foto couple di cover, preview gratis.">
+<meta property="og:title" content="Buat Undangan Pernikahan Digital — Rp 5.000">
 <meta property="og:description" content="Preview gratis, bayar kalau suka. Semua fitur: foto cover, RSVP, countdown, musik, amplop digital.">
 <meta property="og:image" content="https://undanganku-web.vercel.app/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -1248,8 +1248,8 @@
       </div>
       <div style="text-align:right; flex-shrink:0;">
         <div style="font-size:12px; color:var(--text-mute); text-decoration:line-through; text-decoration-color:rgba(232,122,122,0.7);">Rp 249.000</div>
-        <div style="font-family:'DM Serif Display',serif; font-style:italic; font-size:28px; line-height:1.1; color:var(--accent-bright);">Rp 99.000</div>
-        <div style="font-size:10px; letter-spacing:1px; color:#f3b8b8; margin-top:2px;">HEMAT 60%</div>
+        <div style="font-family:'DM Serif Display',serif; font-style:italic; font-size:28px; line-height:1.1; color:var(--accent-bright);">Rp 5.000</div>
+        <div style="font-size:10px; letter-spacing:1px; color:#f3b8b8; margin-top:2px;">HEMAT 98%</div>
       </div>
     </div>
 
@@ -1462,7 +1462,7 @@
   // ============ HARGA ============
   // selectedPaket tetap 'standard' untuk kompatibilitas dengan tema & bot;
   // label yang ditampilkan ke user adalah "Lengkap".
-  const PRICE_IDR = 99000;         // harga perilisan, flat
+  const PRICE_IDR = 5000;          // harga perilisan, flat
   const PRICE_ANCHOR_IDR = 249000; // harga normal (anchor, dicoret di UI)
 
   const PAKET_LABEL = { standard: 'Lengkap ✦' };
@@ -2163,9 +2163,9 @@
   // ============ CHECK EXISTING ORDER (URL param atau localStorage) ============
   const urlParams = new URLSearchParams(window.location.search);
 
-  // ===== OPSI 4: Kontrol sumber via ?src= =====
+  // ===== OPSI 4: Kontrol sumber via ?src=ecommerce (1 link untuk Shopee & Tokopedia) =====
   const paramSrc = urlParams.get('src');
-  const isMarketplace = paramSrc === 'shopee' || paramSrc === 'tokped';
+  const isMarketplace = paramSrc === 'ecommerce';
   // Token unik per-buyer dari link chat marketplace (untuk validasi backend)
   const _shopeeRef = urlParams.get('ref') || '';
   const btnTransferEl = document.getElementById('srcTransfer');
@@ -2173,20 +2173,10 @@
   const toggleWrap = document.getElementById('sumberToggleWrap');
 
   if (isMarketplace) {
-    // Dari Shopee/Tokped — sembunyikan Transfer, auto-select E-Commerce
+    // Dari link e-commerce (Shopee/Tokopedia) — sembunyikan Transfer, auto-select E-Commerce
     btnTransferEl.style.display = 'none';
     toggleWrap.style.gridTemplateColumns = '1fr';
     setSumber('ecommerce');
-    // Update label platform agar lebih spesifik
-    const platformLabel = document.getElementById('ecomPlatformLabel');
-    if (platformLabel) {
-      platformLabel.textContent = paramSrc === 'tokped' ? '(Tokopedia)' : '(Shopee)';
-    }
-    // Update placeholder nomor pesanan sesuai platform
-    const orderInput = document.getElementById('shopeeOrderNumber');
-    if (orderInput && paramSrc === 'tokped') {
-      orderInput.placeholder = 'Contoh: INV/20250611/MPL/XXXX';
-    }
   } else {
     // URL biasa (IG, WA, dll) — sembunyikan E-Commerce, hanya Transfer
     btnEcomEl.style.display = 'none';
