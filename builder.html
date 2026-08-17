@@ -323,6 +323,53 @@
     margin: 5px 0;
     letter-spacing: 4px;
   }
+
+  /* Modern Minimalist thumb */
+  .theme-thumb.modern-minimalist {
+    background: linear-gradient(160deg, #f7f5ef 0%, #ece7db 100%);
+    position: relative;
+  }
+  .theme-thumb.modern-minimalist::before {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(74, 91, 64, 0.3);
+  }
+  .theme-thumb.modern-minimalist::after {
+    content: '01 / 26';
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    color: #4a5b40;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+  }
+  .theme-thumb.modern-minimalist .thumb-content {
+    text-align: center;
+    color: #201e19;
+    z-index: 2;
+  }
+  .theme-thumb.modern-minimalist .thumb-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: #6b7f5e;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .theme-thumb.modern-minimalist .thumb-names {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.05;
+    color: #201e19;
+  }
+  .theme-thumb.modern-minimalist .thumb-amp {
+    color: #6b7f5e;
+    font-size: 15px;
+    margin: 4px 0;
+  }
   .theme-meta {
     padding: 16px 18px;
     display: flex;
@@ -881,6 +928,22 @@
           <div>
             <div class="theme-name">Adat Jawa</div>
             <div class="theme-tag">Klasik · Tradisional · Elegan</div>
+          </div>
+        </div>
+      </div>
+      <div class="theme-card" data-theme="modern-minimalist" onclick="selectTheme('modern-minimalist')">
+        <div class="theme-thumb modern-minimalist">
+          <div class="thumb-content">
+            <div class="thumb-label">Wedding Invitation</div>
+            <div class="thumb-names">Mempelai Wanita</div>
+            <div class="thumb-amp">&amp;</div>
+            <div class="thumb-names">Mempelai Pria</div>
+          </div>
+        </div>
+        <div class="theme-meta">
+          <div>
+            <div class="theme-name">Modern Minimalist</div>
+            <div class="theme-tag">Bersih · Modern · Editorial</div>
           </div>
         </div>
       </div>
@@ -1464,6 +1527,7 @@
     'royal-classic': 'tema-royal.html',
     'sunset-bloom': 'tema-bloom.html',
     'adat-jawa': 'tema-jawa.html',
+    'modern-minimalist': 'tema-modern.html',
   };
   
   // Helper: dapatkan file path tema (relative)
@@ -1501,6 +1565,7 @@
     'royal-classic': 'Royal Classic',
     'sunset-bloom': 'Sunset Bloom',
     'adat-jawa': 'Adat Jawa',
+    'modern-minimalist': 'Modern Minimalist',
   };
   
   // ============ ANALYTICS (Vercel Web Analytics custom events) ============
@@ -1699,6 +1764,7 @@
       'royal-classic': 'piano-elegant',
       'sunset-bloom': 'acoustic-love',
       'adat-jawa': 'javanese-gamelan',
+      'modern-minimalist': 'piano-elegant',
     };
     const suggested = themeMusicMap[theme];
     const musicSelect = document.getElementById('musicChoice');

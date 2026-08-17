@@ -1,10 +1,10 @@
 # UndanganKu — Undangan Digital Pernikahan
 
-Platform undangan digital pernikahan elegan dengan 3 tema premium, builder interaktif, dan integrasi Telegram bot untuk manajemen order.
+Platform undangan digital pernikahan elegan dengan 4 tema premium, builder interaktif, dan integrasi Telegram bot untuk manajemen order.
 
 ## Fitur
 
-- **3 Tema Premium** — Royal Classic, Sunset Bloom, Adat Jawa
+- **4 Tema Premium** — Royal Classic, Sunset Bloom, Adat Jawa, Modern Minimalist
 - **Foto Couple di Cover** — Pembeli bisa unggah foto untuk halaman depan undangan (dikompres otomatis di browser)
 - **Builder Interaktif** — Form 3 langkah untuk buat undangan tanpa coding
 - **RSVP & Ucapan** — Tamu konfirmasi kehadiran + kirim ucapan langsung
@@ -25,6 +25,7 @@ undanganku-web/
 ├── tema-royal.html     # Tema: Royal Classic (midnight sapphire, platinum, mewah)
 ├── tema-bloom.html     # Tema: Sunset Bloom (warm, peach, romantic)
 ├── tema-jawa.html      # Tema: Adat Jawa (maroon, klasik, tradisional)
+├── tema-modern.html    # Tema: Modern Minimalist (kertas, sage, editorial)
 ├── favicon.svg         # SVG favicon
 ├── music/
 │   └── romantic.mp3    # Background music default
