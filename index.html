@@ -344,10 +344,11 @@
   @media (max-width: 600px) { .tema-showcase { padding: 14px; } }
   .tema-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
   }
-  @media (max-width: 760px) { .tema-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 980px) { .tema-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .tema-grid { grid-template-columns: 1fr; } }
 
   .tema-card {
     position: relative;
@@ -370,6 +371,7 @@
   .tema-card.royal .tema-bg { background: linear-gradient(150deg, #0a1126, #1c2b52 60%, #0a1126); }
   .tema-card.bloom .tema-bg { background: linear-gradient(150deg, #fef5ed, #fad9c0 50%, #f4a574); }
   .tema-card.jawa .tema-bg  { background: linear-gradient(160deg, #241806, #4a3520 55%, #241806); }
+  .tema-card.modern .tema-bg { background: linear-gradient(160deg, #f7f5ef, #ece7db 100%); }
 
   .tema-pick {
     position: absolute; top: 12px; left: 12px;
@@ -381,6 +383,7 @@
   .tema-card.royal .tema-pick { color: #dfe9f8; border-color: rgba(195,211,238,0.4); }
   .tema-card.bloom .tema-pick { color: #5d3a2e; border-color: rgba(93,58,46,0.4); }
   .tema-card.jawa .tema-pick  { color: #f0e0c0; border-color: rgba(196,164,100,0.45); }
+  .tema-card.modern .tema-pick { color: #4a5b40; border-color: rgba(74,91,64,0.4); }
 
   .tema-frame {
     position: absolute; inset: 12px;
@@ -390,6 +393,7 @@
   .tema-card.royal .tema-frame { border-color: rgba(195,211,238,0.3); }
   .tema-card.bloom .tema-frame { border-color: rgba(217,124,108,0.35); }
   .tema-card.jawa .tema-frame  { border-color: rgba(196,164,100,0.32); }
+  .tema-card.modern .tema-frame { border-color: rgba(74,91,64,0.3); }
 
   .tema-inner {
     position: absolute; inset: 0;
@@ -409,11 +413,15 @@
   .tema-card.jawa .tema-overline { color: #c4a464; }
   .tema-card.jawa .tema-names { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(26px, 3.2vw, 34px); color: #f0e0c0; }
   .tema-card.jawa .tema-amp { color: #c4a464; font-size: 0.6em; }
+  .tema-card.modern .tema-overline { font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #6b7f5e; }
+  .tema-card.modern .tema-names { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(30px, 3.6vw, 40px); color: #201e19; }
+  .tema-card.modern .tema-amp { color: #6b7f5e; font-size: 0.55em; }
 
   .tema-deco { font-size: 10px; letter-spacing: 6px; margin-top: 16px; opacity: 0.65; }
   .tema-card.royal .tema-deco { color: #c3d3ee; }
   .tema-card.bloom .tema-deco { color: #d97c6c; }
   .tema-card.jawa .tema-deco  { color: #c4a464; }
+  .tema-card.modern .tema-deco { color: #93a684; font-family: 'DM Sans', sans-serif; letter-spacing: 2px; }
 
   .tema-foot {
     position: absolute; left: 0; right: 0; bottom: 0;
@@ -422,6 +430,7 @@
     background: linear-gradient(to top, rgba(0,0,0,0.45), transparent);
   }
   .tema-card.bloom .tema-foot { background: linear-gradient(to top, rgba(93,58,46,0.25), transparent); }
+  .tema-card.modern .tema-foot { background: linear-gradient(to top, rgba(32,30,25,0.16), transparent); }
   .tema-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2.5px; }
   .tema-open {
     font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2px;
@@ -433,6 +442,7 @@
   .tema-card.royal .tema-label, .tema-card.royal .tema-open { color: #dfe9f8; border-color: rgba(195,211,238,0.4); }
   .tema-card.bloom .tema-label, .tema-card.bloom .tema-open { color: #5d3a2e; border-color: rgba(93,58,46,0.4); }
   .tema-card.jawa .tema-label,  .tema-card.jawa .tema-open  { color: #f0e0c0; border-color: rgba(196,164,100,0.45); }
+  .tema-card.modern .tema-label, .tema-card.modern .tema-open { color: #201e19; border-color: rgba(74,91,64,0.4); }
 
   /* ════════ FITUR ════════ */
   .feature-flagship {
@@ -923,7 +933,7 @@
 <section id="tema">
   <div class="wrap">
     <div class="sec-kicker reveal"><span class="num">01</span><span class="rule"></span><span class="label">KOLEKSI TEMA</span><span class="rule"></span></div>
-    <h2 class="sec-title reveal">Tiga Karakter, <em>Satu Kelas</em></h2>
+    <h2 class="sec-title reveal">Empat Karakter, <em>Satu Kelas</em></h2>
     <p class="sec-sub reveal">Setiap tema dirancang seperti undangan butik — ketuk untuk membuka demo utuh lengkap dengan musik dan animasinya.</p>
 
     <div class="tema-showcase reveal">
@@ -969,6 +979,21 @@
           </div>
           <div class="tema-foot">
             <span class="tema-label">ADAT JAWA</span>
+            <span class="tema-open">BUKA DEMO →</span>
+          </div>
+        </a>
+
+        <a href="./demo.html?tema=modern-minimalist&paket=premium" class="tema-card modern" target="_blank" data-tilt>
+          <div class="tema-bg"></div>
+          <span class="tema-pick">PILIHAN 04</span>
+          <div class="tema-frame"></div>
+          <div class="tema-inner">
+            <div class="tema-overline">Wedding Invitation</div>
+            <div class="tema-names">Naya <span class="tema-amp">&amp;</span> Alvaro</div>
+            <div class="tema-deco">01 — 02 — 03</div>
+          </div>
+          <div class="tema-foot">
+            <span class="tema-label">MODERN MINIMALIST</span>
             <span class="tema-open">BUKA DEMO →</span>
           </div>
         </a>
