@@ -324,6 +324,82 @@
     letter-spacing: 4px;
   }
 
+  /* Kemerdekaan 17 Agustus thumb — merah putih seremonial */
+  .theme-thumb.kemerdekaan-17 {
+    background: linear-gradient(135deg, #7a0c1a, #c8102e 60%, #7a0c1a);
+    position: relative;
+  }
+  .theme-thumb.kemerdekaan-17::before {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(255, 216, 137, 0.4);
+  }
+  .theme-thumb.kemerdekaan-17::after {
+    content: '★ ★ ★';
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 216, 137, 0.6);
+    font-size: 10px;
+    letter-spacing: 6px;
+  }
+  .theme-thumb.kemerdekaan-17 .thumb-content {
+    text-align: center;
+    color: #fff6ea;
+    z-index: 2;
+  }
+  .theme-thumb.kemerdekaan-17 .thumb-label {
+    font-family: 'Cinzel', serif;
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: #ffd889;
+    margin-bottom: 6px;
+  }
+  .theme-thumb.kemerdekaan-17 .thumb-names {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1;
+  }
+  .theme-thumb.kemerdekaan-17 .thumb-amp {
+    color: #ffd889;
+    font-size: 15px;
+    margin: 4px 0;
+  }
+
+  /* Tema Kemerdekaan terkunci di luar tanggal 17 Agustus */
+  .theme-card.locked {
+    cursor: not-allowed;
+    opacity: 0.75;
+  }
+  .theme-card.locked .theme-thumb {
+    filter: grayscale(45%);
+  }
+  .theme-lock-badge {
+    display: none;
+    position: absolute;
+    inset: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: rgba(10, 6, 6, 0.6);
+    color: #fff6ea;
+    text-align: center;
+    padding: 0 18px;
+    z-index: 3;
+  }
+  .theme-card.locked .theme-lock-badge { display: flex; }
+  .theme-lock-badge .lock-icon { font-size: 20px; }
+  .theme-lock-badge .lock-text {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    line-height: 1.6;
+  }
+
   /* Modern Minimalist thumb */
   .theme-thumb.modern-minimalist {
     background: linear-gradient(160deg, #f7f5ef 0%, #ece7db 100%);
@@ -947,6 +1023,26 @@
           </div>
         </div>
       </div>
+      <div class="theme-card" data-theme="kemerdekaan-17" id="themeCardKemerdekaan" onclick="selectTheme('kemerdekaan-17')">
+        <div class="theme-thumb kemerdekaan-17">
+          <div class="thumb-content">
+            <div class="thumb-label">★ The Wedding Of ★</div>
+            <div class="thumb-names">Mempelai Wanita</div>
+            <div class="thumb-amp">&amp;</div>
+            <div class="thumb-names">Mempelai Pria</div>
+          </div>
+          <div class="theme-lock-badge" id="kemerdekaanLockBadge">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-text">Spesial 17 Agustus<br>Terbuka hanya di tanggal ini</div>
+          </div>
+        </div>
+        <div class="theme-meta">
+          <div>
+            <div class="theme-name">Kemerdekaan 17 Agustus</div>
+            <div class="theme-tag">Merah Putih · Seremonial · Spesial</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="step" id="step-2">
@@ -1528,7 +1624,15 @@
     'sunset-bloom': 'tema-bloom.html',
     'adat-jawa': 'tema-jawa.html',
     'modern-minimalist': 'tema-modern.html',
+    'kemerdekaan-17': 'tema-merdeka.html',
   };
+
+  // Tema Kemerdekaan hanya boleh dipilih setiap tanggal 17 Agustus (berulang tiap tahun,
+  // berdasarkan waktu perangkat pengguna). Di luar tanggal itu kartu tema terkunci.
+  function isKemerdekaanThemeOpen() {
+    var now = new Date();
+    return now.getMonth() === 7 && now.getDate() === 17; // getMonth() 7 = Agustus
+  }
   
   // Helper: dapatkan file path tema (relative)
   function getThemeFile(theme) {
@@ -1566,6 +1670,7 @@
     'sunset-bloom': 'Sunset Bloom',
     'adat-jawa': 'Adat Jawa',
     'modern-minimalist': 'Modern Minimalist',
+    'kemerdekaan-17': 'Kemerdekaan 17 Agustus',
   };
   
   // ============ ANALYTICS (Vercel Web Analytics custom events) ============
@@ -1753,18 +1858,34 @@
     }
   }
   
+  // Tampilkan/lepas overlay kunci pada kartu tema Kemerdekaan sesuai tanggal perangkat
+  (function applyKemerdekaanLockState() {
+    var card = document.getElementById('themeCardKemerdekaan');
+    if (!card) return;
+    if (isKemerdekaanThemeOpen()) {
+      card.classList.remove('locked');
+    } else {
+      card.classList.add('locked');
+    }
+  })();
+
   // ============ THEME & PAKET ============
   function selectTheme(theme) {
+    if (theme === 'kemerdekaan-17' && !isKemerdekaanThemeOpen()) {
+      showToast('Tema Kemerdekaan hanya dibuka setiap tanggal 17 Agustus 🇮🇩', 'error');
+      return;
+    }
     selectedTheme = theme;
     document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
     document.querySelector('[data-theme="' + theme + '"]').classList.add('selected');
-    
+
     // Auto-suggest best music for this theme
     const themeMusicMap = {
       'royal-classic': 'piano-elegant',
       'sunset-bloom': 'acoustic-love',
       'adat-jawa': 'javanese-gamelan',
       'modern-minimalist': 'piano-elegant',
+      'kemerdekaan-17': 'piano-elegant',
     };
     const suggested = themeMusicMap[theme];
     const musicSelect = document.getElementById('musicChoice');
@@ -2066,10 +2187,18 @@
   
   // ============ SUBMIT ORDER ============
   async function submitOrder() {
+    // Jaga-jaga: tema Kemerdekaan cuma boleh dipesan tanggal 17 Agustus,
+    // meskipun selectedTheme sempat ke-set lewat draft lama.
+    if (selectedTheme === 'kemerdekaan-17' && !isKemerdekaanThemeOpen()) {
+      showToast('Tema Kemerdekaan hanya dibuka setiap tanggal 17 Agustus 🇮🇩', 'error');
+      changeStep(1);
+      return;
+    }
+
     const data = collectFormData();
     const buyerContact = document.getElementById('buyerContact').value.trim();
     const buyerInstagram = document.getElementById('buyerInstagram')?.value.trim() || '';
-    
+
     // Validasi kontak WA wajib diisi
     if (!buyerContact) {
       document.getElementById('buyerContact')?.classList.add('error');
@@ -2405,7 +2534,8 @@
         var el = document.getElementById(id);
         if (el && draft[id] !== undefined && draft[id] !== '') el.value = draft[id];
       });
-      if (draft._theme && TEMA_LABEL[draft._theme]) selectTheme(draft._theme);
+      var draftThemeLocked = draft._theme === 'kemerdekaan-17' && !isKemerdekaanThemeOpen();
+      if (draft._theme && TEMA_LABEL[draft._theme] && !draftThemeLocked) selectTheme(draft._theme);
       showToast('Draft dipulihkan otomatis ✓', 'success');
       updatePreview();
     } catch(e) {}

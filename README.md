@@ -4,7 +4,7 @@ Platform undangan digital pernikahan elegan dengan 4 tema premium, builder inter
 
 ## Fitur
 
-- **4 Tema Premium** — Royal Classic, Sunset Bloom, Adat Jawa, Modern Minimalist
+- **5 Tema Premium** — Royal Classic, Sunset Bloom, Adat Jawa, Modern Minimalist, Kemerdekaan 17 Agustus (edisi spesial, hanya bisa dipesan setiap tanggal 17 Agustus)
 - **Foto Couple di Cover** — Pembeli bisa unggah foto untuk halaman depan undangan (dikompres otomatis di browser)
 - **Builder Interaktif** — Form 3 langkah untuk buat undangan tanpa coding
 - **RSVP & Ucapan** — Tamu konfirmasi kehadiran + kirim ucapan langsung
@@ -26,6 +26,7 @@ undanganku-web/
 ├── tema-bloom.html     # Tema: Sunset Bloom (warm, peach, romantic)
 ├── tema-jawa.html      # Tema: Adat Jawa (maroon, klasik, tradisional)
 ├── tema-modern.html    # Tema: Modern Minimalist (kertas, sage, editorial)
+├── tema-merdeka.html   # Tema: Kemerdekaan 17 Agustus (merah putih, spesial 17 Agustus)
 ├── favicon.svg         # SVG favicon
 ├── music/
 │   └── romantic.mp3    # Background music default

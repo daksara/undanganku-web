@@ -344,7 +344,7 @@
   @media (max-width: 600px) { .tema-showcase { padding: 14px; } }
   .tema-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
   }
   @media (max-width: 980px) { .tema-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -372,6 +372,7 @@
   .tema-card.bloom .tema-bg { background: linear-gradient(150deg, #fef5ed, #fad9c0 50%, #f4a574); }
   .tema-card.jawa .tema-bg  { background: linear-gradient(160deg, #241806, #4a3520 55%, #241806); }
   .tema-card.modern .tema-bg { background: linear-gradient(160deg, #f7f5ef, #ece7db 100%); }
+  .tema-card.merdeka .tema-bg { background: linear-gradient(150deg, #7a0c1a, #c8102e 55%, #7a0c1a); }
 
   .tema-pick {
     position: absolute; top: 12px; left: 12px;
@@ -384,6 +385,7 @@
   .tema-card.bloom .tema-pick { color: #5d3a2e; border-color: rgba(93,58,46,0.4); }
   .tema-card.jawa .tema-pick  { color: #f0e0c0; border-color: rgba(196,164,100,0.45); }
   .tema-card.modern .tema-pick { color: #4a5b40; border-color: rgba(74,91,64,0.4); }
+  .tema-card.merdeka .tema-pick { color: #ffe9b0; border-color: rgba(255,233,176,0.45); }
 
   .tema-frame {
     position: absolute; inset: 12px;
@@ -394,6 +396,7 @@
   .tema-card.bloom .tema-frame { border-color: rgba(217,124,108,0.35); }
   .tema-card.jawa .tema-frame  { border-color: rgba(196,164,100,0.32); }
   .tema-card.modern .tema-frame { border-color: rgba(74,91,64,0.3); }
+  .tema-card.merdeka .tema-frame { border-color: rgba(255,233,176,0.3); }
 
   .tema-inner {
     position: absolute; inset: 0;
@@ -416,12 +419,16 @@
   .tema-card.modern .tema-overline { font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #6b7f5e; }
   .tema-card.modern .tema-names { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(30px, 3.6vw, 40px); color: #201e19; }
   .tema-card.modern .tema-amp { color: #6b7f5e; font-size: 0.55em; }
+  .tema-card.merdeka .tema-overline { color: #ffd889; }
+  .tema-card.merdeka .tema-names { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(28px, 3.4vw, 38px); color: #fff6ea; }
+  .tema-card.merdeka .tema-amp { color: #ffd889; font-size: 0.55em; }
 
   .tema-deco { font-size: 10px; letter-spacing: 6px; margin-top: 16px; opacity: 0.65; }
   .tema-card.royal .tema-deco { color: #c3d3ee; }
   .tema-card.bloom .tema-deco { color: #d97c6c; }
   .tema-card.jawa .tema-deco  { color: #c4a464; }
   .tema-card.modern .tema-deco { color: #93a684; font-family: 'DM Sans', sans-serif; letter-spacing: 2px; }
+  .tema-card.merdeka .tema-deco { color: #ffd889; }
 
   .tema-foot {
     position: absolute; left: 0; right: 0; bottom: 0;
@@ -431,6 +438,7 @@
   }
   .tema-card.bloom .tema-foot { background: linear-gradient(to top, rgba(93,58,46,0.25), transparent); }
   .tema-card.modern .tema-foot { background: linear-gradient(to top, rgba(32,30,25,0.16), transparent); }
+  .tema-card.merdeka .tema-foot { background: linear-gradient(to top, rgba(45,5,10,0.5), transparent); }
   .tema-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2.5px; }
   .tema-open {
     font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2px;
@@ -443,6 +451,7 @@
   .tema-card.bloom .tema-label, .tema-card.bloom .tema-open { color: #5d3a2e; border-color: rgba(93,58,46,0.4); }
   .tema-card.jawa .tema-label,  .tema-card.jawa .tema-open  { color: #f0e0c0; border-color: rgba(196,164,100,0.45); }
   .tema-card.modern .tema-label, .tema-card.modern .tema-open { color: #201e19; border-color: rgba(74,91,64,0.4); }
+  .tema-card.merdeka .tema-label, .tema-card.merdeka .tema-open { color: #fff6ea; border-color: rgba(255,216,137,0.4); }
 
   /* ════════ FITUR ════════ */
   .feature-flagship {
@@ -994,6 +1003,21 @@
           </div>
           <div class="tema-foot">
             <span class="tema-label">MODERN MINIMALIST</span>
+            <span class="tema-open">BUKA DEMO →</span>
+          </div>
+        </a>
+
+        <a href="./demo.html?tema=kemerdekaan-17&paket=premium" class="tema-card merdeka" target="_blank" data-tilt>
+          <div class="tema-bg"></div>
+          <span class="tema-pick">SPESIAL 17 AGUSTUS</span>
+          <div class="tema-frame"></div>
+          <div class="tema-inner">
+            <div class="tema-overline">★ The Wedding Of ★</div>
+            <div class="tema-names">Kirana <span class="tema-amp">&amp;</span> Wira</div>
+            <div class="tema-deco">17 · 08</div>
+          </div>
+          <div class="tema-foot">
+            <span class="tema-label">KEMERDEKAAN 17 AGUSTUS</span>
             <span class="tema-open">BUKA DEMO →</span>
           </div>
         </a>
