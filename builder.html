@@ -1830,7 +1830,8 @@
 
   // ============ FOTO SAMPUL ============
   // Foto dikompres di browser (canvas → JPEG) lalu dikirim sebagai data URL.
-  // Maks sisi terpanjang 1080px; kalau hasil masih >1.4MB, turunkan kualitas.
+  // Maks sisi terpanjang 960px, target ~450KB biar undangan ringan di HP tamu;
+  // kalau masih di atas target, turunkan kualitas sampai batas aman server (1.4MB).
   var coverPhotoDataUrl = '';
 
   function compressImage(file) {
@@ -1839,7 +1840,9 @@
       var url = URL.createObjectURL(file);
       img.onload = function() {
         URL.revokeObjectURL(url);
-        var MAX = 1080;
+        var MAX = 960;
+        var TARGET = 450000;
+        var HARD_CAP = 1400000;
         var w = img.naturalWidth, h = img.naturalHeight;
         if (!w || !h) return reject(new Error('Gambar tidak valid'));
         var scale = Math.min(1, MAX / Math.max(w, h));
@@ -1848,14 +1851,14 @@
         canvas.height = Math.round(h * scale);
         var ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        var quality = 0.82;
+        var quality = 0.78;
         var out = canvas.toDataURL('image/jpeg', quality);
         // Batas aman payload (server menolak data URL > ~2M karakter)
-        while (out.length > 1400000 && quality > 0.4) {
-          quality -= 0.12;
+        while (out.length > TARGET && quality > 0.35) {
+          quality -= 0.08;
           out = canvas.toDataURL('image/jpeg', quality);
         }
-        if (out.length > 1400000) return reject(new Error('Foto terlalu besar, coba foto lain'));
+        if (out.length > HARD_CAP) return reject(new Error('Foto terlalu besar, coba foto lain'));
         resolve(out);
       };
       img.onerror = function() { URL.revokeObjectURL(url); reject(new Error('Gagal membaca gambar')); };
