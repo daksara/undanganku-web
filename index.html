@@ -1220,23 +1220,23 @@
 
     <div class="faq-list reveal">
       <div class="faq-item">
-        <button class="faq-q"><span class="faq-num">01</span><span class="faq-q-text">Benar cuma Rp 5.000? Tidak ada biaya lain?</span><i>+</i></button>
+        <button class="faq-q" aria-expanded="false"><span class="faq-num">01</span><span class="faq-q-text">Benar cuma Rp 5.000? Tidak ada biaya lain?</span><i aria-hidden="true">+</i></button>
         <div class="faq-a"><div class="faq-a-inner">Benar — <strong>sekali bayar Rp 5.000</strong>, semua fitur terbuka, undangan aktif 3 bulan penuh. Tidak ada paket bertingkat, biaya admin, atau biaya perpanjangan tersembunyi.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q"><span class="faq-num">02</span><span class="faq-q-text">Bagaimana cara menambahkan foto kami di cover?</span><i>+</i></button>
+        <button class="faq-q" aria-expanded="false"><span class="faq-num">02</span><span class="faq-q-text">Bagaimana cara menambahkan foto kami di cover?</span><i aria-hidden="true">+</i></button>
         <div class="faq-a"><div class="faq-a-inner">Di builder ada bagian <strong>Foto Sampul</strong> — tinggal unggah foto prewedding atau foto favorit kalian dari galeri HP. Foto otomatis dirapikan dan tampil elegan di halaman depan undangan. Kalau tidak diunggah, undangan tampil polos dengan nama mempelai saja — dua-duanya cantik.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q"><span class="faq-num">03</span><span class="faq-q-text">Bisa lihat hasilnya dulu sebelum bayar?</span><i>+</i></button>
+        <button class="faq-q" aria-expanded="false"><span class="faq-num">03</span><span class="faq-q-text">Bisa lihat hasilnya dulu sebelum bayar?</span><i aria-hidden="true">+</i></button>
         <div class="faq-a"><div class="faq-a-inner">Bisa, dan memang begitu alurnya: isi data → <strong>preview gratis tanpa batas</strong> → bayar hanya kalau sudah suka. Kamu tidak pernah membayar untuk sesuatu yang belum kamu lihat.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q"><span class="faq-num">04</span><span class="faq-q-text">Berapa lama undangan aktif setelah bayar?</span><i>+</i></button>
+        <button class="faq-q" aria-expanded="false"><span class="faq-num">04</span><span class="faq-q-text">Berapa lama undangan aktif setelah bayar?</span><i aria-hidden="true">+</i></button>
         <div class="faq-a"><div class="faq-a-inner">Setelah pembayaran dikonfirmasi, link aktif <strong>dalam hitungan detik</strong> — otomatis, tanpa menunggu. Undangan online selama 3 bulan, lebih dari cukup sampai hari H dan sesudahnya.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q"><span class="faq-num">05</span><span class="faq-q-text">Bagaimana tamu menerima undangannya?</span><i>+</i></button>
+        <button class="faq-q" aria-expanded="false"><span class="faq-num">05</span><span class="faq-q-text">Bagaimana tamu menerima undangannya?</span><i aria-hidden="true">+</i></button>
         <div class="faq-a"><div class="faq-a-inner">Kamu cukup membagikan satu link via WhatsApp. Mau lebih personal? Pakai <strong>generator link per tamu</strong> — setiap tamu dapat link dengan namanya sendiri tersapa di undangan.</div></div>
       </div>
     </div>
@@ -1329,10 +1329,12 @@
       document.querySelectorAll('.faq-item.open').forEach(function(other) {
         other.classList.remove('open');
         other.querySelector('.faq-a').style.maxHeight = '0px';
+        other.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
       });
       if (!isOpen) {
         item.classList.add('open');
         a.style.maxHeight = a.scrollHeight + 'px';
+        q.setAttribute('aria-expanded', 'true');
       }
     });
   });
