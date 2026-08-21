@@ -14,6 +14,7 @@ Platform undangan digital pernikahan elegan dengan 4 tema premium, builder inter
 - **Google Maps** — Link lokasi akad & resepsi
 - **Preview Real-time** — Lihat hasil undangan sebelum memesan
 - **Order via Telegram Bot** — Notifikasi otomatis ke owner
+- **Pembayaran via Midtrans** — Order transfer langsung dibukakan popup Snap (VA, e-wallet, QRIS, kartu), status order update otomatis begitu bayar
 
 ## Struktur File
 
@@ -45,7 +46,7 @@ https://telegram-bot.daksara-dev.workers.dev
 ```
 
 Endpoint yang digunakan:
-- `POST /orders/new` — Buat order baru
+- `POST /orders/new` — Buat order baru (untuk order transfer, response berisi `paymentUrl`/`snapToken` Midtrans Snap kalau pembayaran otomatis aktif)
 - `GET /orders/status/:id` — Cek status pembayaran
 - `GET /orders/data/:id` — Ambil data undangan
 - `GET /u/:id` — Render undangan langsung (static HTML)

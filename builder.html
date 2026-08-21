@@ -1547,6 +1547,43 @@
   let selectedPaket = 'standard';
   let currentOrderId = null;
   let pollingInterval = null;
+  let currentSnapToken = null;
+  let currentPaymentUrl = null;
+  let currentClientKey = null;
+  let _snapScriptLoaded = null;
+
+  // ============ MIDTRANS SNAP ============
+  // Muat snap.js sekali saja (sandbox atau production sesuai env backend).
+  function loadMidtransSnap(snapEnv) {
+    if (_snapScriptLoaded) return _snapScriptLoaded;
+    _snapScriptLoaded = new Promise(function(resolve, reject) {
+      if (window.snap) return resolve();
+      var script = document.createElement('script');
+      script.src = snapEnv === 'production'
+        ? 'https://app.midtrans.com/snap/snap.js'
+        : 'https://app.sandbox.midtrans.com/snap/snap.js';
+      script.setAttribute('data-client-key', currentClientKey || '');
+      script.onload = function() { resolve(); };
+      script.onerror = function() { reject(new Error('Gagal memuat Midtrans Snap')); };
+      document.head.appendChild(script);
+    });
+    return _snapScriptLoaded;
+  }
+
+  // Buka popup pembayaran Midtrans. Dipanggil otomatis setelah order dibuat,
+  // dan bisa dipanggil ulang lewat tombol "Bayar Sekarang" kalau popup ditutup.
+  function openMidtransPayment() {
+    if (!window.snap || !currentSnapToken) {
+      if (currentPaymentUrl) window.open(currentPaymentUrl, '_blank');
+      return;
+    }
+    window.snap.pay(currentSnapToken, {
+      onSuccess: function() { if (currentOrderId) checkOrderStatus(currentOrderId); },
+      onPending: function() { if (currentOrderId) checkOrderStatus(currentOrderId); },
+      onError: function() { showToast('Pembayaran gagal, coba lagi ya', 'error'); },
+      onClose: function() { showToast('Pembayaran belum selesai. Tap "Bayar Sekarang" untuk lanjut.', ''); },
+    });
+  }
   let _activeNextHandler = null; // init setelah DOM ready
   var _goingBack = false;
 
@@ -2140,16 +2177,30 @@
         track('order_submitted', { paket: selectedPaket, sumber: sumberPembelian });
         showToast('Pesanan terkirim ke owner!', 'success');
         try { localStorage.removeItem(DRAFT_KEY); sessionStorage.removeItem(DRAFT_KEY); } catch(e) {}
-        
+
         // Tampilkan order status card
         document.getElementById('orderStatusCard').classList.add('show');
         document.getElementById('orderIdDisplay').textContent = result.orderId;
-        document.getElementById('statusDetail').innerHTML = 
-          'Owner sudah mendapat notifikasi via Telegram. Halaman ini akan otomatis update saat pesanan dikonfirmasi.<br><br>Simpan Order ID di atas untuk referensi.';
-        
+
+        if (result.paymentUrl && result.snapToken) {
+          currentSnapToken = result.snapToken;
+          currentPaymentUrl = result.paymentUrl;
+          currentClientKey = result.clientKey;
+          document.getElementById('statusDetail').innerHTML =
+            'Selesaikan pembayaran di jendela Midtrans yang terbuka. Halaman ini akan otomatis update setelah pembayaran berhasil.<br><br>' +
+            '<button type="button" onclick="openMidtransPayment()" style="padding:10px 20px;background:linear-gradient(135deg,var(--accent-bright),var(--accent));color:#0b0805;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">Bayar Sekarang</button><br><br>Simpan Order ID di atas untuk referensi.';
+          loadMidtransSnap(result.snapEnv).then(openMidtransPayment).catch(function(err) {
+            console.error(err);
+            showToast('Gagal memuat halaman pembayaran, coba tombol Bayar Sekarang', 'error');
+          });
+        } else {
+          document.getElementById('statusDetail').innerHTML =
+            'Owner sudah mendapat notifikasi via Telegram. Halaman ini akan otomatis update saat pesanan dikonfirmasi.<br><br>Simpan Order ID di atas untuk referensi.';
+        }
+
         btn.style.display = 'none';
         document.getElementById('prevBtn').style.display = 'none';
-        
+
         startPolling(result.orderId);
       } else {
         showToast('Gagal: ' + (result.error || 'Unknown error'), 'error');
